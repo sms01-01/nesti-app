@@ -1,970 +1,1244 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nesti — Plateforme Familiale Inclusive (Pro One-File Extended)</title>
-  <meta name="description" content="Prototype professionnel tout-en-un : dashboard familial, calendrier, tâches, chat IA, inclusion, RGPD — sans dépendances externes."/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
-  <style>
-    /* ==========================
-       THEME & VARIABLES (Design pro, extended)
-       ========================== */
-    :root{
-      --bg: #f4fbff;
-      --card: #ffffff;
-      --muted: #64748b;
-      --text: #0f172a;
-      --glass: rgba(255,255,255,0.7);
-      --primary: #136bb1;
-      --primary-2: #1c9dea;
-      --accent: #ffd166;
-      --success: #29c48a;
-      --danger: #ff6b6b;
-      --radius-xl: 18px;
-      --radius-lg: 12px;
-      --shadow-soft: 0 6px 28px rgba(17, 102, 204, 0.08);
-      --shadow-strong: 0 12px 48px rgba(17, 102, 204, 0.12);
-      --mono: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      --transition: 220ms cubic-bezier(.2,.9,.27,1);
-      --max-width: 1180px;
-      --ui-z: 1000;
-    }
-    /* Dark mode support toggle via [data-theme="dark"] on body */
-    body { margin:0; font-family:var(--mono); background:linear-gradient(180deg,#f8fdff 0%,var(--bg) 100%); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    [data-theme="dark"]{ --bg:#071320; --card:#0b1622; --muted:#93a6bd; --text:#f4f8fb; --glass: rgba(10,18,28,0.55); --shadow-soft: 0 10px 30px rgba(0,0,0,0.6); --shadow-strong: 0 18px 50px rgba(0,0,0,0.7); }
-    .app { display:flex; min-height:100vh; align-items:stretch; justify-content:flex-start; }
-    /* ==========================
-       SIDEBAR
-       ========================== */
-    .sidebar { width:300px; padding:32px 22px; background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.45)); border-top-right-radius:var(--radius-xl); border-bottom-right-radius:var(--radius-xl); box-shadow:var(--shadow-soft); display:flex; flex-direction:column; gap:22px; }
-    [data-theme="dark"] .sidebar{ background:linear-gradient(180deg,var(--glass), rgba(255,255,255,0.02)); }
-    .logo { display:flex; align-items:center; gap:12px; }
-    .logo svg { width:46px; height:46px; border-radius:9px; }
-    .brand { font-weight:800; font-size:1.6rem; color:var(--primary-2); }
-    .nav { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
-    .nav button { background:none; border:none; text-align:left; padding:12px 14px; border-radius:10px; display:flex; gap:12px; align-items:center; cursor:pointer; font-weight:600; color:var(--muted); transition:all var(--transition); }
-    .nav button:hover, .nav button:focus { transform:translateX(4px); color:var(--primary-2); box-shadow:var(--shadow-soft); }
-    .nav button.active { background:linear-gradient(90deg, rgba(28,157,234,0.12), rgba(255,209,102,0.06)); color:var(--primary-2); }
-    .spacer { flex:1; }
-    .profile { display:flex; gap:12px; align-items:center; padding-top:12px; border-top:1px solid rgba(0,0,0,0.04); }
-    .avatar { width:48px; height:48px; border-radius:10px; background:linear-gradient(180deg,#fff,#f0f8ff); border:1px solid rgba(0,0,0,0.04); background-size:cover; background-position:center; }
-    .profile .meta { display:flex; flex-direction:column; }
-    .role { font-size:0.9rem; color:var(--muted); }
-    .logout { margin-left:auto; background:none; border:none; color:var(--primary); cursor:pointer; font-weight:700; }
-    /* ==========================
-       MAIN LAYOUT
-       ========================== */
-    .main { flex:1; padding:42px; display:flex; justify-content:center; }
-    .container { width:100%; max-width:var(--max-width); display:grid; grid-template-columns: 1.1fr 2fr 1fr; gap:28px; align-items:start; }
-    .header { grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:6px; }
-    .header-left { display:flex; flex-direction:column; gap:6px; }
-    .title { font-size:2.2rem; font-weight:800; }
-    .subtitle { color:var(--muted); font-weight:600; }
-    .header-right { display:flex; gap:12px; align-items:center; }
-    .search { border-radius:12px; padding:10px 12px; border:1px solid var(--shadow-soft); background:var(--card); min-width:260px; display:flex; align-items:center; gap:10px; }
-    .search input { border:none; outline:none; background:transparent; font-weight:600; width:100%; }
-    .cta { background:var(--accent); padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; border:none; box-shadow:var(--shadow-soft); }
-    /* ==========================
-       CARDS / PANELS
-       ========================== */
-    .card { background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-soft); }
-    .card h3 { margin:0 0 12px 0; font-size:1.05rem; font-weight:800; }
-    .calendar { display:flex; flex-direction:column; gap:10px; }
-    .mini-cal { border-radius:10px; padding:12px; background:linear-gradient(180deg, rgba(20,130,200,0.02), rgba(255,255,255,0.02)); }
-    .events { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
-    .event-item { display:flex; gap:10px; align-items:center; padding:8px; border-radius:10px; background:linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2)); border-left:6px solid var(--primary); }
-    .event-meta { display:flex; flex-direction:column; }
-    .event-time { font-weight:800; color:var(--muted); font-size:0.95rem; }
-    .event-title { font-weight:800; }
-    .event-note { color:var(--muted); font-size:0.9rem; }
-    /* TASKS */
-    .tasks-list { display:flex; flex-direction:column; gap:10px; }
-    .task-row { display:flex; align-items:center; gap:12px; padding:9px; border-radius:10px; border:1px solid rgba(0,0,0,0.03); }
-    .task-title { flex:1; font-weight:700; }
-    .task-meta { color:var(--muted); font-size:0.9rem; }
-    .chip { padding:6px 10px; border-radius:999px; background:linear-gradient(90deg,#fff, rgba(0,0,0,0.02)); font-weight:700; }
-    /* CHAT */
-    .chat { display:flex; flex-direction:column; gap:12px; height:100%; }
-    .chat-list { display:flex; flex-direction:column; gap:10px; max-height:360px; overflow:auto; padding-right:8px; }
-    .bubble { display:inline-block; padding:10px 14px; border-radius:14px; max-width:78%; font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
-    .bubble.me { background:linear-gradient(90deg,#e7f6ff,#e9f6ff); margin-left:auto; }
-    .bubble.bot { background:linear-gradient(90deg,#fff7e6,#fff8e9); margin-right:auto; }
-    .chat-input { display:flex; gap:10px; align-items:center; }
-    .chat-input input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.05); background:var(--card); font-weight:700; }
-    .chat-actions button { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
-    .rephrase { background:var(--primary-2); color:#fff; }
-    /* ACCESSIBILITY / SETTINGS */
-    .controls { display:flex; gap:10px; align-items:center; }
-    .toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
-    .switch { width:42px; height:24px; border-radius:999px; background:#e6eefb; position:relative; padding:3px; transition:background var(--transition); }
-    .switch .dot { width:18px; height:18px; border-radius:50%; background:#fff; position:absolute; left:3px; top:3px; transition:left var(--transition); box-shadow:var(--shadow-soft); }
-    .switch.on { background:linear-gradient(90deg,var(--primary-2),var(--accent)); }
-    .switch.on .dot { left:21px; }
-    /* OVERLAYS / MODALS */
-    .overlay { position:fixed; inset:0; background:rgba(2,6,23,0.55); display:flex; align-items:center; justify-content:center; z-index:var(--ui-z); }
-    .modal { background:var(--card); border-radius:14px; padding:22px; width:min(880px,92vw); box-shadow:var(--shadow-strong); }
-    .modal h2 { margin:0 0 12px 0; font-size:1.3rem; }
-    .modal .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .modal .actions { display:flex; gap:12px; margin-top:12px; }
-    /* FOOTER SMALL PRINT */
-    .foot { text-align:center; color:var(--muted); margin-top:26px; font-size:0.9rem; }
-    /* RESPONSIVE */
-    @media (max-width:1100px){
-      .container { grid-template-columns:1fr; }
-      .sidebar { display:none; }
-      .main { padding:20px; }
-    }
-    /* UTILITY */
-    .hidden { display:none !important; }
-    .muted { color:var(--muted); }
-    .mt { margin-top:14px; }
-    .mb { margin-bottom:14px; }
-    .frow { display:flex; gap:12px; align-items:center; }
-    .pill { padding:6px 10px; border-radius:999px; background:rgba(0,0,0,0.03); font-weight:700; cursor:pointer; border:none; }
-    /* simple accessible focus */
-    button:focus, input:focus, select:focus { outline:3px solid rgba(28,157,234,0.18); outline-offset:2px; }
-    /* KEYBOARD HINT */
-    .kbd { border:1px solid rgba(0,0,0,0.06); padding:4px 8px; border-radius:6px; font-weight:700; background:rgba(0,0,0,0.02); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nesti - Organisation familiale</title>
+    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #fdeef9 50%, #e6f0ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nesti-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
+        }
+        
+        .meditation-active {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            border-radius: 18px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
+            color: white;
+            margin-left: auto;
+        }
+        
+        .bot-message {
+            background: #f8fafc;
+            color: #334155;
+            margin-right: auto;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .event-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #06b6d4;
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+        }
+        
+        .calendar-day {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .calendar-day.today {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .task-priority-high {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .task-priority-medium {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .task-priority-low {
+            border-left: 4px solid #10b981;
+        }
+        
+        /* Animation pour les messages du bot */
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #06b6d4;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
-<body>
-  <div id="root" class="app" role="application" aria-label="Nesti Platform"></div>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="container max-w-7xl mx-auto">
+        <div class="glass-card rounded-3xl shadow-2xl overflow-hidden">
+            <!-- Application Container -->
+            <div id="app" class="flex flex-col md:flex-row min-h-screen">
+                <!-- Sidebar Navigation -->
+                <div class="w-full md:w-80 bg-white/50 p-6 md:p-8 flex flex-col">
+                    <div class="flex items-center space-x-3 mb-8 md:mb-12">
+                        <div class="w-12 h-12 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg">
+                            <div class="w-8 h-6 bg-white/90 rounded-lg flex items-center justify-center">
+                                <div class="w-4 h-3 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
+                            </div>
+                        </div>
+                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Nesti</h1>
+                    </div>
 
-  <!-- Template for initial UI (injected by JS) -->
-  <template id="app-template">
-    <aside class="sidebar" role="navigation" aria-label="Menu principal">
-      <div class="logo" id="sidebar-logo" tabindex="0">
-        <!-- svg brand -->
-        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#1c9dea"/>
-              <stop offset="1" stop-color="#ffd166"/>
-            </linearGradient>
-          </defs>
-          <rect width="64" height="64" rx="12" fill="url(#g1)"></rect>
-          <g transform="translate(8,12)">
-            <circle cx="16" cy="14" r="14" fill="#fff"/>
-            <ellipse cx="17" cy="19" rx="9" ry="6" fill="#ffd166"/>
-            <circle cx="24" cy="14" r="1.8" fill="#222b45"/>
-          </g>
-        </svg>
-        <div class="brand">Nesti</div>
-      </div>
+                    <nav class="space-y-2 mb-8">
+                        <button data-view="dashboard" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 shadow-sm">
+                            <i class="fas fa-home w-5 h-5"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button data-view="chat" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
+                            <i class="fas fa-comment-dots w-5 h-5"></i>
+                            <span>Chat</span>
+                        </button>
+                        <button data-view="calendar" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
+                            <i class="fas fa-calendar w-5 h-5"></i>
+                            <span>Calendrier</span>
+                        </button>
+                        <button data-view="activities" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
+                            <i class="fas fa-star w-5 h-5"></i>
+                            <span>Activités</span>
+                        </button>
+                        <button data-view="settings" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
+                            <i class="fas fa-cog w-5 h-5"></i>
+                            <span>Paramètres</span>
+                        </button>
+                    </nav>
 
-      <nav class="nav" id="nav" aria-label="Navigation principale">
-        <!-- JS injects nav buttons -->
-      </nav>
-
-      <div class="spacer" aria-hidden="true"></div>
-
-      <div class="profile" id="profile">
-        <div class="avatar" id="profile-avatar" role="img" aria-label="Photo du profil"></div>
-        <div class="meta">
-          <div id="profile-name" style="font-weight:800;">Nom</div>
-          <div class="role" id="profile-role">Role</div>
-        </div>
-        <button class="logout" id="logout" title="Se déconnecter" aria-label="Se déconnecter">→</button>
-      </div>
-    </aside>
-
-    <main class="main" id="main">
-      <div class="container" id="container">
-        <header class="header" role="banner">
-          <div class="header-left">
-            <div class="title" id="title">Bonjour, utilisateur</div>
-            <div class="subtitle">Organisation et bien-être pour toute la famille</div>
-          </div>
-          <div class="header-right">
-            <div class="search" role="search" aria-label="Recherche">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#1c9dea" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11.5" cy="11.5" r="5.5" stroke="#1c9dea" stroke-width="1.6"></circle></svg>
-              <input id="search-input" placeholder="Rechercher événement, tâche, message..." aria-label="Rechercher">
-            </div>
-            <div class="controls">
-              <div class="toggle" title="Mode sombre">
-                <div id="dark-switch" class="switch" role="button" tabindex="0" aria-pressed="false" aria-label="Basculer mode sombre">
-                  <div class="dot"></div>
+                    <!-- User Profile -->
+                    <div class="bg-white/60 rounded-2xl p-4 mt-auto">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-10 h-10 nesti-gradient rounded-xl flex items-center justify-center text-white font-bold">
+                                M
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-800 text-sm">Marie</p>
+                                <p class="text-gray-600 text-xs">Famille Martin</p>
+                            </div>
+                        </div>
+                        <button id="logout-btn" class="w-full flex items-center justify-center space-x-2 text-gray-600 hover:text-red-600 text-sm py-2">
+                            <i class="fas fa-sign-out-alt w-4 h-4"></i>
+                            <span>Déconnexion</span>
+                        </button>
+                    </div>
                 </div>
-              </div>
-              <button class="cta" id="new-event-cta" aria-haspopup="dialog">+ Nouveau</button>
-            </div>
-          </div>
-        </header>
 
-        <!-- Left column: calendar + tasks compact -->
-        <section class="card" id="left-col" aria-labelledby="left-heading">
-          <h3 id="left-heading">Emploi du temps</h3>
-          <div class="calendar">
-            <div class="mini-cal" id="mini-cal" aria-hidden="false"></div>
-            <div class="events" id="today-events" aria-live="polite"></div>
-          </div>
+                <!-- Main Content -->
+                <div class="flex-1 p-6 md:p-8">
+                    <!-- Header -->
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+                        <div class="mb-4 md:mb-0">
+                            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Bonjour, Marie</h2>
+                            <p class="text-gray-600 text-lg">Organisation et bien-être pour toute la famille</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <button class="relative p-3 bg-white/60 rounded-2xl shadow-sm hover:shadow-md">
+                                <i class="fas fa-bell text-gray-600"></i>
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</div>
+                            </button>
+                            
+                            <div class="w-12 h-12 md:w-16 md:h-16 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center text-teal-600 font-bold text-lg">M</div>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="mt">
-            <h3>Liste de tâches</h3>
-            <div class="tasks-list" id="task-list"></div>
-            <div class="mt frow">
-              <input id="new-task-input" placeholder="Nouvelle tâche..." aria-label="Nouvelle tâche" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);">
-              <button id="add-task-btn" class="pill" aria-label="Ajouter une tâche">Ajouter</button>
-            </div>
-          </div>
-        </section>
+                    <!-- Dashboard View -->
+                    <div id="dashboard-view" class="view-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                            <!-- Column 1: Schedule -->
+                            <div class="space-y-6">
+                                <div class="glass-card p-6">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <h3 class="text-xl font-bold text-gray-800">Emploi du temps</h3>
+                                        <div class="flex space-x-2">
+                                            <button id="add-event-btn" class="p-2 bg-teal-100 text-teal-600 rounded-xl hover:bg-teal-200">
+                                                <i class="fas fa-plus w-4 h-4"></i>
+                                            </button>
+                                            <i class="fas fa-chevron-right w-5 h-5 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Mini Calendar -->
+                                    <div class="mb-6">
+                                        <div class="grid grid-cols-7 gap-1 text-center text-sm font-medium text-gray-500 mb-2">
+                                            <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                                        </div>
+                                        <div class="grid grid-cols-7 gap-1" id="mini-calendar">
+                                            <!-- Calendar days will be generated here -->
+                                        </div>
+                                    </div>
 
-        <!-- Middle column: chat, AI summary -->
-        <section class="card" id="center-col" aria-labelledby="center-heading">
-          <h3 id="center-heading">Chat familial <span class="chip" id="chat-status">IA active</span></h3>
-          <div class="chat" id="chat">
-            <div class="chat-list" id="chat-list" role="log" aria-live="polite"></div>
-            <div class="chat-input">
-              <input id="chat-input" placeholder="Écrire un message..." aria-label="Écrire un message">
-              <div class="chat-actions" role="group" aria-label="Actions chat">
-                <button id="send-btn" class="pill">Envoyer</button>
-                <button id="rephrase-btn" class="rephrase" title="Proposer reformulations">Reformuler</button>
-                <button id="variants-btn" class="pill" title="Voir variantes">Variantes</button>
-                <button id="summarize-btn" class="pill" title="Résumé conversation">Résumer</button>
-              </div>
-            </div>
-          </div>
+                                    <!-- Today's Events -->
+                                    <div class="space-y-3" id="today-events">
+                                        <!-- Events will be populated here -->
+                                    </div>
+                                </div>
 
-          <div class="mt">
-            <h3>Résumé & Suggestions IA</h3>
-            <div id="ai-suggestions" class="muted">L'assistant peut reformuler, proposer activités inclusives et résumer les conversations.</div>
-            <div id="ai-variants" class="mt hidden"></div>
-          </div>
-        </section>
+                                <!-- Tasks Section -->
+                                <div class="glass-card p-6">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <h3 class="text-xl font-bold text-gray-800">Tâches</h3>
+                                        <button id="add-task-btn" class="p-2 bg-teal-100 text-teal-600 rounded-xl hover:bg-teal-200">
+                                            <i class="fas fa-plus w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="space-y-3" id="tasks-list">
+                                        <!-- Tasks will be populated here -->
+                                    </div>
+                                </div>
 
-        <!-- Right column: activities, well-being -->
-        <aside class="card" id="right-col" aria-labelledby="right-heading">
-          <h3 id="right-heading">Activités inclusives</h3>
-          <div id="activities" class="mt"></div>
+                                <!-- Inclusive Activities -->
+                                <div class="glass-card p-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Activités inclusives</h3>
+                                    
+                                    <div class="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl p-4 hover:shadow-lg cursor-pointer">
+                                        <div class="flex items-center space-x-3 mb-2">
+                                            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                                                <span class="text-white text-lg">🎨</span>
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="font-bold text-gray-800">Expo sur l'art-thérapie</h4>
+                                                <p class="text-sm text-gray-600 flex items-center">
+                                                    <i class="fas fa-map-marker-alt w-3 h-3 mr-1"></i>
+                                                    Musée de l'art moderne
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex space-x-2">
+                                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                                    Gratuit
+                                                </span>
+                                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                                    6+
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center space-x-1">
+                                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                                <span class="text-sm font-medium text-gray-700">4.8</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-          <div class="mt">
-            <h3>Votre bien-être</h3>
-            <div class="muted">Courtes activités, guides et rappels pour la famille</div>
-            <div class="mt">
-              <button id="start-meditation" class="pill">Démarrer méditation</button>
-            </div>
-          </div>
+                            <!-- Column 2: Family Chat -->
+                            <div class="glass-card p-6 flex flex-col">
+                                <h3 class="text-xl font-bold text-gray-800 mb-6">Chat familial</h3>
+                                
+                                <div class="flex-1 space-y-4 mb-6 overflow-y-auto max-h-96" id="chat-messages">
+                                    <!-- Messages will be populated here -->
+                                </div>
 
-          <div class="mt">
-            <h3>Paramètres rapides</h3>
-            <div class="frow mt">
-              <label for="easy-read" class="muted">Lecture facile</label>
-              <div style="margin-left:auto;" class="toggle"><div id="easy-switch" class="switch" role="button" tabindex="0" aria-pressed="false"><div class="dot"></div></div></div>
-            </div>
-            <div class="frow mt">
-              <label class="muted">Confidentialité</label>
-              <button id="privacy-btn" class="pill" style="margin-left:auto;">Voir</button>
-            </div>
-            <div class="frow mt">
-              <label class="muted">Importer JSON</label>
-              <input id="import-file" type="file" accept=".json" style="margin-left:auto;">
-            </div>
-          </div>
-        </aside>
+                                <!-- Message Input -->
+                                <div class="relative">
+                                    <input type="text" id="message-input" placeholder="Écrire un message..." class="w-full bg-white/50 border border-white/30 rounded-2xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                    <button id="send-message-btn" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 nesti-gradient rounded-xl flex items-center justify-center text-white shadow-lg hover:shadow-xl">
+                                        <i class="fas fa-paper-plane w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-        <!-- Footer / legal -->
-        <div class="card" style="grid-column:1/-1;margin-top:18px;">
-          <div class="frow" style="justify-content:space-between; align-items:center;">
-            <div class="muted">© Nesti — Prototype. Données techniques et d'intégration disponibles pour threading backend.</div>
-            <div class="frow">
-              <button id="export-data" class="pill">Exporter données</button>
-              <button id="export-csv" class="pill">Export tasks CSV</button>
-              <button id="delete-account" class="pill" style="background:var(--danger); color:#fff;">Demander suppression</button>
+                            <!-- Column 3: Wellness -->
+                            <div class="glass-card p-6 relative overflow-hidden">
+                                <h3 class="text-xl font-bold text-gray-800 mb-6">Votre bien-être</h3>
+                                
+                                <div class="space-y-6">
+                                    <div class="text-center">
+                                        <p class="text-gray-700 mb-4 font-medium" id="meditation-status">N'oubliez pas votre pause méditation</p>
+                                        
+                                        <div id="meditation-timer" class="text-3xl font-bold text-teal-600 mb-4 hidden">0:00</div>
+                                        
+                                        <button id="meditation-toggle" class="font-bold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2 mx-auto bg-gradient-to-r from-amber-400 to-orange-500 text-white">
+                                            <i class="fas fa-play w-4 h-4"></i>
+                                            <span>Démarrer</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Wellness Avatar -->
+                                    <div class="flex justify-center">
+                                        <div class="relative">
+                                            <div id="meditation-avatar" class="w-20 h-20 nesti-gradient rounded-3xl flex items-center justify-center shadow-xl">
+                                                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center">
+                                                    <div class="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Wellness Stats -->
+                                    <div class="grid grid-cols-2 gap-3 mt-6">
+                                        <div class="bg-white/40 rounded-xl p-3 text-center">
+                                            <div class="text-2xl font-bold text-teal-600">7</div>
+                                            <div class="text-xs text-gray-600">jours consécutifs</div>
+                                        </div>
+                                        <div class="bg-white/40 rounded-xl p-3 text-center">
+                                            <div class="text-2xl font-bold text-purple-600">142</div>
+                                            <div class="text-xs text-gray-600">min cette semaine</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Decorations -->
+                                <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-xl"></div>
+                                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-cyan-200/20 to-teal-200/20 rounded-full blur-xl"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other views (initially hidden) -->
+                    <div id="chat-view" class="view-content hidden">
+                        <!-- Chat view content -->
+                    </div>
+
+                    <div id="calendar-view" class="view-content hidden">
+                        <!-- Calendar view content -->
+                    </div>
+
+                    <div id="activities-view" class="view-content hidden">
+                        <!-- Activities view content -->
+                    </div>
+
+                    <div id="settings-view" class="view-content hidden">
+                        <!-- Settings view content -->
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
+    </div>
 
-      </div>
-    </main>
-  </template>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-8 w-full max-w-md shadow-2xl border border-white/20">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                    <div class="w-10 h-8 bg-white/90 rounded-lg flex items-center justify-center">
+                        <div class="w-6 h-4 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-2">Nesti</h1>
+                <p class="text-gray-600" id="auth-subtitle">Connectez-vous à votre espace familial</p>
+            </div>
 
-  <!-- MODAL ROOT -->
-  <div id="modal-root" aria-live="assertive" style="z-index:2000;position:fixed;inset:0;pointer-events:none;"></div>
-
-  <!-- NOTIFICATION BANNER -->
-  <div id="notif-banner" aria-hidden="true" style="position:fixed;right:20px;bottom:20px;z-index:2100;padding:12px 18px;border-radius:10px;background:var(--success);color:#fff;font-weight:800;display:none;box-shadow:var(--shadow-strong)"></div>
-
-  <script>
-  /* ==========================
-     EXTENDED PROFESSIONAL SINGLE-FILE APP
-     - Modular comments, many features
-     - No external deps 
-     - Local persistence + import/export + CSV
-     - IA heuristics: multi-variants rephrase, summarize, moderation
-     - Role-based UI and permission checks
-     - Keyboard shortcuts: N new event (n), T new task (t), M meditate (m), / focus search
-     - Test harness (basic)
-     ========================== */
-
-  /* --------------------------
-     Small helpers
-     -------------------------- */
-  const $ = s => document.querySelector(s);
-  const $all = s => Array.from(document.querySelectorAll(s));
-  const nowStr = () => new Date().toISOString();
-  const uid = (p='id') => `${p}_${Math.random().toString(36).slice(2,9)}`;
-  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-
-  /* --------------------------
-     Local storage wrapper
-     -------------------------- */
-  const Store = {
-    key: 'nesti_pro_extended_v2',
-    read(){
-      try {
-        const raw = localStorage.getItem(this.key);
-        if(!raw) return null;
-        return JSON.parse(raw);
-      } catch(e){ console.warn('Store.read', e); return null; }
-    },
-    write(data){
-      try { localStorage.setItem(this.key, JSON.stringify(data)); } catch(e){ console.warn('Store.write', e); }
-    },
-    export(){
-      const data = this.read() || {};
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'nesti-export-'+(new Date()).toISOString().slice(0,10)+'.json';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    },
-    importFile(file, cb){
-      const reader = new FileReader();
-      reader.onload = (e)=> {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          cb(null, parsed);
-        } catch(err) { cb(err); }
-      };
-      reader.readAsText(file);
-    },
-    exportCSVTasks(){
-      const data = this.read();
-      const tasks = (data && data.tasks) ? data.tasks : [];
-      const header = ['id','title','status','assignee','created_at'];
-      const csv = [header.join(',')].concat(tasks.map(t => [t.id, `"${t.title.replace(/"/g,'""')}"`, t.status, t.assignee, t.created_at].join(','))).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'nesti-tasks-'+(new Date()).toISOString().slice(0,10)+'.csv';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    },
-    clear(){ localStorage.removeItem(this.key); }
-  };
-
-  /* --------------------------
-     Seed: initial demo data
-     -------------------------- */
-  const SEED = {
-    families: [{
-      id: 'fam_1', 
-      name: 'Famille Demo',
-      members: [
-        {id:'u_1', name:'Emma', role:'parent1', email:'emma@mail.com', avatar:''},
-        {id:'u_2', name:'Louis', role:'parent2', email:'louis@mail.com', avatar:''},
-        {id:'u_3', name:'Alice', role:'enfant', email:'alice@mail.com', avatar:''},
-        {id:'u_4', name:'Mamie', role:'invite', email:'mamie@mail.com', avatar:''}
-      ]
-    }],
-    events: [
-      { id: 'ev_1', title:'Heure du goûter', time:'15:00', day:10, note:'Gâteau au chocolat', creator:'u_1', created_at:nowStr(), color:'#ffd166' },
-      { id: 'ev_2', title:'Cours de piano', time:'17:00', day:10, note:'Salle 2', creator:'u_2', created_at:nowStr(), color:'#1c9dea' },
-      { id: 'ev_3', title:'Jeux de famille', time:'20:00', day:10, note:'Choisir le jeu', creator:'u_3', created_at:nowStr(), color:'#29c48a' }
-    ],
-    tasks: [
-      { id:'t_1', title:'Acheter du pain', status:'À faire', assignee:'u_1', created_at:nowStr() },
-      { id:'t_2', title:'Préparer le goûter', status:'En cours', assignee:'u_2', created_at:nowStr() },
-      { id:'t_3', title:'Ranger la chambre', status:'Fait', assignee:'u_3', created_at:nowStr() }
-    ],
-    chat:[
-      {id:'m_1', from:'u_1', text:'Salut à tous! Quelle activité ce soir ?', created_at:nowStr()},
-      {id:'m_2', from:'bot', text:"Bonjour! Je peux vous suggérer la dernière expo sur l'art-thérapie à 18h.", created_at:nowStr()}
-    ],
-    activities: [
-      {id:'a_1', title:'Expo sur l'art-thérapie', place:'Musée de l'art moderne', tags:['inclusion','culture'], color:'#ffd166'},
-      {id:'a_2', title:'Atelier peinture', place:'Centre culturel', tags:['créatif'], color:'#1c9dea'},
-      {id:'a_3', title:'Yoga famille', place:'Maison de quartier', tags:['bien-être'], color:'#29c48a'}  
-    ],
-    settings: {
-      easyRead:false,
-      dark:false,
-      consent:{ location:false, analytics:false }
-    },
-    meta:{ created_at: nowStr() }
-  };
-
-  /* --------------------------
-     App core
-     -------------------------- */
-  const App = {
-    state: {},
-    init(){
-      // initialize store or seed
-      const data = Store.read();
-      if(data){
-        this.state = data;
-      } else {
-        this.state = JSON.parse(JSON.stringify(SEED)); // deep copy
-        Store.write(this.state);
-      }
-      // attach template
-      const root = document.getElementById('root');
-      root.innerHTML = document.getElementById('app-template').innerHTML;
-      // expose sections
-      this.cache = {
-        nav: $('#nav'),
-        profileName: $('#profile-name'),
-        profileRole: $('#profile-role'),
-        profileAvatar: $('#profile-avatar'),
-        title: $('#title'),
-        miniCal: $('#mini-cal'),
-        todayEvents: $('#today-events'),
-        taskList: $('#task-list'),
-        chatList: $('#chat-list'),
-        chatInput: $('#chat-input'),
-        newTaskInput: $('#new-task-input'),
-        addTaskBtn: $('#add-task-btn'),
-        activitiesEl: $('#activities'),
-        modalRoot: $('#modal-root'),
-        notif: $('#notif-banner')
-      };
-      // set demo user (first)
-      this.currentUser = this.state.families[0].members[0];
-      // render UI
-      this.bind();
-      this.renderAll();
-      this.attachKeyboardShortcuts();
-      this.runSelfTests(); // basic automated sanity tests
-    },
-    persist(){ Store.write(this.state); },
-    bind(){
-      const D = this;
-      // render nav  
-      this.renderNav();
-      // profile
-      this.cache.profileName.textContent = this.currentUser.name;
-      this.cache.profileRole.textContent = this.roleLabel(this.currentUser.role);
-      this.cache.profileAvatar.style.backgroundImage = `url('https://api.dicebear.com/6.x/identicon/svg?seed=${encodeURIComponent(this.currentUser.name)}')`;
-      $('#logout').onclick = ()=>{ this.logout(); };
-      // controls
-      $('#dark-switch').onclick = ()=>{ this.toggleDark(); };
-      $('#easy-switch').onclick = ()=>{ this.toggleEasy(); };
-      $('#new-event-cta').onclick = ()=>{ this.openEventModal(); };
-      $('#add-task-btn').onclick = ()=>{ this.addTaskFromInput(); };
-      $('#search-input').oninput = (e)=> this.search(e.target.value);
-      $('#export-data').onclick = ()=> { Store.export(); showToast('Export JSON lancé'); };
-      $('#export-csv').onclick = ()=> { Store.exportCSVTasks(); showToast('Export CSV t
-                                                                          
-      /* --- Composants Dashboard --- */
-      function renderDashboard() {
-        return h('div', {className: 'dashboard animate-in'}, [
-          h('header', {className: 'dashboard-header'}, [
-            h('div', {className: 'dashboard-welcome'}, [
-              h('h1', {}, `Bonjour, ${state.user.name}`),
-              h('p', {}, 'Organisation et bien-être pour toute la famille')
-            ]),
-            renderQuickActions()
-          ]),
-          h('div', {className: 'dashboard-grid'}, [
-            renderCalendarWidget(),
-            renderChatWidget(),
-            renderWellbeingWidget()
-          ]),
-          renderActivityFeed()
-        ]);
-      }
-      
-      function renderCalendarWidget() {
-        return h('section', {className: 'card calendar-widget'}, [
-          h('div', {className: 'card-header'}, [
-            h('h2', {}, 'Calendrier'),
-            h('button', {
-              className: 'button button-primary button-sm',
-              onClick: () => showModal('newEvent')
-            }, '+ Événement')
-          ]),
-          h('div', {className: 'calendar-grid'}, renderCalendarGrid()),
-          h('div', {className: 'calendar-events'}, 
-            state.events
-              .filter(evt => isToday(evt.date))
-              .map(evt => renderEventCard(evt))
-          )
-        ]);
-      }
-      
-      function renderChatWidget() {
-        return h('section', {className: 'card chat-widget'}, [
-          h('div', {className: 'card-header'}, [
-            h('h2', {}, 'Chat Familial'),
-            h('button', {
-              className: 'button button-secondary button-sm',
-              onClick: () => state.aiHelperActive = !state.aiHelperActive,
-              'aria-pressed': state.aiHelperActive
-            }, '🤖 IA Helper')
-          ]),
-          h('div', {className: 'chat-messages', id: 'chat-messages'},
-            state.messages.map(msg => renderChatMessage(msg))
-          ),
-          h('form', {
-            className: 'chat-input-form',
-            onSubmit: handleChatSubmit
-          }, [
-            h('input', {
-              type: 'text',
-              className: 'input chat-input',
-              placeholder: 'Votre message...',
-              id: 'chat-input'
-            }),
-            h('button', {
-              type: 'submit',
-              className: 'button button-primary'
-            }, 'Envoyer')
-          ])
-        ]);
-      }
-      
-      function renderWellbeingWidget() {
-        return h('section', {className: 'card wellbeing-widget'}, [
-          h('h2', {}, 'Bien-être'),
-          h('div', {className: 'wellbeing-stats'}, [
-            renderWellbeingStat('Méditation', '15min', 'var(--brand-primary)'),
-            renderWellbeingStat('Activités', '3/5', 'var(--brand-accent)'),
-            renderWellbeingStat('Humeur', '😊', 'var(--brand-success)')
-          ]),
-          h('button', {
-            className: 'button button-primary button-lg wellbeing-action',
-            onClick: startMeditation
-          }, [
-            h('span', {}, '▶️ Commencer la méditation'),
-            h('span', {className: 'button-desc'}, '15 minutes guidées')
-          ])
-        ]);
-      }
-      
-      /* --- Système IA --- */
-      const aiHelper = {
-        analyze: (message) => {
-          // Analyse basique des sentiments
-          const positiveWords = ['merci', 'super', 'génial', 'content', 'heureux'];
-          const negativeWords = ['pas', 'non', 'problème', 'difficile', 'impossible'];
-          
-          const words = message.toLowerCase().split(' ');
-          let sentiment = 'neutral';
-          
-          if (words.some(w => positiveWords.includes(w))) sentiment = 'positive';
-          if (words.some(w => negativeWords.includes(w))) sentiment = 'negative';
-          
-          return {
-            sentiment,
-            needsReformulation: sentiment === 'negative',
-            suggestedActivities: findRelevantActivities(message)
-          };
-        },
-      
-        reformulate: (message) => {
-          let reformulated = message;
-          
-          // Remplacements positifs
-          const replacements = {
-            'impossible': 'challenging',
-            'problème': 'situation',
-            'difficile': 'demandant un peu plus d\'effort',
-            'pas content': 'j\'aimerais améliorer',
-            'ne peux pas': 'pourrais avec de l\'aide'
-          };
-      
-          Object.entries(replacements).forEach(([neg, pos]) => {
-            reformulated = reformulated.replace(new RegExp(neg, 'gi'), pos);
-          });
-      
-          // Ajouter une touche positive
-          if (!reformulated.includes('merci')) {
-            reformulated = `Je comprends, ${reformulated}. Voyons comment nous pouvons améliorer cela ensemble.`;
-          }
-      
-          return reformulated;
-        },
-      
-        generateResponse: (message) => {
-          const analysis = aiHelper.analyze(message);
-          
-          if (analysis.needsReformulation) {
-            return {
-              text: aiHelper.reformulate(message),
-              type: 'suggestion',
-              activities: analysis.suggestedActivities
-            };
-          }
-      
-          return {
-            text: 'Je suis là pour vous aider ! 😊',
-            type: 'confirmation'
-          };
-        }
-      };
-      
-      /* --- Gestionnaire d'Événements --- */
-      const eventManager = {
-        add: (event) => {
-          const newEvent = {
-            id: Date.now(),
-            createdAt: new Date(),
-            ...event
-          };
-          
-          state.events.push(newEvent);
-          notify(`Événement "${event.title}" ajouté`);
-          saveState();
-          return newEvent;
-        },
-      
-        update: (id, updates) => {
-          const index = state.events.findIndex(e => e.id === id);
-          if (index > -1) {
-            state.events[index] = {...state.events[index], ...updates};
-            notify('Événement mis à jour');
-            saveState();
-          }
-        },
-      
-        delete: (id) => {
-          state.events = state.events.filter(e => e.id !== id);
-          notify('Événement supprimé');
-          saveState();
-        },
-      
-        getUpcoming: () => {
-          const now = new Date();
-          return state.events
-            .filter(e => new Date(e.date) >= now)
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
-        }
-      };
-      
-      /* --- Gestionnaire de Tâches --- */
-      const taskManager = {
-        add: (task) => {
-          const newTask = {
-            id: Date.now(),
-            status: 'todo',
-            createdAt: new Date(),
-            ...task
-          };
-          
-          state.tasks.push(newTask);
-          notify(`Tâche "${task.title}" ajoutée`);
-          saveState();
-          return newTask;
-        },
-      
-        update: (id, updates) => {
-          const index = state.tasks.findIndex(t => t.id === id);
-          if (index > -1) {
-            state.tasks[index] = {...state.tasks[index], ...updates};
-            saveState();
-          }
-        },
-      
-        delete: (id) => {
-          state.tasks = state.tasks.filter(t => t.id !== id);
-          notify('Tâche supprimée');
-          saveState();
-        },
-      
-        toggleStatus: (id) => {
-          const task = state.tasks.find(t => t.id === id);
-          if (task) {
-            task.status = task.status === 'done' ? 'todo' : 'done';
-            saveState();
-          }
-        }
-      };
-      
-      /* --- Gestionnaire de Méditation --- */
-      const meditationManager = {
-        currentSession: null,
-        audio: null,
-      
-        start: async (duration = 15) => {
-          if (meditationManager.currentSession) return;
-      
-          const session = {
-            startTime: new Date(),
-            duration: duration * 60, // en secondes
-            remainingTime: duration * 60,
-            paused: false
-          };
-      
-          meditationManager.currentSession = session;
-          meditationManager.audio = new Audio('/meditation-background.mp3');
-          meditationManager.audio.loop = true;
-      
-          try {
-            await meditationManager.audio.play();
-            notify('Session de méditation commencée');
-            
-            session.timer = setInterval(() => {
-              if (!session.paused) {
-                session.remainingTime--;
-                updateMeditationUI(session);
+            <form id="auth-form" class="space-y-4">
+                <div id="name-fields" class="hidden space-y-4">
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="name-input" placeholder="Votre prénom" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="family-name-input" placeholder="Nom de famille" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                    </div>
+                </div>
                 
-                if (session.remainingTime <= 0) {
-                  meditationManager.end();
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" id="email-input" placeholder="Email" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                </div>
+                
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" id="password-input" placeholder="Mot de passe" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-eye w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="w-full nesti-gradient text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:transform-none">
+                    <span id="auth-button-text">Se connecter</span>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <button id="switch-auth-mode" class="text-teal-600 hover:text-teal-700 font-medium">
+                    Pas encore d'espace familial ? Créer un compte
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="event-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 w-full max-w-lg shadow-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Nouvel événement</h3>
+                <button id="close-event-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="event-form" class="space-y-4">
+                <input type="text" id="event-title" placeholder="Titre de l'événement" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                <textarea id="event-description" placeholder="Description" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 h-20 resize-none"></textarea>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="time" id="event-time" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    <input type="text" id="event-location" placeholder="Lieu" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                </div>
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="cancel-event" class="flex-1 bg-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-300">
+                        Annuler
+                    </button>
+                    <button type="submit" class="flex-1 nesti-gradient text-white font-medium py-3 rounded-xl hover:from-teal-600 hover:to-cyan-700">
+                        Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 w-full max-w-lg shadow-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Nouvelle tâche</h3>
+                <button id="close-task-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="task-form" class="space-y-4">
+                <input type="text" id="task-title" placeholder="Titre de la tâche" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <select id="task-assignee" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                        <option value="">Assigner à...</option>
+                        <option value="Maman">Maman</option>
+                        <option value="Papa">Papa</option>
+                        <option value="Emma">Emma</option>
+                    </select>
+                    <select id="task-priority" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                        <option value="low">Faible</option>
+                        <option value="medium">Moyenne</option>
+                        <option value="high">Haute</option>
+                    </select>
+                </div>
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="cancel-task" class="flex-1 bg-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-300">
+                        Annuler
+                    </button>
+                    <button type="submit" class="flex-1 nesti-gradient text-white font-medium py-3 rounded-xl hover:from-teal-600 hover:to-cyan-700">
+                        Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        const state = {
+            user: null,
+            currentView: 'dashboard',
+            isAuthenticated: false,
+            currentTime: new Date(),
+            showAuthModal: true,
+            authMode: 'login',
+            showPassword: false,
+            events: [],
+            tasks: [],
+            messages: [],
+            activities: [],
+            notifications: [],
+            showEventModal: false,
+            showTaskModal: false,
+            newMessage: '',
+            selectedDate: new Date(),
+            meditationActive: false,
+            meditationTimer: 0,
+            meditationInterval: null
+        };
+
+        // DOM Elements
+        const elements = {
+            app: document.getElementById('app'),
+            authModal: document.getElementById('auth-modal'),
+            authForm: document.getElementById('auth-form'),
+            authSubtitle: document.getElementById('auth-subtitle'),
+            authButtonText: document.getElementById('auth-button-text'),
+            nameFields: document.getElementById('name-fields'),
+            nameInput: document.getElementById('name-input'),
+            familyNameInput: document.getElementById('family-name-input'),
+            emailInput: document.getElementById('email-input'),
+            passwordInput: document.getElementById('password-input'),
+            togglePassword: document.getElementById('toggle-password'),
+            switchAuthMode: document.getElementById('switch-auth-mode'),
+            logoutBtn: document.getElementById('logout-btn'),
+            navBtns: document.querySelectorAll('.nav-btn'),
+            views: document.querySelectorAll('.view-content'),
+            eventModal: document.getElementById('event-modal'),
+            eventForm: document.getElementById('event-form'),
+            closeEventModal: document.getElementById('close-event-modal'),
+            addEventBtn: document.getElementById('add-event-btn'),
+            cancelEvent: document.getElementById('cancel-event'),
+            taskModal: document.getElementById('task-modal'),
+            taskForm: document.getElementById('task-form'),
+            closeTaskModal: document.getElementById('close-task-modal'),
+            addTaskBtn: document.getElementById('add-task-btn'),
+            cancelTask: document.getElementById('cancel-task'),
+            messageInput: document.getElementById('message-input'),
+            sendMessageBtn: document.getElementById('send-message-btn'),
+            chatMessages: document.getElementById('chat-messages'),
+            meditationToggle: document.getElementById('meditation-toggle'),
+            meditationStatus: document.getElementById('meditation-status'),
+            meditationTimer: document.getElementById('meditation-timer'),
+            meditationAvatar: document.getElementById('meditation-avatar'),
+            miniCalendar: document.getElementById('mini-calendar'),
+            todayEvents: document.getElementById('today-events'),
+            tasksList: document.getElementById('tasks-list')
+        };
+
+        // Initialize the application
+        function init() {
+            // Check if user is authenticated
+            const savedUser = localStorage.getItem('nesti_user');
+            if (savedUser) {
+                state.user = JSON.parse(savedUser);
+                state.isAuthenticated = true;
+                state.showAuthModal = false;
+                loadUserData();
+            } else {
+                state.showAuthModal = true;
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Update UI based on state
+            updateUI();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Auth modal
+            elements.switchAuthMode.addEventListener('click', toggleAuthMode);
+            elements.togglePassword.addEventListener('click', togglePasswordVisibility);
+            elements.authForm.addEventListener('submit', handleAuth);
+            elements.logoutBtn.addEventListener('click', logout);
+
+            // Navigation
+            elements.navBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const view = e.currentTarget.getAttribute('data-view');
+                    switchView(view);
+                });
+            });
+
+            // Event modal
+            elements.addEventBtn.addEventListener('click', () => {
+                state.showEventModal = true;
+                updateUI();
+            });
+            elements.closeEventModal.addEventListener('click', closeEventModal);
+            elements.cancelEvent.addEventListener('click', closeEventModal);
+            elements.eventForm.addEventListener('submit', addEvent);
+
+            // Task modal
+            elements.addTaskBtn.addEventListener('click', () => {
+                state.showTaskModal = true;
+                updateUI();
+            });
+            elements.closeTaskModal.addEventListener('click', closeTaskModal);
+            elements.cancelTask.addEventListener('click', closeTaskModal);
+            elements.taskForm.addEventListener('submit', addTask);
+
+            // Chat
+            elements.sendMessageBtn.addEventListener('click', sendMessage);
+            elements.messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // Meditation
+            elements.meditationToggle.addEventListener('click', toggleMeditation);
+        }
+
+        // Toggle between login and register modes
+        function toggleAuthMode() {
+            state.authMode = state.authMode === 'login' ? 'register' : 'login';
+            updateUI();
+        }
+
+        // Toggle password visibility
+        function togglePasswordVisibility() {
+            state.showPassword = !state.showPassword;
+            elements.passwordInput.type = state.showPassword ? 'text' : 'password';
+            elements.togglePassword.innerHTML = state.showPassword ? 
+                '<i class="fas fa-eye-slash w-5 h-5"></i>' : 
+                '<i class="fas fa-eye w-5 h-5"></i>';
+        }
+
+        // Handle authentication
+        function handleAuth(e) {
+            e.preventDefault();
+            
+            if (state.authMode === 'login') {
+                // Simple validation for demo
+                if (elements.emailInput.value && elements.passwordInput.value) {
+                    state.user = {
+                        id: '1',
+                        name: elements.emailInput.value.split('@')[0],
+                        email: elements.emailInput.value,
+                        familyName: 'Famille Martin',
+                        avatar: 'M'
+                    };
+                    state.isAuthenticated = true;
+                    state.showAuthModal = false;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('nesti_user', JSON.stringify(state.user));
+                    
+                    loadUserData();
+                    updateUI();
+                } else {
+                    alert('Veuillez remplir tous les champs');
                 }
-              }
-            }, 1000);
-            
-          } catch (error) {
-            notify('Erreur audio: cliquez pour commencer', 'error');
-          }
-        },
-      
-        pause: () => {
-          if (!meditationManager.currentSession) return;
-          
-          meditationManager.currentSession.paused = true;
-          meditationManager.audio?.pause();
-          notify('Méditation en pause');
-        },
-      
-        resume: () => {
-          if (!meditationManager.currentSession) return;
-          
-          meditationManager.currentSession.paused = false;
-          meditationManager.audio?.play();
-          notify('Méditation reprise');
-        },
-      
-        end: () => {
-          if (!meditationManager.currentSession) return;
-          
-          clearInterval(meditationManager.currentSession.timer);
-          meditationManager.audio?.pause();
-          meditationManager.audio = null;
-          
-          const duration = (new Date() - meditationManager.currentSession.startTime) / 1000;
-          state.stats.meditationTime += Math.round(duration / 60);
-          
-          meditationManager.currentSession = null;
-          saveState();
-          notify('Session de méditation terminée');
-        }
-      };
-      
-      /* --- Gestionnaire de Thème --- */
-      const themeManager = {
-        init() {
-          // Détecter la préférence système
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          this.setTheme(state.theme || (prefersDark ? 'dark' : 'light'));
-          
-          // Écouter les changements de préférence système
-          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!state.theme) { // Si pas de préférence utilisateur
-              this.setTheme(e.matches ? 'dark' : 'light');
+            } else {
+                // Registration
+                if (elements.nameInput.value && elements.familyNameInput.value && 
+                    elements.emailInput.value && elements.passwordInput.value) {
+                    state.user = {
+                        id: '1',
+                        name: elements.nameInput.value,
+                        email: elements.emailInput.value,
+                        familyName: elements.familyNameInput.value,
+                        avatar: elements.nameInput.value.charAt(0).toUpperCase()
+                    };
+                    state.isAuthenticated = true;
+                    state.showAuthModal = false;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('nesti_user', JSON.stringify(state.user));
+                    
+                    loadUserData();
+                    updateUI();
+                } else {
+                    alert('Veuillez remplir tous les champs');
+                }
             }
-          });
-        },
-      
-        setTheme(theme) {
-          state.theme = theme;
-          document.documentElement.setAttribute('data-theme', theme);
-          saveState();
-        },
-      
-        toggle() {
-          this.setTheme(state.theme === 'dark' ? 'light' : 'dark');
         }
-      };
-      
-      /* --- Gestionnaire de Stats --- */
-      const statsManager = {
-        init() {
-          if (!state.stats) {
-            state.stats = {
-              meditationTime: 0,
-              tasksCompleted: 0,
-              eventsAttended: 0,
-              wellbeingScore: 0
+
+        // Logout user
+        function logout() {
+            state.user = null;
+            state.isAuthenticated = false;
+            state.showAuthModal = true;
+            localStorage.removeItem('nesti_user');
+            updateUI();
+        }
+
+        // Switch between views
+        function switchView(view) {
+            state.currentView = view;
+            updateUI();
+        }
+
+        // Close event modal
+        function closeEventModal() {
+            state.showEventModal = false;
+            updateUI();
+        }
+
+        // Close task modal
+        function closeTaskModal() {
+            state.showTaskModal = false;
+            updateUI();
+        }
+
+        // Add new event
+        function addEvent(e) {
+            e.preventDefault();
+            const newEvent = {
+                id: Date.now().toString(),
+                title: document.getElementById('event-title').value,
+                description: document.getElementById('event-description').value,
+                time: document.getElementById('event-time').value,
+                location: document.getElementById('event-location').value,
+                date: state.selectedDate,
+                color: 'bg-purple-100',
+                textColor: 'text-purple-800',
+                icon: '📅'
             };
-          }
-        },
-      
-        update(type, value) {
-          switch(type) {
-            case 'meditation':
-              state.stats.meditationTime += value;
-              break;
-            case 'task':
-              state.stats.tasksCompleted += value;
-              break;
-            case 'event':
-              state.stats.eventsAttended += value;
-              break;
-            case 'wellbeing':
-              // Moyenne mobile du score de bien-être
-              state.stats.wellbeingScore = (state.stats.wellbeingScore * 0.7) + (value * 0.3);
-              break;
-          }
-          saveState();
-        },
-      
-        getReport() {
-          return {
-            dailyStats: {
-              meditation: `${state.stats.meditationTime} min`,
-              tasks: `${state.stats.tasksCompleted} complétées`,
-              events: `${state.stats.eventsAttended} participations`
-            },
-            wellbeingTrend: Math.round(state.stats.wellbeingScore * 10) / 10
-          };
+            state.events.push(newEvent);
+            state.showEventModal = false;
+            updateUI();
         }
-      };
-      
-      /* --- Gestionnaire de Données --- */
-      const dataManager = {
-        async export() {
-          const data = {
-            events: state.events,
-            tasks: state.tasks,
-            stats: state.stats,
-            settings: {
-              theme: state.theme,
-              notifications: state.notifications
-            }
-          };
-      
-          const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-          const url = URL.createObjectURL(blob);
-          
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `nesti-export-${new Date().toISOString().split('T')[0]}.json`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        },
-      
-        async import(file) {
-          try {
-            const text = await file.text();
-            const data = JSON.parse(text);
+
+        // Add new task
+        function addTask(e) {
+            e.preventDefault();
+            const newTask = {
+                id: Date.now().toString(),
+                title: document.getElementById('task-title').value,
+                assignee: document.getElementById('task-assignee').value,
+                priority: document.getElementById('task-priority').value,
+                completed: false,
+                dueDate: state.selectedDate
+            };
+            state.tasks.push(newTask);
+            state.showTaskModal = false;
+            updateUI();
+        }
+
+        // Toggle task completion
+        function toggleTask(taskId) {
+            state.tasks = state.tasks.map(task => 
+                task.id === taskId ? { ...task, completed: !task.completed } : task
+            );
+            updateUI();
+        }
+
+        // Send message
+        function sendMessage() {
+            const messageText = elements.messageInput.value.trim();
+            if (!messageText) return;
+
+            const userMessage = {
+                id: Date.now().toString(),
+                sender: state.user.name,
+                content: messageText,
+                timestamp: new Date(),
+                type: 'user'
+            };
+
+            state.messages.push(userMessage);
+            elements.messageInput.value = '';
+            updateUI();
             
-            // Validation basique
-            if (!data.events || !data.tasks || !data.stats) {
-              throw new Error('Format de fichier invalide');
-            }
-      
-            // Mise à jour de l'état
-            state.events = data.events;
-            state.tasks = data.tasks;
-            state.stats = data.stats;
-            if (data.settings) {
-              state.theme = data.settings.theme;
-              state.notifications = data.settings.notifications;
-            }
-      
-            saveState();
-            notify('Données importées avec succès');
-            renderApp();
+            // Scroll to bottom of chat
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
             
-          } catch (error) {
-            notify('Erreur lors de l\'import: ' + error.message, 'error');
-          }
+            // Simulate bot response after a delay
+            setTimeout(() => {
+                const responses = [
+                    "C'est une excellente idée ! Voulez-vous que je vous aide à organiser cela ?",
+                    "J'ai trouvé quelques activités qui pourraient vous intéresser. Souhaitez-vous les voir ?",
+                    "Parfait ! Je vais ajouter cela à votre planning familial.",
+                    "Excellente question ! Laissez-moi vous proposer quelques suggestions personnalisées."
+                ];
+                
+                const botMessage = {
+                    id: (Date.now() + 1).toString(),
+                    sender: 'Nesti',
+                    content: responses[Math.floor(Math.random() * responses.length)],
+                    timestamp: new Date(),
+                    type: 'bot'
+                };
+                
+                state.messages.push(botMessage);
+                updateUI();
+                
+                // Scroll to bottom of chat again
+                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+            }, 1500);
         }
-      };
-      
-      /* --- Gestionnaire d'Accessibilité --- */
-      const a11yManager = {
-        init() {
-          // Gérer la navigation au clavier
-          document.addEventListener('keydown', this.handleKeyboardNav);
-          
-          // Observer les changements de contenu dynamique
-          this.setupLiveRegions();
-          
-          // Initialiser les préférences d'accessibilité
-          this.loadPreferences();
-        },
-      
-        handleKeyboardNav(e) {
-          // Raccourcis clavier
-          if (e.ctrlKey || e.metaKey) {
-            switch(e.key) {
-              case 'm':
-                e.preventDefault();
-                meditationManager.currentSession ? 
-                  meditationManager.pause() : 
-                  meditationManager.start();
-                break;
-              case 'b':
-                e.preventDefault();
-                themeManager.toggle();
-                break;
+
+        // Toggle meditation
+        function toggleMeditation() {
+            if (state.meditationActive) {
+                // Stop meditation
+                state.meditationActive = false;
+                clearInterval(state.meditationInterval);
+                elements.meditationAvatar.classList.remove('meditation-active');
+            } else {
+                // Start meditation
+                state.meditationActive = true;
+                state.meditationTimer = 0;
+                elements.meditationAvatar.classList.add('meditation-active');
+                
+                state.meditationInterval = setInterval(() => {
+                    state.meditationTimer++;
+                    updateUI();
+                }, 1000);
             }
-          }
-        },
-      
-        setupLiveRegions() {
-          const notifications = document.getElementById('notifications');
-          notifications.setAttribute('aria-live', 'polite');
-          notifications.setAttribute('role', 'status');
-        },
-      
-        loadPreferences() {
-          const prefs = localStorage.getItem('a11yPreferences');
-          if (prefs) {
-            const { fontSize, highContrast, reduceMotion } = JSON.parse(prefs);
-            this.applyPreferences({ fontSize, highContrast, reduceMotion });
-          }
-        },
-      
-        applyPreferences({ fontSize, highContrast, reduceMotion }) {
-          document.documentElement.style.fontSize = fontSize + 'px';
-          
-          if (highContrast) {
-            document.documentElement.classList.add('high-contrast');
-          }
-          
-          if (reduceMotion) {
-            document.documentElement.classList.add('reduce-motion');
-          }
-        },
-      
-        savePreferences(prefs) {
-          localStorage.setItem('a11yPreferences', JSON.stringify(prefs));
-          this.applyPreferences(prefs);
+            updateUI();
         }
-      };
-      
-      /* --- Initialisation --- */
-      function initApp() {
-        loadState();
-        themeManager.init();
-        statsManager.init();
-        a11yManager.init();
-        renderApp();
-      }
-      
-      function loadState() {
-        const saved = localStorage.getItem('nestiState');
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            Object.assign(state, parsed);
-          } catch (e) {
-            console.error('Erreur de chargement:', e);
-          }
+
+        // Format time for meditation timer
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
-      }
-      
-      function saveState() {
-        localStorage.setItem('nestiState', JSON.stringify(state));
-      }
-      
-      /* --- Démarrage de l'application --- */
-      initApp();
-  </script>
+
+        // Load user data (simulated)
+        function loadUserData() {
+            // Simulate loading events
+            state.events = [
+                {
+                    id: '1',
+                    title: 'Heure du goûter',
+                    time: '15:00',
+                    date: new Date(),
+                    color: 'bg-amber-100',
+                    icon: '🍪',
+                    textColor: 'text-amber-800',
+                    description: 'Pause gourmande en famille'
+                },
+                {
+                    id: '2',
+                    title: 'Cours de piano',
+                    time: '17:00',
+                    date: new Date(),
+                    color: 'bg-blue-100',
+                    icon: '🎹',
+                    textColor: 'text-blue-800',
+                    description: 'Leçon de piano d\'Emma'
+                },
+                {
+                    id: '3',
+                    title: 'Jeux de famille',
+                    time: '20:00',
+                    date: new Date(),
+                    color: 'bg-emerald-100',
+                    icon: '🎲',
+                    textColor: 'text-emerald-800',
+                    description: 'Soirée jeux de société'
+                }
+            ];
+
+            // Simulate loading tasks
+            state.tasks = [
+                {
+                    id: '1',
+                    title: 'Préparer le dîner',
+                    completed: false,
+                    assignee: 'Maman',
+                    dueDate: new Date(),
+                    priority: 'high'
+                },
+                {
+                    id: '2',
+                    title: 'Faire les devoirs',
+                    completed: true,
+                    assignee: 'Emma',
+                    dueDate: new Date(),
+                    priority: 'medium'
+                },
+                {
+                    id: '3',
+                    title: 'Acheter cadeau anniversaire',
+                    completed: false,
+                    assignee: 'Papa',
+                    dueDate: new Date(Date.now() + 86400000),
+                    priority: 'low'
+                }
+            ];
+
+            // Simulate loading messages
+            state.messages = [
+                {
+                    id: '1',
+                    sender: 'Emma',
+                    content: 'Salut à tous! Quelle activité ce soir?',
+                    timestamp: new Date(Date.now() - 300000),
+                    type: 'user'
+                },
+                {
+                    id: '2',
+                    sender: 'Nesti',
+                    content: 'Bonjour! Je peux vous suggérer la dernière expo sur l\'art thérapie à 16h',
+                    timestamp: new Date(Date.now() - 60000),
+                    type: 'bot',
+                    suggestions: ['En savoir plus', 'Réserver', 'Autres suggestions']
+                }
+            ];
+
+            // Simulate loading activities
+            state.activities = [
+                {
+                    id: '1',
+                    title: 'Expo sur l\'art-thérapie',
+                    location: 'Musée de l\'art moderne',
+                    date: new Date(Date.now() + 86400000),
+                    price: 'Gratuit',
+                    accessibility: ['Accessible PMR', 'Audio-guide'],
+                    rating: 4.8,
+                    category: 'Culture',
+                    ageRange: '6+'
+                }
+            ];
+
+            // Simulate loading notifications
+            state.notifications = [
+                {
+                    id: '1',
+                    title: 'Rappel: Heure du goûter dans 30 min',
+                    type: 'reminder',
+                    timestamp: new Date(),
+                    read: false
+                }
+            ];
+
+            updateUI();
+        }
+
+        // Update UI based on application state
+        function updateUI() {
+            // Show/hide auth modal
+            if (state.showAuthModal) {
+                elements.authModal.classList.remove('hidden');
+                elements.app.classList.add('blur-sm');
+                
+                // Update auth modal based on mode
+                if (state.authMode === 'login') {
+                    elements.authSubtitle.textContent = 'Connectez-vous à votre espace familial';
+                    elements.authButtonText.textContent = 'Se connecter';
+                    elements.nameFields.classList.add('hidden');
+                    elements.switchAuthMode.textContent = 'Pas encore d\'espace familial ? Créer un compte';
+                } else {
+                    elements.authSubtitle.textContent = 'Créez votre espace familial';
+                    elements.authButtonText.textContent = 'Créer mon espace';
+                    elements.nameFields.classList.remove('hidden');
+                    elements.switchAuthMode.textContent = 'Déjà un compte ? Se connecter';
+                }
+            } else {
+                elements.authModal.classList.add('hidden');
+                elements.app.classList.remove('blur-sm');
+            }
+
+            // Show/hide event modal
+            if (state.showEventModal) {
+                elements.eventModal.classList.remove('hidden');
+            } else {
+                elements.eventModal.classList.add('hidden');
+            }
+
+            // Show/hide task modal
+            if (state.showTaskModal) {
+                elements.taskModal.classList.remove('hidden');
+            } else {
+                elements.taskModal.classList.add('hidden');
+            }
+
+            // Update navigation
+            elements.navBtns.forEach(btn => {
+                const view = btn.getAttribute('data-view');
+                if (view === state.currentView) {
+                    btn.classList.add('bg-gradient-to-r', 'from-gray-100', 'to-gray-50', 'text-gray-700', 'shadow-sm');
+                    btn.classList.remove('text-gray-600', 'hover:bg-white/60', 'hover:text-gray-800');
+                } else {
+                    btn.classList.remove('bg-gradient-to-r', 'from-gray-100', 'to-gray-50', 'text-gray-700', 'shadow-sm');
+                    btn.classList.add('text-gray-600', 'hover:bg-white/60', 'hover:text-gray-800');
+                }
+            });
+
+            // Show current view
+            elements.views.forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(`${state.currentView}-view`).classList.remove('hidden');
+
+            // Update meditation UI
+            if (state.meditationActive) {
+                elements.meditationStatus.textContent = 'Méditation en cours...';
+                elements.meditationTimer.textContent = formatTime(state.meditationTimer);
+                elements.meditationTimer.classList.remove('hidden');
+                elements.meditationToggle.innerHTML = '<i class="fas fa-stop w-4 h-4"></i><span>Arrêter</span>';
+                elements.meditationToggle.classList.remove('bg-gradient-to-r', 'from-amber-400', 'to-orange-500');
+                elements.meditationToggle.classList.add('bg-gradient-to-r', 'from-red-400', 'to-red-500');
+            } else {
+                elements.meditationStatus.textContent = 'N\'oubliez pas votre pause méditation';
+                elements.meditationTimer.classList.add('hidden');
+                elements.meditationToggle.innerHTML = '<i class="fas fa-play w-4 h-4"></i><span>Démarrer</span>';
+                elements.meditationToggle.classList.remove('bg-gradient-to-r', 'from-red-400', 'to-red-500');
+                elements.meditationToggle.classList.add('bg-gradient-to-r', 'from-amber-400', 'to-orange-500');
+            }
+
+            // Render chat messages
+            renderChatMessages();
+
+            // Render mini calendar
+            renderMiniCalendar();
+
+            // Render today's events
+            renderTodaysEvents();
+
+            // Render tasks
+            renderTasks();
+        }
+
+        // Render chat messages
+        function renderChatMessages() {
+            elements.chatMessages.innerHTML = '';
+            
+            state.messages.forEach(message => {
+                const messageEl = document.createElement('div');
+                messageEl.classList.add('flex', message.type === 'user' ? 'justify-end' : 'justify-start');
+                
+                if (message.type === 'bot') {
+                    messageEl.innerHTML = `
+                        <div class="w-10 h-10 nesti-gradient rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 mr-3">
+                            <div class="w-6 h-4 bg-white/90 rounded-md flex items-center justify-center">
+                                <div class="w-3 h-2 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
+                            </div>
+                        </div>
+                        <div class="message-bubble bot-message">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <span class="text-sm font-bold text-gray-700">${message.sender}</span>
+                                ${message.type === 'bot' ? `
+                                    <div class="typing-dots">
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <p class="text-gray-800 text-sm font-medium">${message.content}</p>
+                            <p class="text-xs text-gray-500 mt-2">
+                                ${message.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                            ${message.suggestions ? `
+                                <div class="flex flex-wrap gap-2 mt-3">
+                                    ${message.suggestions.map(suggestion => `
+                                        <button class="text-xs bg-teal-100 text-teal-700 px-3 py-1 rounded-full hover:bg-teal-200">
+                                            ${suggestion}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    messageEl.innerHTML = `
+                        <div class="message-bubble user-message">
+                            <p class="text-white text-sm font-medium">${message.content}</p>
+                            <p class="text-xs text-white/80 mt-2">
+                                ${message.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 ml-3 text-white font-bold text-sm">
+                            ${state.user.avatar}
+                        </div>
+                    `;
+                }
+                
+                elements.chatMessages.appendChild(messageEl);
+            });
+            
+            // Scroll to bottom
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+        }
+
+        // Render mini calendar
+        function renderMiniCalendar() {
+            elements.miniCalendar.innerHTML = '';
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            for (let i = 0; i < 28; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const day = date.getDate();
+                const isCurrentMonth = date.getMonth() === currentMonth;
+                const isToday = date.toDateString() === today.toDateString();
+                const hasEvents = state.events.some(event => 
+                    event.date.toDateString() === date.toDateString()
+                );
+                
+                const dayEl = document.createElement('button');
+                dayEl.classList.add('calendar-day');
+                if (!isCurrentMonth) dayEl.classList.add('text-gray-300');
+                if (isToday) dayEl.classList.add('today');
+                
+                dayEl.innerHTML = `
+                    ${day}
+                    ${hasEvents ? '<div class="event-indicator"></div>' : ''}
+                `;
+                
+                dayEl.addEventListener('click', () => {
+                    state.selectedDate = date;
+                    updateUI();
+                });
+                
+                elements.miniCalendar.appendChild(dayEl);
+            }
+        }
+
+        // Render today's events
+        function renderTodaysEvents() {
+            elements.todayEvents.innerHTML = '';
+            
+            const todaysEvents = state.events.filter(event => 
+                event.date.toDateString() === state.selectedDate.toDateString()
+            );
+            
+            if (todaysEvents.length === 0) {
+                elements.todayEvents.innerHTML = `
+                    <div class="text-center py-4 text-gray-500">
+                        <i class="fas fa-calendar w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-sm">Aucun événement prévu</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            todaysEvents.forEach(event => {
+                const eventEl = document.createElement('div');
+                eventEl.classList.add('flex', 'items-center', 'space-x-3', 'p-3', 'rounded-2xl', 'bg-white/40', 'hover:bg-white/60', 'cursor-pointer', 'group');
+                
+                eventEl.innerHTML = `
+                    <div class="w-10 h-10 ${event.color} rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md">
+                        <span class="text-lg">${event.icon}</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-medium text-gray-600">${event.time}</span>
+                            <span class="text-sm font-semibold ${event.textColor}">${event.title}</span>
+                        </div>
+                        ${event.description ? `
+                            <p class="text-xs text-gray-500 mt-1">${event.description}</p>
+                        ` : ''}
+                    </div>
+                `;
+                
+                elements.todayEvents.appendChild(eventEl);
+            });
+        }
+
+        // Render tasks
+        function renderTasks() {
+            elements.tasksList.innerHTML = '';
+            
+            state.tasks.slice(0, 3).forEach(task => {
+                const taskEl = document.createElement('div');
+                taskEl.classList.add('flex', 'items-center', 'space-x-3', 'p-3', 'rounded-2xl', 'bg-white/40', 'hover:bg-white/60');
+                taskEl.classList.add(`task-priority-${task.priority}`);
+                
+                taskEl.innerHTML = `
+                    <button onclick="toggleTask('${task.id}')" class="w-6 h-6 rounded-lg border-2 flex items-center justify-center ${task.completed ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 hover:border-teal-400'}">
+                        ${task.completed ? '<i class="fas fa-check w-4 h-4"></i>' : ''}
+                    </button>
+                    <div class="flex-1">
+                        <p class="font-medium text-sm ${task.completed ? 'line-through text-gray-500' : 'text-gray-700'}">
+                            ${task.title}
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            ${task.assignee} • ${task.priority === 'high' ? '🔴' : task.priority === 'medium' ? '🟡' : '🟢'}
+                        </p>
+                    </div>
+                `;
+                
+                elements.tasksList.appendChild(taskEl);
+            });
+        }
+
+        // Initialize the application
+        init();
+
+        // Expose toggleTask to global scope for HTML onclick
+        window.toggleTask = function(taskId) {
+            state.tasks = state.tasks.map(task => 
+                task.id === taskId ? { ...task, completed: !task.completed } : task
+            );
+            updateUI();
+        };
+    </script>
 </body>
 </html>
