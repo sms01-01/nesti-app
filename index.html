@@ -3,1242 +3,2361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nesti - Organisation familiale</title>
-    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Nesti - Plateforme Familiale Inclusive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
+        /* ========== VARIABLES ET RESET ========== */
+        :root {
+            --primary: #136bb1;
+            --primary-light: #1c9dea;
+            --primary-dark: #0a4a7a;
+            --accent: #ffd166;
+            --accent-dark: #e6b650;
+            --success: #29c48a;
+            --warning: #ffb347;
+            --danger: #ff6b6b;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --bg: #f4fbff;
+            --card: #ffffff;
+            --card-dark: #f1f5f9;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-lg: 18px;
+            --transition: all 0.3s ease;
+            --sidebar-width: 280px;
+            --header-height: 80px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #1c9dea;
+            --primary-light: #4ab3ff;
+            --primary-dark: #136bb1;
+            --accent: #ffd166;
+            --accent-dark: #e6b650;
+            --success: #29c48a;
+            --warning: #ffb347;
+            --danger: #ff6b6b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-dark: #1a2438;
+            --border: #334155;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #fdeef9 50%, #e6f0ff 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ========== LAYOUT PRINCIPAL ========== */
+        .app {
+            display: flex;
             min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--card);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            z-index: 100;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        /* ========== COMPOSANTS ========== */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--card-dark);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(28, 157, 234, 0.2);
+        }
+
+        /* ========== SIDEBAR ========== */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: var(--card-dark);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(28, 157, 234, 0.1), transparent);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-profile {
+            margin-top: auto;
+            padding: 16px;
+            background: var(--card-dark);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* ========== DASHBOARD ========== */
+        .welcome-banner {
+            grid-column: span 12;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.events {
+            background: rgba(28, 157, 234, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.tasks {
+            background: rgba(255, 209, 102, 0.1);
+            color: var(--accent-dark);
+        }
+
+        .stat-icon.chat {
+            background: rgba(41, 196, 138, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.wellbeing {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .calendar-widget {
+            grid-column: span 4;
+        }
+
+        .chat-widget {
+            grid-column: span 5;
+        }
+
+        .wellbeing-widget {
+            grid-column: span 3;
+        }
+
+        /* ========== CALENDRIER ========== */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            padding: 8px;
+        }
+
+        .calendar-day {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: var(--card-dark);
+        }
+
+        .calendar-day.today {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+        }
+
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-light);
+            opacity: 0.5;
+        }
+
+        .events-list {
+            margin-top: 20px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            background: var(--card-dark);
+            transition: var(--transition);
+        }
+
+        .event-item:hover {
+            background: var(--border);
+        }
+
+        .event-time {
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+        }
+
+        .event-details {
+            flex: 1;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .event-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* ========== CHAT ========== */
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--card-dark);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: var(--card-dark);
+            color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .suggestion {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .chat-send {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .chat-send:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ========== BIEN-ÊTRE ========== */
+        .wellbeing-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .wellbeing-stat {
+            background: var(--card-dark);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .wellbeing-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .wellbeing-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .meditation-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .meditation-timer {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 16px 0;
+            color: var(--primary);
+        }
+
+        .meditation-button {
+            padding: 12px;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .meditation-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .meditation-button.stop {
+            background: var(--danger);
+        }
+
+        .meditation-button.stop:hover {
+            background: #e05555;
+        }
+
+        /* ========== TÂCHES ========== */
+        .tasks-widget {
+            grid-column: span 4;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--card-dark);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .task-item:hover {
+            background: var(--border);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .task-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .task-details {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .task-priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .priority-high {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--danger);
+        }
+
+        .priority-medium {
+            background: rgba(255, 179, 71, 0.2);
+            color: var(--warning);
+        }
+
+        .priority-low {
+            background: rgba(41, 196, 138, 0.2);
+            color: var(--success);
+        }
+
+        /* ========== ACTIVITÉS ========== */
+        .activities-widget {
+            grid-column: span 4;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            padding: 16px;
+            background: var(--card-dark);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .activity-item:hover {
+            background: var(--border);
+            transform: translateY(-2px);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .activity-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .activity-location {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .activity-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 209, 102, 0.2);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-dark);
+        }
+
+        .activity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .activity-tag {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(28, 157, 234, 0.1);
+            color: var(--primary);
+        }
+
+        /* ========== MODALS ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
             padding: 20px;
         }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        
-        .nesti-gradient {
-            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        
-        .meditation-active {
-            animation: pulse 2s infinite;
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
         }
-        
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        /* ========== NOTIFICATIONS ========== */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            background: var(--card);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .notification-icon.success {
+            background: var(--success);
+        }
+
+        .notification-icon.error {
+            background: var(--danger);
+        }
+
+        .notification-icon.warning {
+            background: var(--warning);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .calendar-widget,
+            .chat-widget,
+            .wellbeing-widget,
+            .tasks-widget,
+            .activities-widget {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 16px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-widget,
+            .chat-widget,
+            .wellbeing-widget,
+            .tasks-widget,
+            .activities-widget {
+                grid-column: span 1;
+            }
+            
+            .welcome-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        
-        .message-bubble {
-            max-width: 70%;
-            border-radius: 18px;
-            padding: 12px 16px;
-            margin: 8px 0;
-            line-height: 1.4;
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease;
         }
-        
-        .user-message {
-            background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
-            color: white;
-            margin-left: auto;
+
+        .animate-slideIn {
+            animation: slideIn 0.5s ease;
         }
-        
-        .bot-message {
-            background: #f8fafc;
-            color: #334155;
-            margin-right: auto;
-            border: 1px solid #e2e8f0;
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
         }
-        
-        .event-indicator {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #06b6d4;
+
+        /* ========== ACCESSIBILITY ========== */
+        .sr-only {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
-        
-        .calendar-day {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            cursor: pointer;
-            position: relative;
+
+        /* Focus styles */
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
-        
-        .calendar-day.today {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            font-weight: 600;
-        }
-        
-        .task-priority-high {
-            border-left: 4px solid #ef4444;
-        }
-        
-        .task-priority-medium {
-            border-left: 4px solid #f59e0b;
-        }
-        
-        .task-priority-low {
-            border-left: 4px solid #10b981;
-        }
-        
-        /* Animation pour les messages du bot */
-        .typing-dots {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: #06b6d4;
-            margin: 0 2px;
-            animation: typingAnimation 1.4s infinite ease-in-out;
-        }
-        
-        .typing-dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-        
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes typingAnimation {
-            0%, 60%, 100% {
-                transform: translateY(0);
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --text: #000;
+                --text-light: #333;
+                --bg: #fff;
+                --card: #f8f8f8;
+                --card-dark: #eee;
+                --border: #ccc;
             }
-            30% {
-                transform: translateY(-5px);
+            
+            [data-theme="dark"] {
+                --text: #fff;
+                --text-light: #ccc;
+                --bg: #000;
+                --card: #111;
+                --card-dark: #222;
+                --border: #444;
             }
         }
-        
-        /* Scrollbar personnalisée */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.2);
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="container max-w-7xl mx-auto">
-        <div class="glass-card rounded-3xl shadow-2xl overflow-hidden">
-            <!-- Application Container -->
-            <div id="app" class="flex flex-col md:flex-row min-h-screen">
-                <!-- Sidebar Navigation -->
-                <div class="w-full md:w-80 bg-white/50 p-6 md:p-8 flex flex-col">
-                    <div class="flex items-center space-x-3 mb-8 md:mb-12">
-                        <div class="w-12 h-12 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg">
-                            <div class="w-8 h-6 bg-white/90 rounded-lg flex items-center justify-center">
-                                <div class="w-4 h-3 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
-                            </div>
-                        </div>
-                        <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Nesti</h1>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="logo-text">Nesti</div>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="chat">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat</span>
+                </div>
+                <div class="nav-item" data-view="calendar">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendrier</span>
+                </div>
+                <div class="nav-item" data-view="activities">
+                    <i class="fas fa-star"></i>
+                    <span>Activités</span>
+                </div>
+                <div class="nav-item" data-view="wellbeing">
+                    <i class="fas fa-heart"></i>
+                    <span>Bien-être</span>
+                </div>
+                <div class="nav-item" data-view="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tâches</span>
+                </div>
+                <div class="nav-item" data-view="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Paramètres</span>
+                </div>
+            </nav>
+
+            <div class="user-profile">
+                <div class="user-avatar">M</div>
+                <div class="user-info">
+                    <div class="user-name">Marie</div>
+                    <div class="user-role">Famille Martin</div>
+                </div>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Organisation et bien-être pour toute la famille</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-secondary" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                        <span>Mode sombre</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div class="view-content" id="dashboard-view">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Bonjour, Marie</h1>
+                        <p>Voici votre espace familial pour aujourd'hui</p>
                     </div>
-
-                    <nav class="space-y-2 mb-8">
-                        <button data-view="dashboard" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 shadow-sm">
-                            <i class="fas fa-home w-5 h-5"></i>
-                            <span>Dashboard</span>
-                        </button>
-                        <button data-view="chat" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
-                            <i class="fas fa-comment-dots w-5 h-5"></i>
-                            <span>Chat</span>
-                        </button>
-                        <button data-view="calendar" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
-                            <i class="fas fa-calendar w-5 h-5"></i>
-                            <span>Calendrier</span>
-                        </button>
-                        <button data-view="activities" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
-                            <i class="fas fa-star w-5 h-5"></i>
-                            <span>Activités</span>
-                        </button>
-                        <button data-view="settings" class="nav-btn w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium text-gray-600 hover:bg-white/60 hover:text-gray-800">
-                            <i class="fas fa-cog w-5 h-5"></i>
-                            <span>Paramètres</span>
-                        </button>
-                    </nav>
-
-                    <!-- User Profile -->
-                    <div class="bg-white/60 rounded-2xl p-4 mt-auto">
-                        <div class="flex items-center space-x-3 mb-3">
-                            <div class="w-10 h-10 nesti-gradient rounded-xl flex items-center justify-center text-white font-bold">
-                                M
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-medium text-gray-800 text-sm">Marie</p>
-                                <p class="text-gray-600 text-xs">Famille Martin</p>
-                            </div>
-                        </div>
-                        <button id="logout-btn" class="w-full flex items-center justify-center space-x-2 text-gray-600 hover:text-red-600 text-sm py-2">
-                            <i class="fas fa-sign-out-alt w-4 h-4"></i>
-                            <span>Déconnexion</span>
+                    <div class="welcome-actions">
+                        <button class="btn btn-accent">
+                            <i class="fas fa-plus"></i>
+                            <span>Nouvel événement</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Main Content -->
-                <div class="flex-1 p-6 md:p-8">
-                    <!-- Header -->
-                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
-                        <div class="mb-4 md:mb-0">
-                            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Bonjour, Marie</h2>
-                            <p class="text-gray-600 text-lg">Organisation et bien-être pour toute la famille</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon events">
+                            <i class="fas fa-calendar"></i>
                         </div>
-                        
-                        <div class="flex items-center space-x-4">
-                            <button class="relative p-3 bg-white/60 rounded-2xl shadow-sm hover:shadow-md">
-                                <i class="fas fa-bell text-gray-600"></i>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</div>
+                        <div class="stat-info">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Événements aujourd'hui</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon tasks">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Tâches à faire</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon chat">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Messages non lus</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon wellbeing">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Jours de méditation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Calendar Widget -->
+                    <div class="card calendar-widget">
+                        <div class="card-header">
+                            <h2 class="card-title">Calendrier</h2>
+                            <button class="btn btn-primary btn-sm" id="add-event-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Ajouter</span>
                             </button>
-                            
-                            <div class="w-12 h-12 md:w-16 md:h-16 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg">
-                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center text-teal-600 font-bold text-lg">M</div>
-                            </div>
+                        </div>
+                        <div id="calendar-container"></div>
+                        <div class="events-list" id="today-events-list">
+                            <!-- Events will be populated by JavaScript -->
                         </div>
                     </div>
 
-                    <!-- Dashboard View -->
-                    <div id="dashboard-view" class="view-content">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                            <!-- Column 1: Schedule -->
-                            <div class="space-y-6">
-                                <div class="glass-card p-6">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <h3 class="text-xl font-bold text-gray-800">Emploi du temps</h3>
-                                        <div class="flex space-x-2">
-                                            <button id="add-event-btn" class="p-2 bg-teal-100 text-teal-600 rounded-xl hover:bg-teal-200">
-                                                <i class="fas fa-plus w-4 h-4"></i>
-                                            </button>
-                                            <i class="fas fa-chevron-right w-5 h-5 text-gray-400"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Mini Calendar -->
-                                    <div class="mb-6">
-                                        <div class="grid grid-cols-7 gap-1 text-center text-sm font-medium text-gray-500 mb-2">
-                                            <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
-                                        </div>
-                                        <div class="grid grid-cols-7 gap-1" id="mini-calendar">
-                                            <!-- Calendar days will be generated here -->
-                                        </div>
-                                    </div>
-
-                                    <!-- Today's Events -->
-                                    <div class="space-y-3" id="today-events">
-                                        <!-- Events will be populated here -->
-                                    </div>
-                                </div>
-
-                                <!-- Tasks Section -->
-                                <div class="glass-card p-6">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <h3 class="text-xl font-bold text-gray-800">Tâches</h3>
-                                        <button id="add-task-btn" class="p-2 bg-teal-100 text-teal-600 rounded-xl hover:bg-teal-200">
-                                            <i class="fas fa-plus w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="space-y-3" id="tasks-list">
-                                        <!-- Tasks will be populated here -->
-                                    </div>
-                                </div>
-
-                                <!-- Inclusive Activities -->
-                                <div class="glass-card p-6">
-                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Activités inclusives</h3>
-                                    
-                                    <div class="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl p-4 hover:shadow-lg cursor-pointer">
-                                        <div class="flex items-center space-x-3 mb-2">
-                                            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                                                <span class="text-white text-lg">🎨</span>
-                                            </div>
-                                            <div class="flex-1">
-                                                <h4 class="font-bold text-gray-800">Expo sur l'art-thérapie</h4>
-                                                <p class="text-sm text-gray-600 flex items-center">
-                                                    <i class="fas fa-map-marker-alt w-3 h-3 mr-1"></i>
-                                                    Musée de l'art moderne
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex space-x-2">
-                                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                                                    Gratuit
-                                                </span>
-                                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                                                    6+
-                                                </span>
-                                            </div>
-                                            <div class="flex items-center space-x-1">
-                                                <i class="fas fa-star text-yellow-400 text-sm"></i>
-                                                <span class="text-sm font-medium text-gray-700">4.8</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Chat Widget -->
+                    <div class="card chat-widget">
+                        <div class="card-header">
+                            <h2 class="card-title">Chat familial</h2>
+                            <div class="chat-status">
+                                <span class="status-dot"></span>
+                                <span>En ligne</span>
                             </div>
-
-                            <!-- Column 2: Family Chat -->
-                            <div class="glass-card p-6 flex flex-col">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Chat familial</h3>
-                                
-                                <div class="flex-1 space-y-4 mb-6 overflow-y-auto max-h-96" id="chat-messages">
-                                    <!-- Messages will be populated here -->
-                                </div>
-
-                                <!-- Message Input -->
-                                <div class="relative">
-                                    <input type="text" id="message-input" placeholder="Écrire un message..." class="w-full bg-white/50 border border-white/30 rounded-2xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-teal-400">
-                                    <button id="send-message-btn" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 nesti-gradient rounded-xl flex items-center justify-center text-white shadow-lg hover:shadow-xl">
-                                        <i class="fas fa-paper-plane w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Column 3: Wellness -->
-                            <div class="glass-card p-6 relative overflow-hidden">
-                                <h3 class="text-xl font-bold text-gray-800 mb-6">Votre bien-être</h3>
-                                
-                                <div class="space-y-6">
-                                    <div class="text-center">
-                                        <p class="text-gray-700 mb-4 font-medium" id="meditation-status">N'oubliez pas votre pause méditation</p>
-                                        
-                                        <div id="meditation-timer" class="text-3xl font-bold text-teal-600 mb-4 hidden">0:00</div>
-                                        
-                                        <button id="meditation-toggle" class="font-bold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2 mx-auto bg-gradient-to-r from-amber-400 to-orange-500 text-white">
-                                            <i class="fas fa-play w-4 h-4"></i>
-                                            <span>Démarrer</span>
-                                        </button>
-                                    </div>
-
-                                    <!-- Wellness Avatar -->
-                                    <div class="flex justify-center">
-                                        <div class="relative">
-                                            <div id="meditation-avatar" class="w-20 h-20 nesti-gradient rounded-3xl flex items-center justify-center shadow-xl">
-                                                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center">
-                                                    <div class="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Wellness Stats -->
-                                    <div class="grid grid-cols-2 gap-3 mt-6">
-                                        <div class="bg-white/40 rounded-xl p-3 text-center">
-                                            <div class="text-2xl font-bold text-teal-600">7</div>
-                                            <div class="text-xs text-gray-600">jours consécutifs</div>
-                                        </div>
-                                        <div class="bg-white/40 rounded-xl p-3 text-center">
-                                            <div class="text-2xl font-bold text-purple-600">142</div>
-                                            <div class="text-xs text-gray-600">min cette semaine</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Decorations -->
-                                <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-xl"></div>
-                                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-cyan-200/20 to-teal-200/20 rounded-full blur-xl"></div>
-                            </div>
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages will be populated by JavaScript -->
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" placeholder="Écrire un message..." id="chat-input">
+                            <button class="chat-send" id="chat-send">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Other views (initially hidden) -->
-                    <div id="chat-view" class="view-content hidden">
-                        <!-- Chat view content -->
+                    <!-- Wellbeing Widget -->
+                    <div class="card wellbeing-widget">
+                        <div class="card-header">
+                            <h2 class="card-title">Votre bien-être</h2>
+                        </div>
+                        <div class="wellbeing-stats">
+                            <div class="wellbeing-stat">
+                                <div class="wellbeing-value">7</div>
+                                <div class="wellbeing-label">Jours consécutifs</div>
+                            </div>
+                            <div class="wellbeing-stat">
+                                <div class="wellbeing-value">142</div>
+                                <div class="wellbeing-label">Min cette semaine</div>
+                            </div>
+                        </div>
+                        <div class="meditation-timer" id="meditation-timer">15:00</div>
+                        <div class="meditation-controls">
+                            <button class="meditation-button" id="start-meditation">
+                                <i class="fas fa-play"></i>
+                                <span>Démarrer la méditation</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div id="calendar-view" class="view-content hidden">
-                        <!-- Calendar view content -->
+                    <!-- Tasks Widget -->
+                    <div class="card tasks-widget">
+                        <div class="card-header">
+                            <h2 class="card-title">Tâches</h2>
+                            <button class="btn btn-primary btn-sm" id="add-task-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Ajouter</span>
+                            </button>
+                        </div>
+                        <div class="task-list" id="task-list-container">
+                            <!-- Tasks will be populated by JavaScript -->
+                        </div>
                     </div>
 
-                    <div id="activities-view" class="view-content hidden">
-                        <!-- Activities view content -->
-                    </div>
-
-                    <div id="settings-view" class="view-content hidden">
-                        <!-- Settings view content -->
+                    <!-- Activities Widget -->
+                    <div class="card activities-widget">
+                        <div class="card-header">
+                            <h2 class="card-title">Activités inclusives</h2>
+                            <button class="btn btn-primary btn-sm" id="view-activities-btn">
+                                <i class="fas fa-eye"></i>
+                                <span>Voir tout</span>
+                            </button>
+                        </div>
+                        <div class="activity-list" id="activity-list">
+                            <!-- Activities will be populated by JavaScript -->
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Other views (initially hidden) -->
+            <div class="view-content hidden" id="chat-view">
+                <!-- Chat view content -->
+            </div>
+
+            <div class="view-content hidden" id="calendar-view">
+                <!-- Calendar view content -->
+            </div>
+
+            <div class="view-content hidden" id="activities-view">
+                <!-- Activities view content -->
+            </div>
+
+            <div class="view-content hidden" id="wellbeing-view">
+                <!-- Wellbeing view content -->
+            </div>
+
+            <div class="view-content hidden" id="tasks-view">
+                <!-- Tasks view content -->
+            </div>
+
+            <div class="view-content hidden" id="settings-view">
+                <!-- Settings view content -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="event-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Nouvel événement</h2>
+                <button class="modal-close" id="event-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="modal-form" id="event-form">
+                    <div class="form-group">
+                        <label for="event-title" class="form-label">Titre</label>
+                        <input type="text" id="event-title" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-date" class="form-label">Date</label>
+                        <input type="date" id="event-date" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-time" class="form-label">Heure</label>
+                        <input type="time" id="event-time" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-description" class="form-label">Description</label>
+                        <textarea id="event-description" class="input" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="event-cancel">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
-        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-8 w-full max-w-md shadow-2xl border border-white/20">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 nesti-gradient rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
-                    <div class="w-10 h-8 bg-white/90 rounded-lg flex items-center justify-center">
-                        <div class="w-6 h-4 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
-                    </div>
-                </div>
-                <h1 class="text-2xl font-bold text-gray-800 mb-2">Nesti</h1>
-                <p class="text-gray-600" id="auth-subtitle">Connectez-vous à votre espace familial</p>
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Nouvelle tâche</h2>
+                <button class="modal-close" id="task-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-
-            <form id="auth-form" class="space-y-4">
-                <div id="name-fields" class="hidden space-y-4">
-                    <div class="relative">
-                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="name-input" placeholder="Votre prénom" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+            <div class="modal-body">
+                <form class="modal-form" id="task-form">
+                    <div class="form-group">
+                        <label for="task-title" class="form-label">Titre</label>
+                        <input type="text" id="task-title" class="input" required>
                     </div>
-                    <div class="relative">
-                        <i class="fas fa-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="family-name-input" placeholder="Nom de famille" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
+                    <div class="form-group">
+                        <label for="task-assignee" class="form-label">Assignée à</label>
+                        <select id="task-assignee" class="input" required>
+                            <option value="Marie">Marie</option>
+                            <option value="Pierre">Pierre</option>
+                            <option value="Emma">Emma</option>
+                            <option value="Lucas">Lucas</option>
+                        </select>
                     </div>
-                </div>
-                
-                <div class="relative">
-                    <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="email" id="email-input" placeholder="Email" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                </div>
-                
-                <div class="relative">
-                    <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="password" id="password-input" placeholder="Mot de passe" class="w-full bg-white/60 border border-white/30 rounded-xl px-12 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                    <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-eye w-5 h-5"></i>
-                    </button>
-                </div>
-
-                <button type="submit" class="w-full nesti-gradient text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:transform-none">
-                    <span id="auth-button-text">Se connecter</span>
-                </button>
-            </form>
-
-            <div class="mt-6 text-center">
-                <button id="switch-auth-mode" class="text-teal-600 hover:text-teal-700 font-medium">
-                    Pas encore d'espace familial ? Créer un compte
-                </button>
+                    <div class="form-group">
+                        <label for="task-priority" class="form-label">Priorité</label>
+                        <select id="task-priority" class="input" required>
+                            <option value="low">Faible</option>
+                            <option value="medium">Moyenne</option>
+                            <option value="high">Élevée</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-due-date" class="form-label">Date d'échéance</label>
+                        <input type="date" id="task-due-date" class="input">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="task-cancel">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Event Modal -->
-    <div id="event-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
-        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 w-full max-w-lg shadow-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-gray-800">Nouvel événement</h3>
-                <button id="close-event-modal" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times w-6 h-6"></i>
-                </button>
-            </div>
-            
-            <form id="event-form" class="space-y-4">
-                <input type="text" id="event-title" placeholder="Titre de l'événement" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                <textarea id="event-description" placeholder="Description" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 h-20 resize-none"></textarea>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="time" id="event-time" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                    <input type="text" id="event-location" placeholder="Lieu" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
-                </div>
-                <div class="flex space-x-3 pt-4">
-                    <button type="button" id="cancel-event" class="flex-1 bg-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-300">
-                        Annuler
-                    </button>
-                    <button type="submit" class="flex-1 nesti-gradient text-white font-medium py-3 rounded-xl hover:from-teal-600 hover:to-cyan-700">
-                        Ajouter
-                    </button>
-                </div>
-            </form>
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon" id="notification-icon">
+            <i class="fas fa-check"></i>
         </div>
-    </div>
-
-    <!-- Task Modal -->
-    <div id="task-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
-        <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 w-full max-w-lg shadow-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-gray-800">Nouvelle tâche</h3>
-                <button id="close-task-modal" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times w-6 h-6"></i>
-                </button>
-            </div>
-            
-            <form id="task-form" class="space-y-4">
-                <input type="text" id="task-title" placeholder="Titre de la tâche" class="w-full bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                <div class="grid grid-cols-2 gap-4">
-                    <select id="task-assignee" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                        <option value="">Assigner à...</option>
-                        <option value="Maman">Maman</option>
-                        <option value="Papa">Papa</option>
-                        <option value="Emma">Emma</option>
-                    </select>
-                    <select id="task-priority" class="bg-white/60 border border-white/30 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400">
-                        <option value="low">Faible</option>
-                        <option value="medium">Moyenne</option>
-                        <option value="high">Haute</option>
-                    </select>
-                </div>
-                <div class="flex space-x-3 pt-4">
-                    <button type="button" id="cancel-task" class="flex-1 bg-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-300">
-                        Annuler
-                    </button>
-                    <button type="submit" class="flex-1 nesti-gradient text-white font-medium py-3 rounded-xl hover:from-teal-600 hover:to-cyan-700">
-                        Ajouter
-                    </button>
-                </div>
-            </form>
+        <div class="notification-content">
+            <div class="notification-title" id="notification-title">Succès</div>
+            <div class="notification-message" id="notification-message">Opération réussie</div>
         </div>
+        <button class="notification-close" id="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 
     <script>
-        // Application State
+        // ========== ÉTAT DE L'APPLICATION ==========
         const state = {
-            user: null,
-            currentView: 'dashboard',
-            isAuthenticated: false,
-            currentTime: new Date(),
-            showAuthModal: true,
-            authMode: 'login',
-            showPassword: false,
+            user: {
+                id: 1,
+                name: "Marie",
+                email: "marie@example.com",
+                familyName: "Famille Martin",
+                avatar: "M",
+                role: "parent"
+            },
+            currentView: "dashboard",
+            isAuthenticated: true,
+            theme: "light",
             events: [],
             tasks: [],
             messages: [],
             activities: [],
-            notifications: [],
-            showEventModal: false,
-            showTaskModal: false,
-            newMessage: '',
-            selectedDate: new Date(),
-            meditationActive: false,
-            meditationTimer: 0,
-            meditationInterval: null
+            meditation: {
+                active: false,
+                timer: 0,
+                duration: 15 * 60, // 15 minutes in seconds
+                interval: null
+            },
+            notifications: []
         };
 
-        // DOM Elements
-        const elements = {
-            app: document.getElementById('app'),
-            authModal: document.getElementById('auth-modal'),
-            authForm: document.getElementById('auth-form'),
-            authSubtitle: document.getElementById('auth-subtitle'),
-            authButtonText: document.getElementById('auth-button-text'),
-            nameFields: document.getElementById('name-fields'),
-            nameInput: document.getElementById('name-input'),
-            familyNameInput: document.getElementById('family-name-input'),
-            emailInput: document.getElementById('email-input'),
-            passwordInput: document.getElementById('password-input'),
-            togglePassword: document.getElementById('toggle-password'),
-            switchAuthMode: document.getElementById('switch-auth-mode'),
-            logoutBtn: document.getElementById('logout-btn'),
-            navBtns: document.querySelectorAll('.nav-btn'),
-            views: document.querySelectorAll('.view-content'),
-            eventModal: document.getElementById('event-modal'),
-            eventForm: document.getElementById('event-form'),
-            closeEventModal: document.getElementById('close-event-modal'),
-            addEventBtn: document.getElementById('add-event-btn'),
-            cancelEvent: document.getElementById('cancel-event'),
-            taskModal: document.getElementById('task-modal'),
-            taskForm: document.getElementById('task-form'),
-            closeTaskModal: document.getElementById('close-task-modal'),
-            addTaskBtn: document.getElementById('add-task-btn'),
-            cancelTask: document.getElementById('cancel-task'),
-            messageInput: document.getElementById('message-input'),
-            sendMessageBtn: document.getElementById('send-message-btn'),
-            chatMessages: document.getElementById('chat-messages'),
-            meditationToggle: document.getElementById('meditation-toggle'),
-            meditationStatus: document.getElementById('meditation-status'),
-            meditationTimer: document.getElementById('meditation-timer'),
-            meditationAvatar: document.getElementById('meditation-avatar'),
-            miniCalendar: document.getElementById('mini-calendar'),
-            todayEvents: document.getElementById('today-events'),
-            tasksList: document.getElementById('tasks-list')
+        // ========== DONNÉES DE DÉMONSTRATION ==========
+        const demoData = {
+            events: [
+                {
+                    id: 1,
+                    title: "Heure du goûter",
+                    time: "15:00",
+                    date: new Date().toISOString().split('T')[0],
+                    description: "Pause gourmande en famille",
+                    color: "#FFD166",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    title: "Cours de piano",
+                    time: "17:00",
+                    date: new Date().toISOString().split('T')[0],
+                    description: "Leçon de piano d'Emma",
+                    color: "#1C9DEA",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    title: "Jeux de famille",
+                    time: "20:00",
+                    date: new Date().toISOString().split('T')[0],
+                    description: "Soirée jeux de société",
+                    color: "#29C48A",
+                    createdAt: new Date().toISOString()
+                }
+            ],
+            tasks: [
+                {
+                    id: 1,
+                    title: "Préparer le dîner",
+                    completed: false,
+                    assignee: "Marie",
+                    dueDate: new Date().toISOString().split('T')[0],
+                    priority: "high",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    title: "Faire les devoirs",
+                    completed: true,
+                    assignee: "Emma",
+                    dueDate: new Date().toISOString().split('T')[0],
+                    priority: "medium",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    title: "Acheter cadeau anniversaire",
+                    completed: false,
+                    assignee: "Pierre",
+                    dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+                    priority: "low",
+                    createdAt: new Date().toISOString()
+                }
+            ],
+            messages: [
+                {
+                    id: 1,
+                    sender: "Emma",
+                    content: "Salut à tous! Quelle activité ce soir?",
+                    timestamp: new Date(Date.now() - 300000).toISOString(),
+                    type: "user"
+                },
+                {
+                    id: 2,
+                    sender: "Nesti",
+                    content: "Bonjour! Je peux vous suggérer la dernière expo sur l'art thérapie à 16h",
+                    timestamp: new Date(Date.now() - 60000).toISOString(),
+                    type: "bot",
+                    suggestions: ["En savoir plus", "Réserver", "Autres suggestions"]
+                }
+            ],
+            activities: [
+                {
+                    id: 1,
+                    title: "Expo sur l'art-thérapie",
+                    location: "Musée de l'art moderne",
+                    date: new Date(Date.now() + 86400000).toISOString(),
+                    price: "Gratuit",
+                    accessibility: ["Accessible PMR", "Audio-guide"],
+                    rating: 4.8,
+                    category: "Culture",
+                    ageRange: "6+"
+                },
+                {
+                    id: 2,
+                    title: "Atelier cuisine du monde",
+                    location: "Centre culturel",
+                    date: new Date(Date.now() + 172800000).toISOString(),
+                    price: "15€",
+                    accessibility: ["Accessible PMR", "Traduction LSF"],
+                    rating: 4.9,
+                    category: "Cuisine",
+                    ageRange: "Tous âges"
+                },
+                {
+                    id: 3,
+                    title: "Parcours nature adapté",
+                    location: "Parc municipal",
+                    date: new Date(Date.now() + 259200000).toISOString(),
+                    price: "5€",
+                    accessibility: ["Accessible PMR", "Chiens guide acceptés"],
+                    rating: 4.7,
+                    category: "Nature",
+                    ageRange: "Tous âges"
+                }
+            ]
         };
 
-        // Initialize the application
-        function init() {
-            // Check if user is authenticated
-            const savedUser = localStorage.getItem('nesti_user');
-            if (savedUser) {
-                state.user = JSON.parse(savedUser);
-                state.isAuthenticated = true;
-                state.showAuthModal = false;
-                loadUserData();
+        // ========== INITIALISATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Charger les données depuis le localStorage ou utiliser les données de démo
+            loadData();
+            
+            // Initialiser l'interface
+            initUI();
+            
+            // Initialiser les écouteurs d'événements
+            initEventListeners();
+            
+            // Rendre la vue actuelle
+            renderCurrentView();
+        });
+
+        // ========== GESTION DES DONNÉES ==========
+        function loadData() {
+            // Essayer de charger depuis le localStorage
+            const savedData = localStorage.getItem('nesti_data');
+            
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    state.events = parsedData.events || demoData.events;
+                    state.tasks = parsedData.tasks || demoData.tasks;
+                    state.messages = parsedData.messages || demoData.messages;
+                    state.activities = parsedData.activities || demoData.activities;
+                } catch (e) {
+                    console.error("Erreur lors du chargement des données:", e);
+                    loadDemoData();
+                }
             } else {
-                state.showAuthModal = true;
+                loadDemoData();
             }
-
-            // Set up event listeners
-            setupEventListeners();
-
-            // Update UI based on state
-            updateUI();
         }
 
-        // Set up all event listeners
-        function setupEventListeners() {
-            // Auth modal
-            elements.switchAuthMode.addEventListener('click', toggleAuthMode);
-            elements.togglePassword.addEventListener('click', togglePasswordVisibility);
-            elements.authForm.addEventListener('submit', handleAuth);
-            elements.logoutBtn.addEventListener('click', logout);
+        function loadDemoData() {
+            state.events = demoData.events;
+            state.tasks = demoData.tasks;
+            state.messages = demoData.messages;
+            state.activities = demoData.activities;
+        }
 
+        function saveData() {
+            const dataToSave = {
+                events: state.events,
+                tasks: state.tasks,
+                messages: state.messages,
+                activities: state.activities
+            };
+            
+            localStorage.setItem('nesti_data', JSON.stringify(dataToSave));
+        }
+
+        // ========== INITIALISATION DE L'INTERFACE ==========
+        function initUI() {
+            // Appliquer le thème
+            applyTheme();
+            
+            // Générer le calendrier
+            generateCalendar();
+            
+            // Remplir les événements d'aujourd'hui
+            renderTodaysEvents();
+            
+            // Remplir les tâches
+            renderTasks();
+            
+            // Remplir les messages
+            renderMessages();
+            
+            // Remplir les activités
+            renderActivities();
+        }
+
+        function initEventListeners() {
             // Navigation
-            elements.navBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const view = e.currentTarget.getAttribute('data-view');
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const view = this.getAttribute('data-view');
                     switchView(view);
                 });
             });
-
-            // Event modal
-            elements.addEventBtn.addEventListener('click', () => {
-                state.showEventModal = true;
-                updateUI();
-            });
-            elements.closeEventModal.addEventListener('click', closeEventModal);
-            elements.cancelEvent.addEventListener('click', closeEventModal);
-            elements.eventForm.addEventListener('submit', addEvent);
-
-            // Task modal
-            elements.addTaskBtn.addEventListener('click', () => {
-                state.showTaskModal = true;
-                updateUI();
-            });
-            elements.closeTaskModal.addEventListener('click', closeTaskModal);
-            elements.cancelTask.addEventListener('click', closeTaskModal);
-            elements.taskForm.addEventListener('submit', addTask);
-
+            
+            // Thème
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            
+            // Déconnexion
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Modals événements
+            document.getElementById('add-event-btn').addEventListener('click', openEventModal);
+            document.getElementById('event-modal-close').addEventListener('click', closeEventModal);
+            document.getElementById('event-cancel').addEventListener('click', closeEventModal);
+            document.getElementById('event-form').addEventListener('submit', handleEventSubmit);
+            
+            // Modals tâches
+            document.getElementById('add-task-btn').addEventListener('click', openTaskModal);
+            document.getElementById('task-modal-close').addEventListener('click', closeTaskModal);
+            document.getElementById('task-cancel').addEventListener('click', closeTaskModal);
+            document.getElementById('task-form').addEventListener('submit', handleTaskSubmit);
+            
             // Chat
-            elements.sendMessageBtn.addEventListener('click', sendMessage);
-            elements.messageInput.addEventListener('keypress', (e) => {
+            document.getElementById('chat-send').addEventListener('click', sendMessage);
+            document.getElementById('chat-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') sendMessage();
             });
-
-            // Meditation
-            elements.meditationToggle.addEventListener('click', toggleMeditation);
-        }
-
-        // Toggle between login and register modes
-        function toggleAuthMode() {
-            state.authMode = state.authMode === 'login' ? 'register' : 'login';
-            updateUI();
-        }
-
-        // Toggle password visibility
-        function togglePasswordVisibility() {
-            state.showPassword = !state.showPassword;
-            elements.passwordInput.type = state.showPassword ? 'text' : 'password';
-            elements.togglePassword.innerHTML = state.showPassword ? 
-                '<i class="fas fa-eye-slash w-5 h-5"></i>' : 
-                '<i class="fas fa-eye w-5 h-5"></i>';
-        }
-
-        // Handle authentication
-        function handleAuth(e) {
-            e.preventDefault();
             
-            if (state.authMode === 'login') {
-                // Simple validation for demo
-                if (elements.emailInput.value && elements.passwordInput.value) {
-                    state.user = {
-                        id: '1',
-                        name: elements.emailInput.value.split('@')[0],
-                        email: elements.emailInput.value,
-                        familyName: 'Famille Martin',
-                        avatar: 'M'
-                    };
-                    state.isAuthenticated = true;
-                    state.showAuthModal = false;
-                    
-                    // Save to localStorage
-                    localStorage.setItem('nesti_user', JSON.stringify(state.user));
-                    
-                    loadUserData();
-                    updateUI();
-                } else {
-                    alert('Veuillez remplir tous les champs');
-                }
-            } else {
-                // Registration
-                if (elements.nameInput.value && elements.familyNameInput.value && 
-                    elements.emailInput.value && elements.passwordInput.value) {
-                    state.user = {
-                        id: '1',
-                        name: elements.nameInput.value,
-                        email: elements.emailInput.value,
-                        familyName: elements.familyNameInput.value,
-                        avatar: elements.nameInput.value.charAt(0).toUpperCase()
-                    };
-                    state.isAuthenticated = true;
-                    state.showAuthModal = false;
-                    
-                    // Save to localStorage
-                    localStorage.setItem('nesti_user', JSON.stringify(state.user));
-                    
-                    loadUserData();
-                    updateUI();
-                } else {
-                    alert('Veuillez remplir tous les champs');
-                }
-            }
+            // Méditation
+            document.getElementById('start-meditation').addEventListener('click', toggleMeditation);
+            
+            // Notifications
+            document.getElementById('notification-close').addEventListener('click', hideNotification);
         }
 
-        // Logout user
-        function logout() {
-            state.user = null;
-            state.isAuthenticated = false;
-            state.showAuthModal = true;
-            localStorage.removeItem('nesti_user');
-            updateUI();
-        }
-
-        // Switch between views
+        // ========== GESTION DES VUES ==========
         function switchView(view) {
+            // Mettre à jour la navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.querySelector(`.nav-item[data-view="${view}"]`).classList.add('active');
+            
+            // Cacher toutes les vues
+            document.querySelectorAll('.view-content').forEach(viewEl => {
+                viewEl.classList.add('hidden');
+            });
+            
+            // Afficher la vue actuelle
+            document.getElementById(`${view}-view`).classList.remove('hidden');
+            
+            // Mettre à jour le titre
+            document.getElementById('page-title').textContent = getViewTitle(view);
+            document.getElementById('page-subtitle').textContent = getViewSubtitle(view);
+            
+            // Mettre à jour l'état
             state.currentView = view;
-            updateUI();
         }
 
-        // Close event modal
-        function closeEventModal() {
-            state.showEventModal = false;
-            updateUI();
-        }
-
-        // Close task modal
-        function closeTaskModal() {
-            state.showTaskModal = false;
-            updateUI();
-        }
-
-        // Add new event
-        function addEvent(e) {
-            e.preventDefault();
-            const newEvent = {
-                id: Date.now().toString(),
-                title: document.getElementById('event-title').value,
-                description: document.getElementById('event-description').value,
-                time: document.getElementById('event-time').value,
-                location: document.getElementById('event-location').value,
-                date: state.selectedDate,
-                color: 'bg-purple-100',
-                textColor: 'text-purple-800',
-                icon: '📅'
+        function getViewTitle(view) {
+            const titles = {
+                dashboard: "Dashboard",
+                chat: "Chat familial",
+                calendar: "Calendrier",
+                activities: "Activités",
+                wellbeing: "Bien-être",
+                tasks: "Tâches",
+                settings: "Paramètres"
             };
-            state.events.push(newEvent);
-            state.showEventModal = false;
-            updateUI();
+            
+            return titles[view] || "Nesti";
         }
 
-        // Add new task
-        function addTask(e) {
-            e.preventDefault();
-            const newTask = {
-                id: Date.now().toString(),
-                title: document.getElementById('task-title').value,
-                assignee: document.getElementById('task-assignee').value,
-                priority: document.getElementById('task-priority').value,
-                completed: false,
-                dueDate: state.selectedDate
+        function getViewSubtitle(view) {
+            const subtitles = {
+                dashboard: "Organisation et bien-être pour toute la famille",
+                chat: "Discutez avec votre famille et l'assistant Nesti",
+                calendar: "Planifiez vos événements familiaux",
+                activities: "Découvrez des activités inclusives",
+                wellbeing: "Prenez soin de votre bien-être familial",
+                tasks: "Gérez vos tâches quotidiennes",
+                settings: "Personnalisez votre expérience Nesti"
             };
-            state.tasks.push(newTask);
-            state.showTaskModal = false;
-            updateUI();
-        }
-
-        // Toggle task completion
-        function toggleTask(taskId) {
-            state.tasks = state.tasks.map(task => 
-                task.id === taskId ? { ...task, completed: !task.completed } : task
-            );
-            updateUI();
-        }
-
-        // Send message
-        function sendMessage() {
-            const messageText = elements.messageInput.value.trim();
-            if (!messageText) return;
-
-            const userMessage = {
-                id: Date.now().toString(),
-                sender: state.user.name,
-                content: messageText,
-                timestamp: new Date(),
-                type: 'user'
-            };
-
-            state.messages.push(userMessage);
-            elements.messageInput.value = '';
-            updateUI();
             
-            // Scroll to bottom of chat
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+            return subtitles[view] || "";
+        }
+
+        function renderCurrentView() {
+            switch (state.currentView) {
+                case "dashboard":
+                    renderDashboard();
+                    break;
+                case "chat":
+                    renderChat();
+                    break;
+                case "calendar":
+                    renderCalendar();
+                    break;
+                case "activities":
+                    renderActivitiesView();
+                    break;
+                case "wellbeing":
+                    renderWellbeing();
+                    break;
+                case "tasks":
+                    renderTasksView();
+                    break;
+                case "settings":
+                    renderSettings();
+                    break;
+            }
+        }
+
+        // ========== FONCTIONNALITÉS DU TABLEAU DE BORD ==========
+        function renderDashboard() {
+            // Cette fonction est appelée lorsque le tableau de bord est affiché
+            // On peut mettre à jour les statistiques ou autres éléments dynamiques
+            updateStats();
+        }
+
+        function updateStats() {
+            // Mettre à jour les statistiques affichées sur le tableau de bord
+            const today = new Date().toISOString().split('T')[0];
+            const todayEvents = state.events.filter(event => event.date === today).length;
+            const pendingTasks = state.tasks.filter(task => !task.completed).length;
             
-            // Simulate bot response after a delay
-            setTimeout(() => {
-                const responses = [
-                    "C'est une excellente idée ! Voulez-vous que je vous aide à organiser cela ?",
-                    "J'ai trouvé quelques activités qui pourraient vous intéresser. Souhaitez-vous les voir ?",
-                    "Parfait ! Je vais ajouter cela à votre planning familial.",
-                    "Excellente question ! Laissez-moi vous proposer quelques suggestions personnalisées."
-                ];
-                
-                const botMessage = {
-                    id: (Date.now() + 1).toString(),
-                    sender: 'Nesti',
-                    content: responses[Math.floor(Math.random() * responses.length)],
-                    timestamp: new Date(),
-                    type: 'bot'
-                };
-                
-                state.messages.push(botMessage);
-                updateUI();
-                
-                // Scroll to bottom of chat again
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-            }, 1500);
+            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = todayEvents;
+            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = pendingTasks;
         }
 
-        // Toggle meditation
-        function toggleMeditation() {
-            if (state.meditationActive) {
-                // Stop meditation
-                state.meditationActive = false;
-                clearInterval(state.meditationInterval);
-                elements.meditationAvatar.classList.remove('meditation-active');
-            } else {
-                // Start meditation
-                state.meditationActive = true;
-                state.meditationTimer = 0;
-                elements.meditationAvatar.classList.add('meditation-active');
-                
-                state.meditationInterval = setInterval(() => {
-                    state.meditationTimer++;
-                    updateUI();
-                }, 1000);
-            }
-            updateUI();
-        }
-
-        // Format time for meditation timer
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Load user data (simulated)
-        function loadUserData() {
-            // Simulate loading events
-            state.events = [
-                {
-                    id: '1',
-                    title: 'Heure du goûter',
-                    time: '15:00',
-                    date: new Date(),
-                    color: 'bg-amber-100',
-                    icon: '🍪',
-                    textColor: 'text-amber-800',
-                    description: 'Pause gourmande en famille'
-                },
-                {
-                    id: '2',
-                    title: 'Cours de piano',
-                    time: '17:00',
-                    date: new Date(),
-                    color: 'bg-blue-100',
-                    icon: '🎹',
-                    textColor: 'text-blue-800',
-                    description: 'Leçon de piano d\'Emma'
-                },
-                {
-                    id: '3',
-                    title: 'Jeux de famille',
-                    time: '20:00',
-                    date: new Date(),
-                    color: 'bg-emerald-100',
-                    icon: '🎲',
-                    textColor: 'text-emerald-800',
-                    description: 'Soirée jeux de société'
-                }
-            ];
-
-            // Simulate loading tasks
-            state.tasks = [
-                {
-                    id: '1',
-                    title: 'Préparer le dîner',
-                    completed: false,
-                    assignee: 'Maman',
-                    dueDate: new Date(),
-                    priority: 'high'
-                },
-                {
-                    id: '2',
-                    title: 'Faire les devoirs',
-                    completed: true,
-                    assignee: 'Emma',
-                    dueDate: new Date(),
-                    priority: 'medium'
-                },
-                {
-                    id: '3',
-                    title: 'Acheter cadeau anniversaire',
-                    completed: false,
-                    assignee: 'Papa',
-                    dueDate: new Date(Date.now() + 86400000),
-                    priority: 'low'
-                }
-            ];
-
-            // Simulate loading messages
-            state.messages = [
-                {
-                    id: '1',
-                    sender: 'Emma',
-                    content: 'Salut à tous! Quelle activité ce soir?',
-                    timestamp: new Date(Date.now() - 300000),
-                    type: 'user'
-                },
-                {
-                    id: '2',
-                    sender: 'Nesti',
-                    content: 'Bonjour! Je peux vous suggérer la dernière expo sur l\'art thérapie à 16h',
-                    timestamp: new Date(Date.now() - 60000),
-                    type: 'bot',
-                    suggestions: ['En savoir plus', 'Réserver', 'Autres suggestions']
-                }
-            ];
-
-            // Simulate loading activities
-            state.activities = [
-                {
-                    id: '1',
-                    title: 'Expo sur l\'art-thérapie',
-                    location: 'Musée de l\'art moderne',
-                    date: new Date(Date.now() + 86400000),
-                    price: 'Gratuit',
-                    accessibility: ['Accessible PMR', 'Audio-guide'],
-                    rating: 4.8,
-                    category: 'Culture',
-                    ageRange: '6+'
-                }
-            ];
-
-            // Simulate loading notifications
-            state.notifications = [
-                {
-                    id: '1',
-                    title: 'Rappel: Heure du goûter dans 30 min',
-                    type: 'reminder',
-                    timestamp: new Date(),
-                    read: false
-                }
-            ];
-
-            updateUI();
-        }
-
-        // Update UI based on application state
-        function updateUI() {
-            // Show/hide auth modal
-            if (state.showAuthModal) {
-                elements.authModal.classList.remove('hidden');
-                elements.app.classList.add('blur-sm');
-                
-                // Update auth modal based on mode
-                if (state.authMode === 'login') {
-                    elements.authSubtitle.textContent = 'Connectez-vous à votre espace familial';
-                    elements.authButtonText.textContent = 'Se connecter';
-                    elements.nameFields.classList.add('hidden');
-                    elements.switchAuthMode.textContent = 'Pas encore d\'espace familial ? Créer un compte';
-                } else {
-                    elements.authSubtitle.textContent = 'Créez votre espace familial';
-                    elements.authButtonText.textContent = 'Créer mon espace';
-                    elements.nameFields.classList.remove('hidden');
-                    elements.switchAuthMode.textContent = 'Déjà un compte ? Se connecter';
-                }
-            } else {
-                elements.authModal.classList.add('hidden');
-                elements.app.classList.remove('blur-sm');
-            }
-
-            // Show/hide event modal
-            if (state.showEventModal) {
-                elements.eventModal.classList.remove('hidden');
-            } else {
-                elements.eventModal.classList.add('hidden');
-            }
-
-            // Show/hide task modal
-            if (state.showTaskModal) {
-                elements.taskModal.classList.remove('hidden');
-            } else {
-                elements.taskModal.classList.add('hidden');
-            }
-
-            // Update navigation
-            elements.navBtns.forEach(btn => {
-                const view = btn.getAttribute('data-view');
-                if (view === state.currentView) {
-                    btn.classList.add('bg-gradient-to-r', 'from-gray-100', 'to-gray-50', 'text-gray-700', 'shadow-sm');
-                    btn.classList.remove('text-gray-600', 'hover:bg-white/60', 'hover:text-gray-800');
-                } else {
-                    btn.classList.remove('bg-gradient-to-r', 'from-gray-100', 'to-gray-50', 'text-gray-700', 'shadow-sm');
-                    btn.classList.add('text-gray-600', 'hover:bg-white/60', 'hover:text-gray-800');
-                }
-            });
-
-            // Show current view
-            elements.views.forEach(view => {
-                view.classList.add('hidden');
-            });
-            document.getElementById(`${state.currentView}-view`).classList.remove('hidden');
-
-            // Update meditation UI
-            if (state.meditationActive) {
-                elements.meditationStatus.textContent = 'Méditation en cours...';
-                elements.meditationTimer.textContent = formatTime(state.meditationTimer);
-                elements.meditationTimer.classList.remove('hidden');
-                elements.meditationToggle.innerHTML = '<i class="fas fa-stop w-4 h-4"></i><span>Arrêter</span>';
-                elements.meditationToggle.classList.remove('bg-gradient-to-r', 'from-amber-400', 'to-orange-500');
-                elements.meditationToggle.classList.add('bg-gradient-to-r', 'from-red-400', 'to-red-500');
-            } else {
-                elements.meditationStatus.textContent = 'N\'oubliez pas votre pause méditation';
-                elements.meditationTimer.classList.add('hidden');
-                elements.meditationToggle.innerHTML = '<i class="fas fa-play w-4 h-4"></i><span>Démarrer</span>';
-                elements.meditationToggle.classList.remove('bg-gradient-to-r', 'from-red-400', 'to-red-500');
-                elements.meditationToggle.classList.add('bg-gradient-to-r', 'from-amber-400', 'to-orange-500');
-            }
-
-            // Render chat messages
-            renderChatMessages();
-
-            // Render mini calendar
-            renderMiniCalendar();
-
-            // Render today's events
-            renderTodaysEvents();
-
-            // Render tasks
-            renderTasks();
-        }
-
-        // Render chat messages
-        function renderChatMessages() {
-            elements.chatMessages.innerHTML = '';
-            
-            state.messages.forEach(message => {
-                const messageEl = document.createElement('div');
-                messageEl.classList.add('flex', message.type === 'user' ? 'justify-end' : 'justify-start');
-                
-                if (message.type === 'bot') {
-                    messageEl.innerHTML = `
-                        <div class="w-10 h-10 nesti-gradient rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 mr-3">
-                            <div class="w-6 h-4 bg-white/90 rounded-md flex items-center justify-center">
-                                <div class="w-3 h-2 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-sm"></div>
-                            </div>
-                        </div>
-                        <div class="message-bubble bot-message">
-                            <div class="flex items-center space-x-2 mb-2">
-                                <span class="text-sm font-bold text-gray-700">${message.sender}</span>
-                                ${message.type === 'bot' ? `
-                                    <div class="typing-dots">
-                                        <div class="typing-dot"></div>
-                                        <div class="typing-dot"></div>
-                                        <div class="typing-dot"></div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <p class="text-gray-800 text-sm font-medium">${message.content}</p>
-                            <p class="text-xs text-gray-500 mt-2">
-                                ${message.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                            ${message.suggestions ? `
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    ${message.suggestions.map(suggestion => `
-                                        <button class="text-xs bg-teal-100 text-teal-700 px-3 py-1 rounded-full hover:bg-teal-200">
-                                            ${suggestion}
-                                        </button>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                } else {
-                    messageEl.innerHTML = `
-                        <div class="message-bubble user-message">
-                            <p class="text-white text-sm font-medium">${message.content}</p>
-                            <p class="text-xs text-white/80 mt-2">
-                                ${message.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                        </div>
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 ml-3 text-white font-bold text-sm">
-                            ${state.user.avatar}
-                        </div>
-                    `;
-                }
-                
-                elements.chatMessages.appendChild(messageEl);
-            });
-            
-            // Scroll to bottom
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-        }
-
-        // Render mini calendar
-        function renderMiniCalendar() {
-            elements.miniCalendar.innerHTML = '';
-            
+        // ========== CALENDRIER ==========
+        function generateCalendar() {
+            const calendarContainer = document.getElementById('calendar-container');
             const today = new Date();
             const currentMonth = today.getMonth();
             const currentYear = today.getFullYear();
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
             
-            for (let i = 0; i < 28; i++) {
-                const date = new Date(startDate);
-                date.setDate(startDate.getDate() + i);
+            // Créer l'en-tête du calendrier avec les jours de la semaine
+            const weekdays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            let calendarHTML = '<div class="calendar-grid">';
+            
+            // Ajouter les en-têtes des jours
+            weekdays.forEach(day => {
+                calendarHTML += `<div class="calendar-weekday">${day}</div>`;
+            });
+            
+            // Obtenir le premier jour du mois
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            // Obtenir le dernier jour du mois
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            
+            // Calculer le nombre de jours à afficher avant le premier jour du mois
+            const daysOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            
+            // Commencer à partir du lundi précédent si nécessaire
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - daysOffset);
+            
+            // Générer les jours du calendrier
+            for (let i = 0; i < 42; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
                 
-                const day = date.getDate();
-                const isCurrentMonth = date.getMonth() === currentMonth;
-                const isToday = date.toDateString() === today.toDateString();
-                const hasEvents = state.events.some(event => 
-                    event.date.toDateString() === date.toDateString()
-                );
-                
-                const dayEl = document.createElement('button');
-                dayEl.classList.add('calendar-day');
-                if (!isCurrentMonth) dayEl.classList.add('text-gray-300');
-                if (isToday) dayEl.classList.add('today');
-                
-                dayEl.innerHTML = `
-                    ${day}
-                    ${hasEvents ? '<div class="event-indicator"></div>' : ''}
-                `;
-                
-                dayEl.addEventListener('click', () => {
-                    state.selectedDate = date;
-                    updateUI();
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const isCurrentMonth = currentDate.getMonth() === currentMonth;
+                const hasEvent = state.events.some(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate.toDateString() === currentDate.toDateString();
                 });
                 
-                elements.miniCalendar.appendChild(dayEl);
-            }
-        }
-
-        // Render today's events
-        function renderTodaysEvents() {
-            elements.todayEvents.innerHTML = '';
-            
-            const todaysEvents = state.events.filter(event => 
-                event.date.toDateString() === state.selectedDate.toDateString()
-            );
-            
-            if (todaysEvents.length === 0) {
-                elements.todayEvents.innerHTML = `
-                    <div class="text-center py-4 text-gray-500">
-                        <i class="fas fa-calendar w-8 h-8 mx-auto mb-2 opacity-50"></i>
-                        <p class="text-sm">Aucun événement prévu</p>
+                let dayClass = 'calendar-day';
+                if (isToday) dayClass += ' today';
+                if (!isCurrentMonth) dayClass += ' other-month';
+                if (hasEvent) dayClass += ' has-event';
+                
+                calendarHTML += `
+                    <div class="${dayClass}" data-date="${currentDate.toISOString().split('T')[0]}">
+                        ${currentDate.getDate()}
                     </div>
                 `;
+            }
+            
+            calendarHTML += '</div>';
+            calendarContainer.innerHTML = calendarHTML;
+            
+            // Ajouter les écouteurs d'événements pour les jours
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.addEventListener('click', function() {
+                    const date = this.getAttribute('data-date');
+                    selectDate(date);
+                });
+            });
+        }
+
+        function selectDate(date) {
+            // Mettre en surbrillance la date sélectionnée
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('selected');
+            });
+            
+            document.querySelector(`.calendar-day[data-date="${date}"]`).classList.add('selected');
+            
+            // Afficher les événements de cette date
+            showEventsForDate(date);
+        }
+
+        function showEventsForDate(date) {
+            const events = state.events.filter(event => event.date === date);
+            const eventsList = document.getElementById('today-events-list');
+            
+            if (events.length === 0) {
+                eventsList.innerHTML = '<p class="no-events">Aucun événement prévu pour cette date</p>';
                 return;
             }
             
-            todaysEvents.forEach(event => {
-                const eventEl = document.createElement('div');
-                eventEl.classList.add('flex', 'items-center', 'space-x-3', 'p-3', 'rounded-2xl', 'bg-white/40', 'hover:bg-white/60', 'cursor-pointer', 'group');
-                
-                eventEl.innerHTML = `
-                    <div class="w-10 h-10 ${event.color} rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md">
-                        <span class="text-lg">${event.icon}</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm font-medium text-gray-600">${event.time}</span>
-                            <span class="text-sm font-semibold ${event.textColor}">${event.title}</span>
+            let eventsHTML = '';
+            events.forEach(event => {
+                eventsHTML += `
+                    <div class="event-item">
+                        <div class="event-time">${event.time}</div>
+                        <div class="event-details">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-description">${event.description}</div>
                         </div>
-                        ${event.description ? `
-                            <p class="text-xs text-gray-500 mt-1">${event.description}</p>
-                        ` : ''}
                     </div>
                 `;
-                
-                elements.todayEvents.appendChild(eventEl);
             });
-        }
-
-        // Render tasks
-        function renderTasks() {
-            elements.tasksList.innerHTML = '';
             
-            state.tasks.slice(0, 3).forEach(task => {
-                const taskEl = document.createElement('div');
-                taskEl.classList.add('flex', 'items-center', 'space-x-3', 'p-3', 'rounded-2xl', 'bg-white/40', 'hover:bg-white/60');
-                taskEl.classList.add(`task-priority-${task.priority}`);
+            eventsList.innerHTML = eventsHTML;
+        }
+
+        function renderTodaysEvents() {
+            const today = new Date().toISOString().split('T')[0];
+            showEventsForDate(today);
+        }
+
+        // ========== TÂCHES ==========
+        function renderTasks() {
+            const taskList = document.getElementById('task-list-container');
+            let tasksHTML = '';
+            
+            state.tasks.forEach(task => {
+                const priorityClass = `priority-${task.priority}`;
                 
-                taskEl.innerHTML = `
-                    <button onclick="toggleTask('${task.id}')" class="w-6 h-6 rounded-lg border-2 flex items-center justify-center ${task.completed ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 hover:border-teal-400'}">
-                        ${task.completed ? '<i class="fas fa-check w-4 h-4"></i>' : ''}
-                    </button>
-                    <div class="flex-1">
-                        <p class="font-medium text-sm ${task.completed ? 'line-through text-gray-500' : 'text-gray-700'}">
-                            ${task.title}
-                        </p>
-                        <p class="text-xs text-gray-500">
-                            ${task.assignee} • ${task.priority === 'high' ? '🔴' : task.priority === 'medium' ? '🟡' : '🟢'}
-                        </p>
+                tasksHTML += `
+                    <div class="task-item" data-task-id="${task.id}">
+                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" data-task-id="${task.id}">
+                            ${task.completed ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                        <div class="task-details">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-meta">
+                                <span>${task.assignee}</span>
+                                <span class="task-priority ${priorityClass}">${getPriorityLabel(task.priority)}</span>
+                            </div>
+                        </div>
                     </div>
                 `;
-                
-                elements.tasksList.appendChild(taskEl);
+            });
+            
+            taskList.innerHTML = tasksHTML;
+            
+            // Ajouter les écouteurs d'événements pour les cases à cocher
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    toggleTaskCompletion(taskId);
+                });
             });
         }
 
-        // Initialize the application
-        init();
+        function getPriorityLabel(priority) {
+            const labels = {
+                low: 'Basse',
+                medium: 'Moyenne',
+                high: 'Haute'
+            };
+            
+            return labels[priority] || priority;
+        }
 
-        // Expose toggleTask to global scope for HTML onclick
-        window.toggleTask = function(taskId) {
-            state.tasks = state.tasks.map(task => 
-                task.id === taskId ? { ...task, completed: !task.completed } : task
+        function toggleTaskCompletion(taskId) {
+            const task = state.tasks.find(t => t.id == taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveData();
+                renderTasks();
+                
+                showNotification(
+                    task.completed ? 'Tâche complétée' : 'Tâche réactivée',
+                    `"${task.title}" a été ${task.completed ? 'complétée' : 'réactivée'}`,
+                    'success'
+                );
+            }
+        }
+
+        function renderTasksView() {
+            // Implémentation pour la vue complète des tâches
+            // Similaire à renderTasks() mais avec plus de détails et de fonctionnalités
+        }
+
+        // ========== CHAT ==========
+        function renderMessages() {
+            const chatMessages = document.getElementById('chat-messages');
+            let messagesHTML = '';
+            
+            state.messages.forEach(message => {
+                const time = new Date(message.timestamp).toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                if (message.type === 'user') {
+                    messagesHTML += `
+                        <div class="message user">
+                            <div class="message-content">${message.content}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                } else {
+                    let suggestionsHTML = '';
+                    if (message.suggestions && message.suggestions.length > 0) {
+                        suggestionsHTML = '<div class="message-suggestions">';
+                        message.suggestions.forEach(suggestion => {
+                            suggestionsHTML += `<div class="suggestion">${suggestion}</div>`;
+                        });
+                        suggestionsHTML += '</div>';
+                    }
+                    
+                    messagesHTML += `
+                        <div class="message bot">
+                            <div class="message-content">${message.content}</div>
+                            ${suggestionsHTML}
+                            <div class="message-time">${time}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            chatMessages.innerHTML = messagesHTML;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Ajouter le message de l'utilisateur
+            const userMessage = {
+                id: Date.now(),
+                sender: state.user.name,
+                content: message,
+                timestamp: new Date().toISOString(),
+                type: 'user'
+            };
+            
+            state.messages.push(userMessage);
+            saveData();
+            renderMessages();
+            
+            // Réinitialiser l'input
+            input.value = '';
+            
+            // Simuler une réponse de l'IA après un délai
+            setTimeout(() => {
+                const aiResponse = generateAIResponse(message);
+                state.messages.push(aiResponse);
+                saveData();
+                renderMessages();
+            }, 1000);
+        }
+
+        function generateAIResponse(message) {
+            const responses = [
+                "C'est une excellente idée ! Voulez-vous que je vous aide à organiser cela ?",
+                "J'ai trouvé quelques activités qui pourraient vous intéresser. Souhaitez-vous les voir ?",
+                "Parfait ! Je vais ajouter cela à votre planning familial.",
+                "Excellente question ! Laissez-moi vous proposer quelques suggestions personnalisées."
+            ];
+            
+            return {
+                id: Date.now(),
+                sender: 'Nesti',
+                content: responses[Math.floor(Math.random() * responses.length)],
+                timestamp: new Date().toISOString(),
+                type: 'bot',
+                suggestions: ['En savoir plus', 'Réserver', 'Autres suggestions']
+            };
+        }
+
+        function renderChat() {
+            // Implémentation pour la vue complète du chat
+            // Similaire à renderMessages() mais avec plus de détails et de fonctionnalités
+        }
+
+        // ========== ACTIVITÉS ==========
+        function renderActivities() {
+            const activityList = document.getElementById('activity-list');
+            let activitiesHTML = '';
+            
+            state.activities.slice(0, 3).forEach(activity => {
+                activitiesHTML += `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${activity.location}
+                                </div>
+                            </div>
+                            <div class="activity-rating">
+                                <i class="fas fa-star"></i>
+                                ${activity.rating}
+                            </div>
+                        </div>
+                        <div class="activity-tags">
+                            <span class="activity-tag">${activity.category}</span>
+                            <span class="activity-tag">${activity.ageRange}</span>
+                            <span class="activity-tag">${activity.price}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            activityList.innerHTML = activitiesHTML;
+        }
+
+        function renderActivitiesView() {
+            // Implémentation pour la vue complète des activités
+            // Similaire à renderActivities() mais avec plus de détails et de fonctionnalités
+        }
+
+        // ========== BIEN-ÊTRE ==========
+        function toggleMeditation() {
+            const button = document.getElementById('start-meditation');
+            const timer = document.getElementById('meditation-timer');
+            
+            if (!state.meditation.active) {
+                // Démarrer la méditation
+                state.meditation.active = true;
+                state.meditation.timer = state.meditation.duration;
+                
+                button.innerHTML = '<i class="fas fa-stop"></i><span>Arrêter la méditation</span>';
+                button.classList.add('stop');
+                
+                // Mettre à jour le timer
+                updateMeditationTimer();
+                
+                // Démarrer le compte à rebours
+                state.meditation.interval = setInterval(() => {
+                    state.meditation.timer--;
+                    updateMeditationTimer();
+                    
+                    if (state.meditation.timer <= 0) {
+                        clearInterval(state.meditation.interval);
+                        state.meditation.active = false;
+                        
+                        button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
+                        button.classList.remove('stop');
+                        
+                        showNotification(
+                            'Méditation terminée',
+                            'Vous avez complété une session de méditation de 15 minutes',
+                            'success'
+                        );
+                    }
+                }, 1000);
+            } else {
+                // Arrêter la méditation
+                clearInterval(state.meditation.interval);
+                state.meditation.active = false;
+                
+                button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
+                button.classList.remove('stop');
+                
+                showNotification(
+                    'Méditation interrompue',
+                    'Vous pouvez reprendre votre méditation à tout moment',
+                    'warning'
+                );
+            }
+        }
+
+        function updateMeditationTimer() {
+            const timer = document.getElementById('meditation-timer');
+            const minutes = Math.floor(state.meditation.timer / 60);
+            const seconds = state.meditation.timer % 60;
+            
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function renderWellbeing() {
+            // Implémentation pour la vue complète du bien-être
+        }
+
+        // ========== PARAMÈTRES ==========
+        function renderSettings() {
+            // Implémentation pour la vue des paramètres
+        }
+
+        // ========== MODALS ==========
+        function openEventModal() {
+            document.getElementById('event-modal').classList.add('active');
+            
+            // Définir la date du jour par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('event-date').value = today;
+        }
+
+        function closeEventModal() {
+            document.getElementById('event-modal').classList.remove('active');
+            document.getElementById('event-form').reset();
+        }
+
+        function handleEventSubmit(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('event-title').value;
+            const date = document.getElementById('event-date').value;
+            const time = document.getElementById('event-time').value;
+            const description = document.getElementById('event-description').value;
+            
+            const newEvent = {
+                id: Date.now(),
+                title,
+                date,
+                time,
+                description,
+                color: '#1C9DEA',
+                createdAt: new Date().toISOString()
+            };
+            
+            state.events.push(newEvent);
+            saveData();
+            
+            closeEventModal();
+            renderTodaysEvents();
+            generateCalendar();
+            
+            showNotification(
+                'Événement créé',
+                `"${title}" a été ajouté à votre calendrier`,
+                'success'
             );
-            updateUI();
-        };
+        }
+
+        function openTaskModal() {
+            document.getElementById('task-modal').classList.add('active');
+            
+            // Définir la date du jour par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('task-due-date').value = today;
+        }
+
+        function closeTaskModal() {
+            document.getElementById('task-modal').classList.remove('active');
+            document.getElementById('task-form').reset();
+        }
+
+        function handleTaskSubmit(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('task-title').value;
+            const assignee = document.getElementById('task-assignee').value;
+            const priority = document.getElementById('task-priority').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            
+            const newTask = {
+                id: Date.now(),
+                title,
+                assignee,
+                priority,
+                dueDate,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            state.tasks.push(newTask);
+            saveData();
+            
+            closeTaskModal();
+            renderTasks();
+            
+            showNotification(
+                'Tâche créée',
+                `"${title}" a été ajoutée à votre liste`,
+                'success'
+            );
+        }
+
+        // ========== THÈME ==========
+        function toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            applyTheme();
+            saveTheme();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            if (state.theme === 'dark') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Mode clair</span>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Mode sombre</span>';
+            }
+        }
+
+        function saveTheme() {
+            localStorage.setItem('nesti_theme', state.theme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('nesti_theme');
+            if (savedTheme) {
+                state.theme = savedTheme;
+            } else {
+                // Détection automatique du préférence système
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                state.theme = prefersDark ? 'dark' : 'light';
+            }
+            
+            applyTheme();
+        }
+
+        // ========== NOTIFICATIONS ==========
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationIcon = document.getElementById('notification-icon');
+            const notificationTitle = document.getElementById('notification-title');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            // Mettre à jour le contenu
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Mettre à jour l'icône et la couleur
+            notificationIcon.className = 'notification-icon';
+            let iconClass = 'fas fa-check';
+            
+            if (type === 'success') {
+                notificationIcon.classList.add('success');
+                iconClass = 'fas fa-check';
+            } else if (type === 'error') {
+                notificationIcon.classList.add('error');
+                iconClass = 'fas fa-exclamation';
+            } else if (type === 'warning') {
+                notificationIcon.classList.add('warning');
+                iconClass = 'fas fa-exclamation-triangle';
+            }
+            
+            notificationIcon.innerHTML = `<i class="${iconClass}"></i>`;
+            
+            // Afficher la notification
+            notification.classList.add('active');
+            
+            // Masquer automatiquement après 5 secondes
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('active');
+        }
+
+        // ========== AUTHENTIFICATION ==========
+        function logout() {
+            state.isAuthenticated = false;
+            // Rediriger vers la page de connexion
+            // Dans une application réelle, vous voudriez rediriger vers une page de connexion
+            showNotification(
+                'Déconnexion',
+                'Vous avez été déconnecté avec succès',
+                'success'
+            );
+        }
+
+        // ========== FONCTIONS UTILITAIRES ==========
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatTime(time) {
+            return time.substring(0, 5);
+        }
     </script>
 </body>
 </html>
