@@ -1,813 +1,716 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nesti — Plateforme Familiale Inclusive (Pro One-File)</title>
-  <meta name="description" content="Prototype professionnel tout-en-un : dashboard familial, calendrier, tâches, chat IA, inclusion, RGPD — sans dépendances externes."/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Nesti — Plateforme Familiale Inclusive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Manrope:wght@500;800&display=swap" rel="stylesheet">
   <style>
-    /* ==========================
-       THEME & VARIABLES (Design pro)
-       ========================== */
-    :root{
-      --bg: #f4fbff;
-      --card: #ffffff;
-      --muted: #64748b;
-      --text: #0f172a;
-      --glass: rgba(255,255,255,0.7);
-      --primary: #136bb1;
-      --primary-2: #1c9dea;
-      --accent: #ffd166;
-      --success: #29c48a;
-      --danger: #ff6b6b;
-      --radius-xl: 18px;
-      --radius-lg: 12px;
-      --shadow-soft: 0 6px 28px rgba(17, 102, 204, 0.08);
-      --shadow-strong: 0 12px 48px rgba(17, 102, 204, 0.12);
-      --mono: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      --transition: 220ms cubic-bezier(.2,.9,.27,1);
-      --max-width: 1180px;
+    /* -- Palette et variables "brand" -- */
+    :root {
+      --brand-bg-gradient: linear-gradient(120deg, #f5faff 0%, #e3f0fa 100%);
+      --brand-glass: rgba(255,255,255,0.7);
+      --brand-glass-dark: rgba(34,43,69,0.72);
+      --brand-primary: #1c9dea;
+      --brand-primary-dark: #136bb1;
+      --brand-secondary: #ffe066;
+      --brand-secondary-dark: #ffd600;
+      --brand-accent: #43e6b5;
+      --brand-danger: #f35260;
+      --brand-muted: #6a7ba2;
+      --brand-card: #fff;
+      --brand-card-dark: #232d47;
+      --brand-sidebar: #eaf6fb;
+      --brand-sidebar-dark: #18223b;
+      --brand-gradient: linear-gradient(110deg, #1c9dea 0%, #ffe066 100%);
+      --brand-shadow: 0 6px 24px #1c9dea22;
+      --brand-shadow-strong: 0 12px 40px #1c9dea33;
+      --brand-radius: 20px;
+      --brand-border: #e0eaf1;
+      --brand-dark: #222b45;
+      --brand-light: #f5faff;
+      --brand-chat-bg: #eaf6fb;
+      --brand-chat-ia: #fffbe6;
+      --brand-inclusion: #fff9e7;
+      --brand-success: #1fc98c;
+      --brand-warning: #f8be40;
+      --brand-font-main: 'Manrope', 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --brand-font-heading: 'Manrope', 'Inter', ui-sans-serif, system-ui, sans-serif;
+      --transition: all 0.25s cubic-bezier(.53,.21,.29,.96);
     }
-    /* Dark mode support toggle via [data-theme="dark"] on body */
-    body { margin:0; font-family:var(--mono); background:linear-gradient(180deg,#f8fdff 0%,var(--bg) 100%); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    [data-theme="dark"]{ --bg:#071320; --card:#0b1622; --muted:#93a6bd; --text:#f4f8fb; --glass: rgba(10,18,28,0.55); --shadow-soft: 0 10px 30px rgba(0,0,0,0.6); --shadow-strong: 0 18px 50px rgba(0,0,0,0.7); }
-    .app { display:flex; min-height:100vh; align-items:stretch; justify-content:flex-start; }
-    /* ==========================
-       SIDEBAR
-       ========================== */
-    .sidebar { width:300px; padding:32px 22px; background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.45)); border-top-right-radius:var(--radius-xl); border-bottom-right-radius:var(--radius-xl); box-shadow:var(--shadow-soft); display:flex; flex-direction:column; gap:22px; }
-    [data-theme="dark"] .sidebar{ background:linear-gradient(180deg,var(--glass), rgba(255,255,255,0.02)); }
-    .logo { display:flex; align-items:center; gap:12px; }
-    .logo svg { width:46px; height:46px; border-radius:9px; }
-    .brand { font-weight:800; font-size:1.6rem; color:var(--primary-2); }
-    .nav { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
-    .nav button { background:none; border:none; text-align:left; padding:12px 14px; border-radius:10px; display:flex; gap:12px; align-items:center; cursor:pointer; font-weight:600; color:var(--muted); transition:all var(--transition); }
-    .nav button:hover, .nav button:focus { transform:translateX(4px); color:var(--primary-2); box-shadow:var(--shadow-soft); }
-    .nav button.active { background:linear-gradient(90deg, rgba(28,157,234,0.12), rgba(255,209,102,0.06)); color:var(--primary-2); }
-    .spacer { flex:1; }
-    .profile { display:flex; gap:12px; align-items:center; padding-top:12px; border-top:1px solid rgba(0,0,0,0.04); }
-    .avatar { width:48px; height:48px; border-radius:10px; background:linear-gradient(180deg,#fff,#f0f8ff); border:1px solid rgba(0,0,0,0.04); }
-    .profile .meta { display:flex; flex-direction:column; }
-    .role { font-size:0.9rem; color:var(--muted); }
-    .logout { margin-left:auto; background:none; border:none; color:var(--primary); cursor:pointer; font-weight:700; }
-    /* ==========================
-       MAIN LAYOUT
-       ========================== */
-    .main { flex:1; padding:42px; display:flex; justify-content:center; }
-    .container { width:100%; max-width:var(--max-width); display:grid; grid-template-columns: 1.1fr 2fr 1fr; gap:28px; align-items:start; }
-    .header { grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:6px; }
-    .header-left { display:flex; flex-direction:column; gap:6px; }
-    .title { font-size:2.2rem; font-weight:800; }
-    .subtitle { color:var(--muted); font-weight:600; }
-    .header-right { display:flex; gap:12px; align-items:center; }
-    .search { border-radius:12px; padding:10px 12px; border:1px solid var(--shadow-soft); background:var(--card); min-width:260px; display:flex; align-items:center; gap:10px; }
-    .search input { border:none; outline:none; background:transparent; font-weight:600; width:100%; }
-    .cta { background:var(--accent); padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; border:none; box-shadow:var(--shadow-soft); }
-    /* ==========================
-       CARDS / PANELS
-       ========================== */
-    .card { background:var(--card); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-soft); }
-    .card h3 { margin:0 0 12px 0; font-size:1.05rem; font-weight:800; }
-    .calendar { display:flex; flex-direction:column; gap:10px; }
-    .mini-cal { border-radius:10px; padding:12px; background:linear-gradient(180deg, rgba(20,130,200,0.02), rgba(255,255,255,0.02)); }
-    .events { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
-    .event-item { display:flex; gap:10px; align-items:center; padding:8px; border-radius:10px; background:linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2)); border-left:6px solid var(--primary); }
-    .event-meta { display:flex; flex-direction:column; }
-    .event-time { font-weight:800; color:var(--muted); font-size:0.95rem; }
-    .event-title { font-weight:800; }
-    .event-note { color:var(--muted); font-size:0.9rem; }
-    /* TASKS */
-    .tasks-list { display:flex; flex-direction:column; gap:10px; }
-    .task-row { display:flex; align-items:center; gap:12px; padding:9px; border-radius:10px; border:1px solid rgba(0,0,0,0.03); }
-    .task-title { flex:1; font-weight:700; }
-    .task-meta { color:var(--muted); font-size:0.9rem; }
-    .chip { padding:6px 10px; border-radius:999px; background:linear-gradient(90deg,#fff, rgba(0,0,0,0.02)); font-weight:700; }
-    /* CHAT */
-    .chat { display:flex; flex-direction:column; gap:12px; height:100%; }
-    .chat-list { display:flex; flex-direction:column; gap:10px; max-height:360px; overflow:auto; padding-right:8px; }
-    .bubble { display:inline-block; padding:10px 14px; border-radius:14px; max-width:78%; font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
-    .bubble.me { background:linear-gradient(90deg,#e7f6ff,#e9f6ff); margin-left:auto; }
-    .bubble.bot { background:linear-gradient(90deg,#fff7e6,#fff8e9); margin-right:auto; }
-    .chat-input { display:flex; gap:10px; align-items:center; }
-    .chat-input input { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.05); background:var(--card); font-weight:700; }
-    .chat-actions button { padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
-    .rephrase { background:var(--primary-2); color:#fff; }
-    /* ACCESSIBILITY / SETTINGS */
-    .controls { display:flex; gap:10px; align-items:center; }
-    .toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
-    .switch { width:42px; height:24px; border-radius:999px; background:#e6eefb; position:relative; padding:3px; transition:background var(--transition); }
-    .switch .dot { width:18px; height:18px; border-radius:50%; background:#fff; position:absolute; left:3px; top:3px; transition:left var(--transition); box-shadow:var(--shadow-soft); }
-    .switch.on { background:linear-gradient(90deg,var(--primary-2),var(--accent)); }
-    .switch.on .dot { left:21px; }
-    /* OVERLAYS / MODALS */
-    .overlay { position:fixed; inset:0; background:rgba(2,6,23,0.55); display:flex; align-items:center; justify-content:center; z-index:9999; }
-    .modal { background:var(--card); border-radius:14px; padding:22px; width:min(880px,92vw); box-shadow:var(--shadow-strong); }
-    .modal h2 { margin:0 0 12px 0; font-size:1.3rem; }
-    .modal .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .modal .actions { display:flex; gap:12px; margin-top:12px; }
-    /* FOOTER SMALL PRINT */
-    .foot { text-align:center; color:var(--muted); margin-top:26px; font-size:0.9rem; }
-    /* RESPONSIVE */
-    @media (max-width:1100px){
-      .container { grid-template-columns:1fr; }
-      .sidebar { display:none; }
-      .main { padding:20px; }
+    html, body, #app {min-height:100vh;}
+    html, body {margin:0;padding:0;background:var(--brand-bg-gradient);color:var(--brand-dark);}
+    body {font-family:var(--brand-font-main);}
+    #app {display:flex;min-height:100vh;}
+    /* Sidebar */
+    .sidebar {
+      width:288px; min-width:200px; background:var(--brand-sidebar);
+      box-shadow:2px 0 16px #1c9dea09;
+      display:flex; flex-direction:column; padding:44px 28px 30px 28px;
+      border-top-right-radius: var(--brand-radius);
+      border-bottom-right-radius: var(--brand-radius);
+      transition:width 0.3s var(--transition),background 0.3s;
+      position:relative; z-index:2;
     }
-    /* UTILITY */
-    .hidden { display:none !important; }
-    .muted { color:var(--muted); }
-    .mt { margin-top:14px; }
-    .mb { margin-bottom:14px; }
-    .frow { display:flex; gap:12px; align-items:center; }
-    .pill { padding:6px 10px; border-radius:999px; background:rgba(0,0,0,0.03); font-weight:700; }
-    /* simple accessible focus */
-    button:focus, input:focus, select:focus { outline:3px solid rgba(28,157,234,0.18); outline-offset:2px; }
+    .sidebar-logo {display:flex;align-items:center; margin-bottom:58px;}
+    .sidebar-logo svg {width:48px; height:48px; margin-right:16px;}
+    .sidebar-title {font-weight:800;font-size:2.1rem; color:var(--brand-primary);}
+    .sidebar-nav {display:flex; flex-direction:column; gap:19px;}
+    .sidebar-nav .nav-item {
+      display:flex;align-items:center;gap:15px;
+      padding:15px 22px; border-radius:13px; cursor:pointer; font-size:1.18rem;
+      color:var(--brand-dark); font-weight:600; transition:background 0.20s, color 0.18s;
+      outline:none; border:none; background:none;
+    }
+    .sidebar-nav .nav-item.active, .sidebar-nav .nav-item:focus, .sidebar-nav .nav-item:hover {
+      background:var(--brand-primary); color:#fff; box-shadow:0 2px 8px #1c9dea37;
+    }
+    .sidebar-profile {
+      margin-top:auto; display:flex; align-items:center; gap:15px; padding-top:40px;
+      border-top:1px solid var(--brand-border);
+      position:relative;
+    }
+    .avatar {width:54px; height:54px; border-radius:18px; background:#EEE; border:3px solid #cdefff;}
+    .sidebar-logout-btn {margin-left:auto;background:none;border:none;color:var(--brand-primary);font-size:1.3em;cursor:pointer;}
+    /* Main */
+    .main {flex:1; padding:62px 4vw 38px 4vw;}
+    .dashboard-header {display:flex;justify-content:space-between;align-items:center;}
+    .header-info {max-width:63%;}
+    .header-title {font-size:2.7rem;font-weight:800;font-family:var(--brand-font-heading);}
+    .header-desc {color:var(--brand-muted);font-size:1.25em;}
+    .dashboard-grid {
+      display:grid; grid-template-columns:1.1fr 2.2fr 1.1fr; gap:44px; margin-top:38px;
+    }
+    /* Card */
+    .card {
+      background:var(--brand-card); border-radius:var(--brand-radius); box-shadow:var(--brand-shadow); 
+      padding:32px 30px 26px 30px; margin-bottom:26px;
+      transition:box-shadow 0.18s, background 0.18s;
+      position:relative; overflow:hidden;
+    }
+    .card h2, .card h3 {margin-top:0; font-size:1.35rem; font-weight:700;}
+    .card .badge {background:var(--brand-primary);color:#fff;font-size:0.89em;border-radius:8px;padding:3px 10px; margin-left:8px;}
+    .glass {background:var(--brand-glass); box-shadow:var(--brand-shadow);}
+    /* Calendar */
+    .calendar-table {width:100%; border-collapse:collapse; text-align:center; margin-bottom:18px;}
+    .calendar-table th, .calendar-table td {padding:6px;}
+    .calendar-evt {
+      display:flex;align-items:center;margin-top:10px;gap:11px;
+      font-size:1.08em; background:var(--brand-chat-bg); border-radius:9px; padding:5px 13px; box-shadow:0 1px 4px #1c9dea13;
+      transition:background 0.2s;
+    }
+    .calendar-evt .evt-title {font-weight:700;}
+    .calendar-evt .evt-time {font-size:1.02em;margin-right:7px;}
+    .calendar-evt .evt-note {font-size:0.92em;color:var(--brand-muted);margin-left:10px;}
+    .calendar-add-btn {
+      background:var(--brand-primary);color:#fff;border:none; border-radius:10px; font-weight:700;
+      padding:7px 17px; cursor:pointer; font-size:1.1em; float:right; margin-bottom:7px; box-shadow:0 2px 8px #1c9dea18;
+      transition:background 0.18s;
+    }
+    .calendar-add-btn:hover {background:var(--brand-primary-dark);}
+    .calendar-modal-bg {position:fixed; top:0; left:0; width:100vw; height:100vh; background:#0007; z-index:50; display:flex; align-items:center; justify-content:center;}
+    .calendar-modal {background:var(--brand-card); border-radius:21px; padding:34px 36px; min-width:370px; box-shadow:0 12px 40px #1c9dea22;}
+    .calendar-modal label {display:block; margin-top:16px; font-weight:700;}
+    .calendar-modal input, .calendar-modal textarea, .calendar-modal select {
+      width:99%; font-size:1.08em; padding:9px 11px; border-radius:10px; border:1px solid var(--brand-border); margin-top:5px;
+      background:var(--brand-bg-gradient);
+      font-family:var(--brand-font-main);
+    }
+    .calendar-modal-actions {display:flex; gap:18px; margin-top:26px;}
+    .calendar-modal-actions button {flex:1;padding:11px 0;font-size:1.08em;}
+    .calendar-modal-actions .cancel {background:#f0f0f0;}
+    .calendar-modal-actions .save {background:var(--brand-primary);color:#fff;}
+    /* Tâches */
+    .task-list {margin:0;padding:0;list-style:none;}
+    .task-li {display:flex;align-items:center;gap:13px; margin-bottom:12px;}
+    .task-checkbox {accent-color:var(--brand-primary); width:22px;height:22px;}
+    .task-title {flex:1;font-size:1.05em;}
+    .task-status {font-size:0.96em; border-radius:7px; padding:3px 11px;}
+    .status-pending {background:var(--brand-secondary);}
+    .status-todo {background:var(--brand-accent);color:#fff;}
+    .status-done {background:var(--brand-success);color:#fff;}
+    .task-add-row {display:flex;gap:9px;margin-top:17px;}
+    .task-add-inp {flex:1;}
+    .task-add-btn {background:var(--brand-secondary); border:none; border-radius:9px; padding:9px 17px; font-weight:700; cursor:pointer;}
+    .task-assignee {font-size:0.93em;color:var(--brand-muted);margin-left:10px;}
+    /* Chat */
+    .chat-list {max-height:205px; overflow-y:auto; margin-bottom:13px;}
+    .chat-msg {margin-bottom:13px; padding:13px 17px; border-radius:14px; max-width:70%; font-size:1.05em; word-break:break-word; font-family:var(--brand-font-main);}
+    .chat-me {background:var(--brand-chat-bg); align-self:flex-end;}
+    .chat-bot {background:var(--brand-chat-ia); align-self:flex-start;}
+    .chat-row {display:flex;flex-direction:column;align-items:flex-end;}
+    .chat-row.bot {align-items:flex-start;}
+    .chat-input-row {display:flex;gap:13px;}
+    .chat-inp {flex:1; border:1px solid var(--brand-border); border-radius:10px; padding:11px 15px; font-size:1.05em;}
+    .chat-btn {background:var(--brand-secondary); color:var(--brand-dark); border:none; border-radius:10px; padding:11px 21px; font-weight:700; cursor:pointer;}
+    .chat-btn:hover {background:var(--brand-secondary-dark);}
+    /* Activités */
+    .activity-card {background:var(--brand-inclusion); border-radius:14px; padding:18px 24px; margin-bottom:22px; box-shadow:0 2px 10px #ffe06622;}
+    .activity-card .act-title {font-size:1.1em;font-weight:800;}
+    .activity-card .act-place {color:var(--brand-muted);font-size:0.98em;}
+    .activity-card .act-tags {color:var(--brand-accent);font-size:0.97em;margin-top:10px;}
+    .wellbeing-card {background:var(--brand-bg-gradient); border-radius:14px; padding:19px 23px; box-shadow:0 2px 10px #1fc98c18;}
+    .wellbeing-btn {background:var(--brand-success); border:none; border-radius:9px; padding:9px 19px; font-weight:800; color:#fff; cursor:pointer; margin-top:10px;}
+    .wellbeing-btn:hover {background:#14b57a;}
+    /* Notifications */
+    .notif-banner {
+      position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+      background:var(--brand-success); color:#fff; border-radius:15px;
+      padding:15px 25px; font-weight:700; box-shadow:0 4px 32px #1fc98c42; z-index:300;
+      font-family:var(--brand-font-main);
+      font-size:1.12em; display:none;
+      animation:fadein 0.25s cubic-bezier(.53,.21,.29,.96);
+    }
+    @keyframes fadein {from{opacity:0;transform:translateY(60px) scale(0.9);}to{opacity:1;}}
+    /* Accessibilité */
+    .easyread {font-size:1.25em; letter-spacing:0.025em; background:#fffde8;}
+    .easyread .card, .easyread .activity-card, .easyread .wellbeing-card {font-size:1.17em;}
+    /* Modal overlay pour charte, privacy, etc */
+    .overlay-bg {position:fixed; top:0; left:0; width:100vw; height:100vh; background:#001a; z-index:199; display:flex; align-items:center; justify-content:center;}
+    .overlay-content {background:var(--brand-card); border-radius:22px; min-width:370px; max-width:97vw; padding:36px 36px; box-shadow:0 14px 55px #1c9dea33; position:relative;}
+    .overlay-content h2 {margin-top:0;}
+    .overlay-close {background:none; border:none; font-size:1.55em; position:absolute; top:26px; right:31px; cursor:pointer;}
+    /* KPIs, Monitoring, etc */
+    .kpi-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:30px;}
+    .kpi-card {background:var(--brand-card);border-radius:14px;box-shadow:0 2px 10px #1c9dea16;padding:23px 25px;text-align:center;}
+    .kpi-title {font-weight:700;color:var(--brand-primary);}
+    .kpi-value {font-size:2.2em;font-weight:800;}
+    .kpi-desc {color:var(--brand-muted);font-size:0.96em;}
+    /* Responsive */
+    @media (max-width:1300px) {.dashboard-grid {grid-template-columns:1fr 2.1fr 1fr;}}
+    @media (max-width:1100px) {.dashboard-grid {grid-template-columns:1fr;}}
+    @media (max-width:900px) {.main {padding:12px 2vw;}}
+    @media (max-width:700px) {
+      #app {flex-direction:column;}
+      .sidebar {width:100vw; flex-direction:row; padding:10px 8px;}
+      .sidebar-logo, .sidebar-profile {display:none;}
+      .sidebar-nav {flex-direction:row; gap:12px;}
+      .main {padding:10px 3vw;}
+    }
   </style>
 </head>
 <body>
-  <div id="root" class="app" role="application" aria-label="Nesti Platform"></div>
+<div id="app"></div>
+<div class="notif-banner" id="notif-banner"></div>
+<script>
+/* --- MOCK DATA --- */
+const ROLES = ['parent1','parent2','enfant','invite'];
+const FAMILIES = [
+  {id:1, name:"Famille Demo", members:[
+    {id:1, name:"Emma", role:"parent1", email:"emma@mail.com", avatar:"https://www.svgrepo.com/show/427834/avatar-profile.svg"},
+    {id:2, name:"Louis", role:"parent2", email:"louis@mail.com", avatar:"https://www.svgrepo.com/show/427839/avatar-profile.svg"},
+    {id:3, name:"Alice", role:"enfant", email:"alice@mail.com", avatar:"https://www.svgrepo.com/show/427841/avatar-profile.svg"},
+    {id:4, name:"Mamie Jeanne", role:"invite", email:"mamie@mail.com", avatar:"https://www.svgrepo.com/show/427838/avatar-profile.svg"}
+  ]}
+];
+const MOCK_EVENTS = [
+  {id:1, title:"Heure du goûter", time:"15:00", day:10, note:"Gâteau au chocolat", creator:1, color:"#ffe066"},
+  {id:2, title:"Cours de piano", time:"17:00", day:10, note:"Salle 2", creator:2, color:"#1c9dea"},
+  {id:3, title:"Jeux de famille", time:"20:00", day:10, note:"Choisir le jeu", creator:3, color:"#43e6b5"},
+  {id:4, title:"RDV Orthophoniste", time:"14:30", day:11, note:"", creator:1, color:"#1fc98c"},
+  {id:5, title:"Sortie au parc", time:"11:00", day:12, note:"Prévoir goûter", creator:2, color:"#f35260"}
+];
+const MOCK_TASKS = [
+  {id:1, title:"Acheter du pain", status:"À faire", assignee:1},
+  {id:2, title:"Préparer le goûter", status:"En cours", assignee:2},
+  {id:3, title:"Ranger la chambre", status:"Fait", assignee:3},
+  {id:4, title:"Télécharger l’attestation", status:"À faire", assignee:4}
+];
+const MOCK_CHAT = [
+  {from:1, text:"Salut à tous! Quelle activité ce soir ?"},
+  {from:"bot", text:"Bonjour! Je peux vous suggérer la dernière expo sur l’art thérapie à 1h"},
+  {from:3, text:"Je veux faire un jeu de société !"},
+  {from:"bot", text:"Bonne idée Alice 😊 Voulez-vous que je propose quelques jeux adaptés ?"}
+];
+const MOCK_ACTIVITIES = [
+  {id:1, title:"Expo sur l’art-thérapie", place:"Musée de l’art moderne", age:"all", tags:["inclusion","culture"], color:"#ffe066"},
+  {id:2, title:"Atelier peinture", place:"Centre culturel", age:"8+", tags:["créatif"], color:"#1c9dea"},
+  {id:3, title:"Spectacle inclusif", place:"Théâtre des enfants", age:"all", tags:["inclusion","spectacle"], color:"#43e6b5"},
+  {id:4, title:"Yoga famille", place:"Maison de quartier", age:"all", tags:["bien-être","inclusion"], color:"#1fc98c"}
+];
+const WELLBEING_MSG = "N’oubliez pas votre pause méditation";
+const MOCK_KPIS = [
+  {title:"Taux d’activation", value:"73%", desc:"Familles actives ce mois-ci"},
+  {title:"Utilisation inclusion", value:"62%", desc:"Fonctionnalités inclusion utilisées"},
+  {title:"NPS", value:"8,7", desc:"Satisfaction parents/enfants"}
+];
+let state = {
+  user:null,
+  family:null,
+  page:"auth",
+  events:[...MOCK_EVENTS],
+  tasks:[...MOCK_TASKS],
+  chat:[...MOCK_CHAT],
+  easyread:false,
+  overlay:null,
+  dark:false
+};
 
-  <template id="app-template">
-    <aside class="sidebar" role="navigation" aria-label="Menu principal">
-      <div class="logo" id="sidebar-logo">
-        <!-- logo svg inline -->
-        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#1c9dea"/>
-              <stop offset="1" stop-color="#ffd166"/>
-            </linearGradient>
-          </defs>
-          <rect width="64" height="64" rx="12" fill="url(#g1)"></rect>
-          <g transform="translate(8,12)">
-            <circle cx="16" cy="14" r="14" fill="#fff"/>
-            <ellipse cx="17" cy="19" rx="9" ry="6" fill="#ffd166"/>
-            <circle cx="24" cy="14" r="1.8" fill="#222b45"/>
-          </g>
+/* --- RENDER ROOT --- */
+function renderRoot() {
+  document.body.className = state.easyread ? "easyread" : "";
+  document.getElementById('app').innerHTML = '';
+  if(!state.user) return renderAuth();
+  renderApp();
+}
+window.onhashchange = ()=>{ 
+  const page = location.hash.replace(/^#\/?/,'');
+  if(['dashboard','calendar','tasks','chat','activities','settings'].includes(page)) {
+    state.page = page;
+    renderRoot();
+  }
+}
+
+/* --- AUTH --- */
+function renderAuth() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div style="margin:auto;max-width:480px;padding:70px 38px 42px 38px;background:var(--brand-card);border-radius:22px;box-shadow:var(--brand-shadow-strong);position:relative;">
+      <div style="display:flex;align-items:center;margin-bottom:34px;">
+        <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+          <circle cx="27" cy="27" r="27" fill="#1c9dea"/>
+          <ellipse cx="27" cy="31" rx="14" ry="11" fill="#ffe066"/>
+          <ellipse cx="25" cy="25" rx="7.5" ry="5.2" fill="#FFF"/>
+          <circle cx="30" cy="25" r="1.5" fill="#222B45"/>
+          <ellipse cx="32.5" cy="34" rx="4" ry="1.6" fill="#ffd600"/>
         </svg>
-        <div class="brand">Nesti</div>
+        <span style="font-weight:800;font-size:2.2rem;color:var(--brand-primary);margin-left:18px;">Nesti</span>
       </div>
+      <h2 style="margin:0 0 19px 0;font-weight:800;font-family:var(--brand-font-heading);">Connectez-vous à votre espace familial</h2>
+      <form id="login-form">
+        <label style="font-weight:700;">Email</label>
+        <input id="login-email" type="email" required placeholder="emma@mail.com" style="width:100%;margin-bottom:24px;padding:13px 13px;border-radius:13px;border:1.5px solid #e0e0e0;font-size:1.15em;">
+        <label style="font-weight:700;">Rôle</label>
+        <select id="login-role" style="width:100%;margin-bottom:24px;padding:12px 13px;border-radius:12px;border:1px solid #e0e0e0;font-size:1.08em;">
+          <option value="parent1">Parent 1</option><option value="parent2">Parent 2</option><option value="enfant">Enfant</option><option value="invite">Invité</option>
+        </select>
+        <button style="background:var(--brand-primary);color:#fff;width:100%;padding:13px 0;font-weight:800;border:none;border-radius:13px;font-size:1.18em;cursor:pointer;margin-top:10px;">Connexion</button>
+      </form>
+      <div style="margin-top:26px;font-size:1.05em;">
+        <a href="#" onclick="showOverlay('charte');return false;" style="color:var(--brand-primary);font-weight:600;">Voir la charte d'inclusion</a>
+      </div>
+    </div>
+  `;
+  document.getElementById('login-form').onsubmit = e => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const role = document.getElementById('login-role').value;
+    const family = FAMILIES[0];
+    const user = family.members.find(u=>u.email===email && u.role===role) || family.members.find(u=>u.role===role);
+    if(user) {
+      state.user = user;
+      state.family = family;
+      state.page = "dashboard";
+      location.hash="#/dashboard";
+      renderRoot();
+    } else {
+      showNotif("Email ou rôle incorrects.");
+    }
+  }
+}
 
-      <nav class="nav" id="nav">
-        <!-- nav buttons will be injected -->
+/* --- APP SHELL --- */
+function renderApp() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg viewBox="0 0 54 54" fill="none">
+          <circle cx="27" cy="27" r="27" fill="#1c9dea"/>
+          <ellipse cx="27" cy="31" rx="14" ry="11" fill="#ffe066"/>
+          <ellipse cx="25" cy="25" rx="7.5" ry="5.2" fill="#FFF"/>
+          <circle cx="30" cy="25" r="1.5" fill="#222B45"/>
+          <ellipse cx="32.5" cy="34" rx="4" ry="1.6" fill="#ffd600"/>
+        </svg>
+        <span class="sidebar-title">Nesti</span>
+      </div>
+      <nav class="sidebar-nav">
+        ${navItem("dashboard","Dashboard","M17 6V3M7 6V3M3 9h18M4 19h16a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1v11a1 1 0 001 1z")}
+        ${navItem("calendar","Calendrier","M8 7V3m8 4V3m-9 8h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z")}
+        ${navItem("tasks","Tâches","M9 12l2 2l4-4m-7 8h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z")}
+        ${navItem("chat","Chat","M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z")}
+        ${navItem("activities","Activités","M12 8c-1.657 0-3 1.343-3 3c0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 8c-2.21 0-4-1.79-4-4a4 4 0 118 0c0 2.21-1.79 4-4 4zm7-2h5M17 7v14m-2-7h4")}
+        ${navItem("settings","Paramètres","M12 8c-1.657 0-3 1.343-3 3c0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 8c-2.21 0-4-1.79-4-4a4 4 0 118 0c0 2.21-1.79 4-4 4zm7-2h5M17 7v14m-2-7h4")}
       </nav>
-
-      <div class="spacer"></div>
-
-      <div class="profile" id="profile">
-        <div class="avatar" id="profile-avatar" role="img" aria-label="Photo du profil"></div>
-        <div class="meta">
-          <div id="profile-name" style="font-weight:800;">Nom</div>
-          <div class="role" id="profile-role">Role</div>
+      <div class="sidebar-profile">
+        <img class="avatar" src="${state.user.avatar}" />
+        <div style="font-size:1.03em;">
+          <div style="font-weight:700;font-family:var(--brand-font-main);">${state.user.name}</div>
+          <div style="color:var(--brand-muted);font-size:0.98em;">${roleLabel(state.user.role)}</div>
         </div>
-        <button class="logout" id="logout" title="Se déconnecter" aria-label="Se déconnecter">→</button>
+        <button class="sidebar-logout-btn" onclick="logout()" title="Déconnexion">&rarr;</button>
       </div>
     </aside>
+    <main class="main" id="main-container"></main>
+  `;
+  Array.from(document.querySelectorAll('.nav-item')).forEach(item=>{
+    item.onclick = ()=>{location.hash="#/"+item.dataset.page;}
+  });
+  renderPageContent();
+}
+function navItem(page,label,iconPath) {
+  const active = state.page===page ? "active" : "";
+  return `<button class="nav-item ${active}" data-page="${page}">
+    <svg class="evt-icon" viewBox="0 0 24 24" fill="none" stroke="#1c9dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${iconPath}"/></svg>
+    <span>${label}</span>
+  </button>`;
+}
+function roleLabel(r) {
+  return {parent1:"Parent 1",parent2:"Parent 2",enfant:"Enfant",invite:"Invité"}[r]||r;
+}
+function logout(){ state.user=null; state.family=null; state.page="auth"; location.hash=''; renderRoot(); }
 
-    <main class="main" id="main">
-      <div class="container" id="container">
-        <header class="header" role="banner">
-          <div class="header-left">
-            <div class="title" id="title">Bonjour, utilisateur</div>
-            <div class="subtitle">Organisation et bien-être pour toute la famille</div>
-          </div>
-          <div class="header-right">
-            <div class="search" role="search" aria-label="Recherche">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#1c9dea" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11.5" cy="11.5" r="5.5" stroke="#1c9dea" stroke-width="1.6"></circle></svg>
-              <input id="search-input" placeholder="Rechercher événement, tâche, message..." aria-label="Rechercher">
-            </div>
-            <div class="controls">
-              <div class="toggle" title="Mode sombre">
-                <div id="dark-switch" class="switch" role="button" tabindex="0" aria-pressed="false" aria-label="Basculer mode sombre">
-                  <div class="dot"></div>
-                </div>
-              </div>
-              <button class="cta" id="new-event-cta">+ Nouveau</button>
-            </div>
-          </div>
-        </header>
-
-        <!-- Left column: calendar + tasks compact -->
-        <section class="card" id="left-col" aria-labelledby="left-heading">
-          <h3 id="left-heading">Emploi du temps</h3>
-          <div class="calendar">
-            <div class="mini-cal" id="mini-cal" aria-hidden="false">
-              <!-- small calendar will be rendered here -->
-            </div>
-            <div class="events" id="today-events" aria-live="polite">
-              <!-- event items -->
-            </div>
-          </div>
-
-          <div class="mt">
-            <h3>Liste de tâches</h3>
-            <div class="tasks-list" id="task-list">
-              <!-- tasks -->
-            </div>
-            <div class="mt frow">
-              <input id="new-task-input" placeholder="Nouvelle tâche..." aria-label="Nouvelle tâche" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);">
-              <button id="add-task-btn" class="pill">Ajouter</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Middle column: chat, kanban, insights -->
-        <section class="card" id="center-col">
-          <h3>Chat familial <span class="chip" id="chat-status">IA active</span></h3>
-          <div class="chat" id="chat">
-            <div class="chat-list" id="chat-list" role="log" aria-live="polite">
-              <!-- messages -->
-            </div>
-            <div class="chat-input">
-              <input id="chat-input" placeholder="Écrire un message..." aria-label="Écrire un message">
-              <div class="chat-actions">
-                <button id="send-btn" class="pill">Envoyer</button>
-                <button id="rephrase-btn" class="rephrase">Reformuler</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt">
-            <h3>Résumé & Suggestions IA</h3>
-            <div id="ai-suggestions" class="muted">L'assistant peut reformuler, proposer activités inclusives et résumer les conversations.</div>
-          </div>
-        </section>
-
-        <!-- Right column: activities, well-being -->
-        <aside class="card" id="right-col" aria-labelledby="right-heading">
-          <h3 id="right-heading">Activités inclusives</h3>
-          <div id="activities" class="mt">
-            <!-- activities list -->
-          </div>
-
-          <div class="mt">
-            <h3>Votre bien-être</h3>
-            <div class="muted">Courtes activités, guides et rappels pour la famille</div>
-            <div class="mt">
-              <button id="start-meditation" class="pill">Démarrer méditation</button>
-            </div>
-          </div>
-
-          <div class="mt">
-            <h3>Paramètres rapides</h3>
-            <div class="frow mt">
-              <label for="easy-read" class="muted">Lecture facile</label>
-              <div style="margin-left:auto;" class="toggle"><div id="easy-switch" class="switch" role="button" tabindex="0" aria-pressed="false"><div class="dot"></div></div></div>
-            </div>
-            <div class="frow mt">
-              <label class="muted">Confidentialité</label>
-              <button id="privacy-btn" class="pill" style="margin-left:auto;">Voir</button>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Footer / legal -->
-        <div class="card" style="grid-column:1/-1;margin-top:18px;">
-          <div class="frow" style="justify-content:space-between; align-items:center;">
-            <div class="muted">© Nesti — Prototype. Données techniques et d’intégration disponibles pour threading backend.</div>
-            <div class="frow">
-              <button id="export-data" class="pill">Exporter données</button>
-              <button id="delete-account" class="pill" style="background:var(--danger); color:#fff;">Demander suppression</button>
-            </div>
-          </div>
-        </div>
-
+/* --- PAGES --- */
+function renderPageContent() {
+  let html = "";
+  switch(state.page) {
+    case "dashboard": html = dashboardPage(); break;
+    case "calendar": html = calendarPage(); break;
+    case "tasks": html = tasksPage(); break;
+    case "chat": html = chatPage(); break;
+    case "activities": html = activitiesPage(); break;
+    case "settings": html = settingsPage(); break;
+    default: html = dashboardPage();
+  }
+  document.getElementById('main-container').innerHTML = html;
+  afterRenderPage();
+}
+function dashboardPage() {
+  return `
+    <div class="dashboard-header">
+      <div class="header-info">
+        <div class="header-title">Bonjour, ${state.user.name}</div>
+        <div class="header-desc">Organisation et bien-être pour toute la famille</div>
       </div>
-    </main>
-  </template>
-
-  <!-- MODAL ROOT -->
-  <div id="modal-root" aria-live="assertive"></div>
-
-  <script>
-  /* ==========================
-     PROFESSIONAL SINGLE-FILE APP
-     - modular, commented, extensible
-     - no external deps
-     - persistent localStorage
-     - "IA" local heuristics and placeholders for external APIs
-     ========================== */
-
-  /* --------------------------
-     Utilities
-     -------------------------- */
-  const $ = selector => document.querySelector(selector);
-  const $all = selector => Array.from(document.querySelectorAll(selector));
-  const nowStr = () => new Date().toISOString();
-  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
-  const uid = (p='id') => `${p}_${Math.random().toString(36).slice(2,9)}`;
-
-  /* --------------------------
-     Persistent Store (localStorage)
-     - Simple wrapper to persist app state and allow export/import
-     -------------------------- */
-  const Store = {
-    key: 'nesti_pro_data_v1',
-    read(){
-      try {
-        const raw = localStorage.getItem(this.key);
-        if(!raw) return null;
-        return JSON.parse(raw);
-      } catch(e) { console.warn('Store read error', e); return null; }
-    },
-    write(data){
-      try {
-        localStorage.setItem(this.key, JSON.stringify(data));
-      } catch(e) { console.warn('Store write error', e); }
-    },
-    export(){
-      const blob = new Blob([JSON.stringify(this.read()||{}, null, 2)], {type:'application/json'});
-      const u = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = u; a.download = 'nesti-export-'+(new Date()).toISOString().slice(0,10)+'.json';
-      a.click(); URL.revokeObjectURL(u);
-    },
-    clear(){ localStorage.removeItem(this.key); }
-  };
-
-  /* --------------------------
-     Seed / Initial Data
-     -------------------------- */
-  const SEED = {
-    families: [{
-      id: 'fam_1',
-      name: 'Famille Demo',
-      members: [
-        {id:'u_1', name:'Emma', role:'parent1', email:'emma@mail.com', avatar:''},
-        {id:'u_2', name:'Louis', role:'parent2', email:'louis@mail.com', avatar:''},
-        {id:'u_3', name:'Alice', role:'enfant', email:'alice@mail.com', avatar:''},
-        {id:'u_4', name:'Mamie', role:'invite', email:'mamie@mail.com', avatar:''}
-      ]
-    }],
-    events: [
-      { id: 'ev_1', title:'Heure du goûter', time:'15:00', day:10, note:'Gâteau au chocolat', creator:'u_1', created_at:nowStr(), color:'#ffd166' },
-      { id: 'ev_2', title:'Cours de piano', time:'17:00', day:10, note:'Salle 2', creator:'u_2', created_at:nowStr(), color:'#1c9dea' },
-      { id: 'ev_3', title:'Jeux de famille', time:'20:00', day:10, note:'Choisir le jeu', creator:'u_3', created_at:nowStr(), color:'#29c48a' }
-    ],
-    tasks: [
-      { id:'t_1', title:'Acheter du pain', status:'À faire', assignee:'u_1', created_at:nowStr() },
-      { id:'t_2', title:'Préparer le goûter', status:'En cours', assignee:'u_2', created_at:nowStr() },
-      { id:'t_3', title:'Ranger la chambre', status:'Fait', assignee:'u_3', created_at:nowStr() }
-    ],
-    chat:[
-      {id:'m_1', from:'u_1', text:'Salut à tous! Quelle activité ce soir ?', created_at:nowStr()},
-      {id:'m_2', from:'bot', text:"Bonjour! Je peux vous suggérer la dernière expo sur l'art-thérapie à 18h.", created_at:nowStr()}
-    ],
-    activities: [
-      {id:'a_1', title:'Expo sur l’art-thérapie', place:'Musée de l’art moderne', tags:['inclusion','culture'], color:'#ffd166'},
-      {id:'a_2', title:'Atelier peinture', place:'Centre culturel', tags:['créatif'], color:'#1c9dea'}
-    ],
-    settings: {
-      easyRead:false,
-      dark:false,
-      consent:{ location:false, analytics:false }
-    },
-    meta:{ created_at: nowStr() }
-  };
-
-  /* --------------------------
-     App State
-     -------------------------- */
-  const App = {
-    state: {
-      user: null, // {id,name,role,email}
-      family: null,
-      page: 'dashboard',
-      ...SEED
-    },
-    init(){
-      // Hydrate from store, fallback to SEED
-      const data = Store.read();
-      if(data){
-        this.state = {...this.state, ...data};
-      } else {
-        this.state = {...this.state}; // uses seed included
-        Store.write(this.state);
-      }
-      // mount template
-      this.mount();
-    },
-    persist(){ Store.write(this.state); },
-    mount(){
-      const root = document.getElementById('root');
-      root.innerHTML = document.getElementById('app-template').innerHTML;
-      // initial ui & bindings
-      this.bindNav();
-      this.bindProfile();
-      this.bindGlobal();
-      this.renderAll();
-    },
-    bindNav(){
-      const nav = $('#nav');
-      const items = [
-        {id:'dashboard', label:'Dashboard'},
-        {id:'calendar', label:'Calendrier'},
-        {id:'tasks', label:'Tâches'},
-        {id:'chat', label:'Chat'},
-        {id:'activities', label:'Activités'},
-        {id:'settings', label:'Paramètres'}
-      ];
-      nav.innerHTML = '';
-      items.forEach(it => {
-        const btn = document.createElement('button');
-        btn.className = 'nav-item' + (this.state.page === it.id ? ' active' : '');
-        btn.dataset.page = it.id;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 7h18" stroke="#1c9dea" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${it.label}</span>`;
-        btn.onclick = () => { this.navigate(it.id); };
-        nav.appendChild(btn);
-      });
-    },
-    bindProfile(){
-      const family = this.state.families[0];
-      this.state.family = family;
-      const user = family.members[0]; // default user for initial demo
-      this.state.user = user;
-      // profile UI
-      $('#profile-name').textContent = user.name;
-      $('#profile-role').textContent = (user.role || 'Membre');
-      $('#profile-avatar').textContent = ''; $('#profile-avatar').style.backgroundImage = `url('https://www.gravatar.com/avatar/${btoa(user.email||user.name)}?d=identicon')`;
-      $('#logout').onclick = () => { this.logout(); };
-      $('#title').textContent = `Bonjour, ${user.name}`;
-    },
-    bindGlobal(){
-      // dark switch
-      const darkSwitch = $('#dark-switch');
-      const easySwitch = $('#easy-switch');
-      darkSwitch.onclick = () => { this.toggleDark(); };
-      darkSwitch.onkeydown = e => { if(e.key === 'Enter' || e.key === ' ') this.toggleDark(); };
-      easySwitch.onclick = () => { this.toggleEasy(); };
-      $('#new-event-cta').onclick = () => { this.openEventModal(); };
-      $('#add-task-btn').onclick = () => { this.addTaskFromInput(); };
-      $('#export-data').onclick = () => { Store.export(); showToast('Export démarré'); };
-      $('#delete-account').onclick = () => { this.requestAccountDeletion(); };
-      $('#privacy-btn').onclick = () => { this.openPrivacy(); };
-      $('#start-meditation').onclick = () => { this.startMeditation(); };
-      $('#search-input').addEventListener('input', (e)=> this.search(e.target.value));
-      // chat
-      $('#send-btn').onclick = ()=> this.sendChat();
-      $('#rephrase-btn').onclick = ()=> this.rephraseInput();
-      $('#rephrase-btn').onkeydown = e => { if(e.key==='Enter') this.rephraseInput(); };
-      $('#chat-input').onkeydown = e => { if(e.key === 'Enter') this.sendChat(); };
-    },
-    renderAll(){
-      // render left, center, right
-      this.renderMiniCalendar();
-      this.renderEvents();
-      this.renderTasks();
-      this.renderChat();
-      this.renderActivities();
-      this.highlightNav();
-      this.applyTheme();
-    },
-    highlightNav(){
-      $all('.nav .nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === this.state.page));
-    },
-    navigate(page){
-      this.state.page = page;
-      this.renderAll();
-      this.highlightNav();
-    },
-
-    /* --------------------------
-       THEME & ACCESSIBILITY
-       -------------------------- */
-    toggleDark(){
-      this.state.settings.dark = !this.state.settings.dark;
-      document.body.setAttribute('data-theme', this.state.settings.dark ? 'dark' : 'light');
-      $('#dark-switch').classList.toggle('on', this.state.settings.dark);
-      $('#dark-switch').setAttribute('aria-pressed', String(this.state.settings.dark));
-      this.persist();
-    },
-    toggleEasy(){
-      this.state.settings.easyRead = !this.state.settings.easyRead;
-      document.body.classList.toggle('easyread', !!this.state.settings.easyRead);
-      $('#easy-switch').classList.toggle('on', !!this.state.settings.easyRead);
-      this.persist();
-    },
-
-    /* --------------------------
-       CALENDAR & EVENTS
-       -------------------------- */
-    renderMiniCalendar(){
-      const el = $('#mini-cal');
-      // render a simple week with current dates (demo)
-      const today = new Date();
-      const days = Array.from({length:7}, (_,i)=> {
-        const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (i-3));
-        return {day:d.getDate(), mon:d.toLocaleString('fr-FR',{month:'short'}), isToday: d.toDateString() === today.toDateString()};
-      });
-      el.innerHTML = `<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;">
-        ${days.map(d=>`<div style="text-align:center;padding:8px;border-radius:8px;${d.isToday?'background:linear-gradient(90deg,#e9f6ff,#f6fff1);':''}"><div style="font-weight:800;">${d.day}</div><div style="font-size:0.85rem;color:${d.isToday?'var(--primary-2)':'var(--muted)'}">${d.mon}</div></div>`).join('')}
-      </div>`;
-    },
-    renderEvents(){
-      const container = $('#today-events');
-      const todayDay = 10; // static demo day
-      const evts = this.state.events.filter(e => e.day === todayDay).sort((a,b)=> a.time.localeCompare(b.time));
-      container.innerHTML = evts.map(e => `
-        <div class="event-item" role="article" aria-label="${e.title}">
-          <div style="width:8px;height:40px;border-radius:6px;background:${e.color || '#1c9dea'}"></div>
-          <div class="event-meta">
-            <div class="event-time">${e.time}</div>
-            <div class="event-title">${e.title}</div>
-            <div class="event-note">${e.note || ''}</div>
-          </div>
+      <img class="avatar" src="${state.user.avatar}" />
+    </div>
+    <div class="dashboard-grid">
+      <section class="card glass">
+        <h2>Emploi du temps <span class="badge">aujourd'hui</span></h2>
+        <button class="calendar-add-btn" onclick="showOverlay('event')">+</button>
+        ${calendarMiniTable()}
+        ${state.events.filter(e=>e.day===10).map(evt=>calendarEventLine(evt)).join('')}
+      </section>
+      <section class="card glass" style="grid-column: span 2;">
+        <h2>Chat familial</h2>
+        <div id="chat-list" class="chat-list"></div>
+        <form class="chat-input-row" id="chat-form" autocomplete="off">
+          <input id="chat-input" class="chat-inp" placeholder="Écrire un message..." />
+          <button type="submit" class="chat-btn">Envoyer</button>
+          <button type="button" class="chat-btn" id="rephrase-btn" title="Reformuler (IA)">🤖</button>
+        </form>
+      </section>
+      <div>
+        <div class="activity-card">
+          <div class="act-title">${MOCK_ACTIVITIES[0].title}</div>
+          <div class="act-place">${MOCK_ACTIVITIES[0].place}</div>
+          <div class="act-tags">Tags: ${MOCK_ACTIVITIES[0].tags.join(', ')}</div>
         </div>
-      `).join('') || `<div class="muted">Aucun événement aujourd'hui</div>`;
-    },
-    openEventModal(){
-      const root = $('#modal-root'); root.innerHTML = '';
-      const overlay = document.createElement('div'); overlay.className = 'overlay'; overlay role='dialog';
-      const modal = document.createElement('div'); modal.className = 'modal';
-      modal.innerHTML = `
-        <h2>Créer un événement</h2>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <label>Titre<input id="modal-ev-title" placeholder="Nom de l'événement" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></label>
-          <label>Jour (ex: 10)<input id="modal-ev-day" type="number" min="1" max="31" value="10" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></label>
-          <label>Heure<input id="modal-ev-time" type="time" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></label>
-          <label>Note<textarea id="modal-ev-note" rows="3" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></textarea></label>
-          <div class="actions"><button id="modal-ev-cancel" class="pill">Annuler</button><button id="modal-ev-save" class="pill" style="background:var(--primary-2);color:#fff;">Ajouter</button></div>
+        <div class="wellbeing-card">
+          <h3 style="margin:0 0 5px 0;">Votre bien-être</h3>
+          <div>${WELLBEING_MSG}</div>
+          <button class="wellbeing-btn" onclick="showNotif('Bonne méditation !')">Démarrer</button>
         </div>
-      `;
-      overlay.appendChild(modal); root.appendChild(overlay);
-      $('#modal-ev-cancel').onclick = () => { root.innerHTML = ''; };
-      $('#modal-ev-save').onclick = () => {
-        const title = $('#modal-ev-title').value.trim();
-        const day = Number($('#modal-ev-day').value);
-        const time = $('#modal-ev-time').value;
-        const note = $('#modal-ev-note').value.trim();
-        if(!title || !time || !day) { showToast('Veuillez remplir titre, jour et heure'); return; }
-        this.state.events.push({ id: uid('ev'), title, day, time, note, creator:this.state.user.id, created_at:nowStr(), color:'#1c9dea' });
-        root.innerHTML = ''; this.persist(); this.renderEvents(); showToast('Événement ajouté');
-      };
-    },
-
-    /* --------------------------
-       TASKS
-       -------------------------- */
-    renderTasks(){
-      const list = $('#task-list');
-      list.innerHTML = this.state.tasks.map(t => `
-        <div class="task-row" data-id="${t.id}">
-          <input type="checkbox" ${t.status==='Fait' ? 'checked' : ''} onchange="App.toggleTask('${t.id}', event)" aria-label="Marquer tâche">
-          <div class="task-title">${t.title}</div>
-          <div class="task-meta">${this.nameFor(t.assignee)}</div>
-          <div><button onclick="App.removeTask('${t.id}')" style="background:none;border:none;color:var(--danger);font-weight:800;cursor:pointer;">×</button></div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      ${MOCK_KPIS.map(k=>`
+        <div class="kpi-card">
+          <div class="kpi-title">${k.title}</div>
+          <div class="kpi-value">${k.value}</div>
+          <div class="kpi-desc">${k.desc}</div>
         </div>
-      `).join('') || `<div class="muted">Aucune tâche</div>`;
-    },
-    addTaskFromInput(){
-      const val = $('#new-task-input').value.trim(); if(!val) { showToast('Entrez une tâche'); return; }
-      this.state.tasks.push({ id: uid('t'), title: val, status:'À faire', assignee:this.state.user.id, created_at:nowStr() });
-      $('#new-task-input').value=''; this.persist(); this.renderTasks(); showToast('Tâche ajoutée');
-    },
-    toggleTask(id, e){
-      const t = this.state.tasks.find(x => x.id === id); if(!t) return;
-      t.status = e.target.checked ? 'Fait' : 'À faire'; this.persist(); this.renderTasks();
-    },
-    removeTask(id){
-      this.state.tasks = this.state.tasks.filter(t => t.id !== id); this.persist(); this.renderTasks(); showToast('Tâche supprimée');
-    },
-
-    /* --------------------------
-       CHAT & IA (local heuristics)
-       -------------------------- */
-    renderChat(){
-      const el = $('#chat-list'); el.innerHTML = '';
-      this.state.chat.forEach(m => {
-        const div = document.createElement('div');
-        const isBot = (m.from === 'bot');
-        div.className = 'bubble ' + (isBot ? 'bot' : 'me');
-        div.setAttribute('role','article');
-        div.innerHTML = `${escapeHtml(m.text)}<div style="font-size:0.78rem;color:var(--muted);margin-top:6px;font-weight:600;">${isBot ? 'Assistant' : this.nameFor(m.from)} • ${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>`;
-        el.appendChild(div);
-      });
-      el.scrollTop = el.scrollHeight;
-    },
-    sendChat(){
-      const input = $('#chat-input'); const txt = input.value.trim(); if(!txt) return;
-      const msg = { id: uid('m'), from: this.state.user.id, text: txt, created_at: nowStr() };
-      this.state.chat.push(msg); input.value=''; this.persist(); this.renderChat();
-      // trigger assistant: light moderation -> reformulation suggestions -> content-based suggestion
-      setTimeout(()=> this.aiRespond(msg), 700);
-    },
-    rephraseInput(){
-      const input = $('#chat-input'); const txt = input.value.trim(); if(!txt) { showToast('Tapez un message pour reformuler'); return; }
-      const reform = this.ai.rephrase(txt);
-      input.value = reform;
-      showToast('Reformulation proposée');
-    },
-    aiRespond(userMessage){
-      // naive pipeline:
-      const text = userMessage.text;
-      // detect offensive -> propose reformulation rather than posting as assistant message
-      const offensive = this.ai.detectOffensive(text);
-      if(offensive) {
-        const reform = this.ai.rephrase(text, 'bienveillant');
-        this.state.chat.push({ id: uid('m'), from:'bot', text: `Le message semble potentiellement blessant. Proposition: "${reform}"`, created_at: nowStr() });
-        this.persist(); this.renderChat(); return;
-      }
-      // else propose activity suggestions if match keywords
-      const lower = text.toLowerCase();
-      if(/expo|activité|jeu|sortie|parc|cinéma|théâtre/.test(lower)){
-        const reco = this.ai.suggestActivities(lower, this.state.activities);
-        this.state.chat.push({ id: uid('m'), from:'bot', text: `Suggestions: ${reco.map(r=>r.title+' ('+r.place+')').join(' — ')}`, created_at: nowStr() });
-        this.persist(); this.renderChat();
-        return;
-      }
-      // else bot acknowledges and optionally summarizes last 5 messages
-      this.state.chat.push({ id: uid('m'), from:'bot', text: this.ai.smallTalk(text), created_at: nowStr() });
-      this.persist(); this.renderChat();
-    },
-
-    /* --------------------------
-       ACTIVITIES & INCLUSION
-       -------------------------- */
-    renderActivities(){
-      const el = $('#activities');
-      el.innerHTML = this.state.activities.map(a => `
-        <div style="border-left:6px solid ${a.color}; padding:10px 12px; border-radius:8px; margin-bottom:10px;">
-          <div style="font-weight:800;">${a.title}</div>
-          <div style="font-size:0.95rem;color:var(--muted)">${a.place}</div>
-          <div style="margin-top:8px;color:var(--muted);font-size:0.9rem">Tags: ${a.tags.join(', ')}</div>
-          <div style="margin-top:8px;"><button class="pill" onclick="App.addActivityToCalendar('${a.id}')">Ajouter au calendrier</button></div>
+      `).join('')}
+    </div>
+  `;
+}
+function calendarPage() {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-size:2em;font-weight:800;">Calendrier familial</h2>
+      <button class="calendar-add-btn" onclick="showOverlay('event')">Ajouter un événement</button>
+    </div>
+    <div>
+      <table class="calendar-table"><thead>
+        <tr><th>Date</th><th>Heure</th><th>Événement</th><th>Note</th><th>Ajouté par</th></tr>
+      </thead><tbody>
+        ${state.events.map(evt=>`
+          <tr>
+            <td>${evt.day}/09</td>
+            <td>${evt.time}</td>
+            <td>${evt.title}</td>
+            <td>${evt.note||""}</td>
+            <td>${userName(evt.creator)}</td>
+          </tr>
+        `).join('')}
+      </tbody></table>
+    </div>
+  `;
+}
+function tasksPage() {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-size:2em;font-weight:800;">Liste de tâches</h2>
+    </div>
+    <ul class="task-list">
+      ${state.tasks.map(t=>`
+        <li class="task-li">
+          <input class="task-checkbox" type="checkbox" ${t.status==="Fait"?"checked":""} onchange="toggleTaskStatus(${t.id})"/>
+          <span class="task-title">${t.title}</span>
+          <span class="task-status ${statusClass(t.status)}">${t.status}</span>
+          <span class="task-assignee">${userName(t.assignee)}</span>
+          <button onclick="deleteTask(${t.id})" style="background:none;border:none;color:var(--brand-danger);font-size:1.2em;cursor:pointer;">×</button>
+        </li>
+      `).join('')}
+    </ul>
+    <div class="task-add-row">
+      <input id="task-add-inp" class="task-add-inp" placeholder="Nouvelle tâche à ajouter..." />
+      <select id="task-add-user">
+        ${state.family.members.map(m=>`<option value="${m.id}">${m.name}</option>`).join('')}
+      </select>
+      <button class="task-add-btn" onclick="addTask()">Ajouter</button>
+    </div>
+  `;
+}
+function chatPage() {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-size:2em;font-weight:800;">Chat familial</h2>
+    </div>
+    <div id="chat-list" class="chat-list"></div>
+    <form class="chat-input-row" id="chat-form" autocomplete="off">
+      <input id="chat-input" class="chat-inp" placeholder="Écrire un message..." />
+      <button type="submit" class="chat-btn">Envoyer</button>
+      <button type="button" class="chat-btn" id="rephrase-btn" title="Reformuler (IA)">🤖</button>
+    </form>
+  `;
+}
+function activitiesPage() {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-size:2em;font-weight:800;">Activités inclusives & recommandations</h2>
+      <button onclick="showOverlay('charte')" style="background:var(--brand-secondary);border:none;padding:11px 23px;border-radius:10px;font-weight:800;font-size:1.05em;cursor:pointer;">Charte inclusion</button>
+    </div>
+    <div>
+      ${MOCK_ACTIVITIES.map(a=>`
+        <div class="activity-card" style="border-left:7px solid ${a.color};">
+          <div class="act-title">${a.title}</div>
+          <div class="act-place">${a.place}</div>
+          <div class="act-tags">Tags: ${a.tags.join(', ')}</div>
         </div>
-      `).join('');
-    },
-    addActivityToCalendar(aid){
-      const a = this.state.activities.find(x => x.id===aid);
-      if(!a) return showToast('Activité non trouvée');
-      // create event tomorrow 18:00 as demo
-      const d = new Date(); d.setDate(d.getDate()+1);
-      this.state.events.push({ id: uid('ev'), title:a.title, day: d.getDate(), time:'18:00', note: a.place, creator:this.state.user.id, created_at:nowStr(), color:a.color });
-      this.persist(); this.renderEvents(); showToast('Activité ajoutée au calendrier');
-    },
-
-    /* --------------------------
-       MEDITATION / TIMERS
-       -------------------------- */
-    startMeditation(){
-      // simple guided demo: display modal with timer
-      const root = $('#modal-root'); root.innerHTML = '';
-      const overlay = document.createElement('div'); overlay.className = 'overlay';
-      const modal = document.createElement('div'); modal.className = 'modal';
-      modal.innerHTML = `<h2>Pause méditation — 3 minutes</h2><div id="med-status" style="font-weight:700;margin-top:8px;">Respirez profondément...</div><div class="mt"><button id="med-end" class="pill">Terminer</button></div>`;
-      overlay.appendChild(modal); root.appendChild(overlay);
-      let remaining = 180;
-      const tick = () => {
-        const s = Math.max(0, remaining);
-        const mm = String(Math.floor(s/60)).padStart(2,'0'); const ss = String(s%60).padStart(2,'0');
-        $('#med-status').textContent = `Temps restant ${mm}:${ss}`;
-        remaining--;
-        if(remaining < 0){ clearInterval(timer); $('#med-status').textContent = 'Session terminée — bonne détente !'; showToast('Méditation terminée'); setTimeout(()=> root.innerHTML='',1200); }
-      };
-      tick();
-      const timer = setInterval(tick,1000);
-      $('#med-end').onclick = ()=>{ clearInterval(timer); root.innerHTML=''; showToast('Méditation arrêtée'); };
-    },
-
-    /* --------------------------
-       SETTINGS & PRIVACY
-       -------------------------- */
-    openPrivacy(){
-      const root = $('#modal-root'); root.innerHTML = '';
-      const overlay = document.createElement('div'); overlay.className = 'overlay';
-      const modal = document.createElement('div'); modal.className = 'modal';
-      modal.innerHTML = `<h2>Politique de confidentialité (Brouillon)</h2>
-        <p style="color:var(--muted);font-size:0.95rem;">Nous collectons le minimum nécessaire. Les données peuvent être exportées ou supprimées. Pour démo, les données sont stockées localement dans votre navigateur.</p>
-        <div class="grid mt">
-          <div><b>Droits</b><p class="muted">Accès, rectification, suppression, portabilité.</p></div>
-          <div><b>IA & Prompts</b><p class="muted">Les prompts sont anonymisés avant envoi si un back-end est configuré.</p></div>
-        </div>
-        <div class="actions"><button id="close-privacy" class="pill">Fermer</button><button id="export-privacy" class="pill" style="background:var(--primary-2);color:#fff">Exporter</button></div>
-      `;
-      overlay.appendChild(modal); root.appendChild(overlay);
-      $('#close-privacy').onclick = ()=> root.innerHTML = '';
-      $('#export-privacy').onclick = ()=>{ Store.export(); showToast('Export demandé'); };
-    },
-
-    /* --------------------------
-       ACCOUNT DELETION (RGPD demo)
-       -------------------------- */
-    requestAccountDeletion(){
-      const ok = confirm('Voulez-vous demander la suppression de votre compte (démonstration locale) ?');
-      if(!ok) return;
-      // simulate deletion
-      Store.clear();
-      showToast('Demande reçue — données locales supprimées');
-      // reload demo
-      setTimeout(()=> location.reload(), 1400);
-    },
-
-    /* --------------------------
-       HELPERS
-       -------------------------- */
-    nameFor(id){
-      if(!this.state.family) return '';
-      if(id === 'bot') return 'Assistant';
-      return this.state.family.members.find(m=>m.id===id)?.name || '';
-    },
-    logout(){ this.state.user = null; showToast('Déconnecté — rechargement'); setTimeout(()=> location.reload(),600); },
-
-    /* --------------------------
-       SEARCH
-       -------------------------- */
-    search(q){
-      q = String(q || '').trim().toLowerCase();
-      if(!q) { this.renderAll(); return; }
-      // highlight simple matches in tasks/events
-      const tasks = this.state.tasks.filter(t => t.title.toLowerCase().includes(q));
-      const events = this.state.events.filter(e => (e.title + ' ' + (e.note||'')).toLowerCase().includes(q));
-      // render filtered
-      $('#task-list').innerHTML = tasks.map(t=>`<div class="task-row"><div class="task-title">${t.title}</div><div class="task-meta">${this.nameFor(t.assignee)}</div></div>`).join('') || '<div class="muted">Aucun résultat</div>';
-      $('#today-events').innerHTML = events.map(e=>`<div class="event-item"><div style="width:8px;height:40px;background:${e.color};"></div><div class="event-meta"><div class="event-time">${e.time}</div><div class="event-title">${e.title}</div></div></div>`).join('') || '<div class="muted">Aucun événement</div>';
-    },
-
-    /* --------------------------
-       "IA" utility (local heuristics) - accessible & privacy-first
-       - detectOffensive: simple rule-based check
-       - rephrase: simple templating plus synonyms
-       - suggestActivities: match keywords and scoring
-       - smallTalk: friendly canned responses
-       -------------------------- */
-    ai: {
-      offensiveWords: ['idiot','stupide','nul','hate','déteste'],
-      synonyms: {
-        'fâché':'un peu contrarié',
-        'nul':'peu adapté',
-        'idiot':'inapproprié',
-        'impossible':'compliqué'
-      },
-      detectOffensive(text){
-        const t = (text||'').toLowerCase();
-        return this.offensiveWords.some(w => t.includes(w));
-      },
-      rephrase(text, tone='bienveillant'){
-        // very small local rephraser: polite prefix + replace offensive synonyms
-        let result = text;
-        for(const [k,v] of Object.entries(this.synonyms)){
-          const re = new RegExp('\\b'+escapeRegExp(k)+'\\b','gi');
-          result = result.replace(re, v);
-        }
-        if(tone === 'bienveillant') {
-          if(!/merci|merci beaucoup|svp|s\'il vous plaît/i.test(text)) result = 'Merci — ' + result;
-          // calm voice
-          result = result.replace(/!/g, '.');
-        }
-        // trim & capitalise
-        result = result.trim(); result = result.charAt(0).toUpperCase() + result.slice(1);
-        return result;
-      },
-      suggestActivities(msg, activities){
-        // simple scoring: if any tag word exists
-        const words = msg.split(/\W+/).map(s=>s.toLowerCase());
-        const score = activities.map(a=> {
-          const match = a.tags.reduce((acc,tag)=> acc + (words.includes(tag) ? 2 : 0), 0) + (words.some(w=> a.title.toLowerCase().includes(w)) ? 3:0);
-          return {act:a, score:match};
-        }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.act);
-        // fallback: return top 2
-        return score.length ? score : activities.slice(0,2);
-      },
-      smallTalk(userText){
-        const t = userText.toLowerCase();
-        if(/merci|merci beaucoup/.test(t)) return "Avec plaisir ! 💛";
-        if(/bonjour|salut/.test(t)) return "Bonjour ! Comment puis-je aider la famille aujourd'hui ?";
-        if(/qui est|présente/.test(t)) return "Voici la liste des membres connectés : " + App.state.family.members.map(m=>m.name).join(', ');
-        return "Merci pour le message — je peux proposer des activités, reformuler un texte ou résumer une discussion si vous le souhaitez.";
+      `).join('')}
+    </div>
+  `;
+}
+function settingsPage() {
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <h2 style="font-size:2em;font-weight:800;">Paramètres</h2>
+    </div>
+    <div class="card" style="margin-bottom:24px;">
+      <label style="display:flex;align-items:center;gap:15px;font-size:1.11em;">
+        <input type="checkbox" id="easyread-toggle" ${state.easyread?"checked":""} onchange="toggleEasyRead()" />
+        Activer le mode « lecture facile » (accessibilité)
+      </label>
+    </div>
+    <div class="card">
+      <h3>Confidentialité et données</h3>
+      <button onclick="showOverlay('privacy')" style="background:var(--brand-primary);color:#fff;font-size:1.12em;border:none;padding:11px 23px;border-radius:10px;font-weight:800;cursor:pointer;">Voir la politique</button>
+      <button onclick="showNotif('Données exportées (démo)')" style="margin-left:22px;background:var(--brand-secondary);border:none;padding:11px 23px;border-radius:10px;font-weight:800;cursor:pointer;">Exporter mes données</button>
+      <button onclick="showNotif('Suppression demandée (démo)')" style="margin-left:22px;background:#f0b6b6;color:#fff;border:none;padding:11px 23px;border-radius:10px;font-weight:800;cursor:pointer;">Demander suppression</button>
+    </div>
+  `;
+}
+function calendarMiniTable() {
+  return `
+    <table class="calendar-table">
+      <thead><tr><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+function calendarEventLine(evt) {
+  return `<div class="calendar-evt" style="background:${evt.color}22;">
+    <svg class="evt-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="4" fill="${evt.color||'#1c9dea'}"/></svg>
+    <span class="evt-time">${evt.time}</span>
+    <span class="evt-title">${evt.title}</span>
+    <span class="evt-note">${evt.note||""}</span>
+  </div>`;
+}
+function userName(id) {
+  const m = state.family.members.find(m=>m.id===id); return m?m.name:"";
+}
+function statusClass(st) {
+  if(st==="En cours") return "status-pending";
+  if(st==="À faire") return "status-todo";
+  if(st==="Fait") return "status-done";
+  return "";
+}
+/* --- INTERACTIONS --- */
+function afterRenderPage() {
+  // Chat
+  if(["dashboard","chat"].includes(state.page)) renderChat();
+  // Chat submit
+  const chatForm = document.getElementById('chat-form');
+  if(chatForm) {
+    chatForm.onsubmit = e => {
+      e.preventDefault();
+      const inp = document.getElementById('chat-input');
+      const txt = inp.value.trim();
+      if(txt){
+        state.chat.push({from:state.user.id, text:txt});
+        renderChat();
+        inp.value = "";
       }
     }
-  };
-
-  /* --------------------------
-     Small helpers exposed to template for inline onclick (simpler integration)
-     -------------------------- */
-  window.App = {
-    toggleTask: (id, e) => App.toggleTask(id, e),
-    removeTask: id => App.removeTask(id),
-    addActivityToCalendar: id => App.addActivityToCalendar(id),
-    logout: () => App.logout(),
-    toggleDark: () => App.toggleDark(),
-    requestAccountDeletion: () => App.requestAccountDeletion(),
-    startMeditation: () => App.startMeditation()
-  };
-
-  /* --------------------------
-     Safety & misc helpers
-     -------------------------- */
-  function escapeHtml(str){ if(!str) return ''; return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s]); }
-  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  function showToast(msg, ms=2200){ const t = $('#notif-banner'); t.textContent = msg; t.style.display='block'; setTimeout(()=> t.style.display='none', ms); }
-
-  /* --------------------------
-     Init app
-     -------------------------- */
-  (function init(){
-    // initialize store if empty
-    if(!Store.read()) Store.write(SEED);
-    App.init();
-  })();
-
-  </script>
+    document.getElementById('rephrase-btn').onclick = function(){
+      const inp = document.getElementById('chat-input');
+      if(inp.value.trim()){
+        let txt = inp.value.replace(/(pas|non|nul|bête|fâché|problème|difficile|jamais|impossible|trop)/gi, "un peu compliqué");
+        if(!txt.match(/(merci|bravo|chouette|génial|super|content|heureux)/i)){
+          txt = "Merci pour ta participation ! " + txt;
+        }
+        inp.value = txt;
+      }
+    };
+  }
+}
+function renderChat() {
+  const chatList = document.getElementById('chat-list');
+  if(!chatList) return;
+  chatList.innerHTML = "";
+  state.chat.forEach(msg => {
+    const row = document.createElement("div");
+    row.className = "chat-row " + (msg.from === "bot" ? "bot" : "");
+    const bubble = document.createElement("div");
+    bubble.className = "chat-msg " + (msg.from === "bot" ? "chat-bot" : "chat-me");
+    if(msg.from === "bot"){
+      bubble.innerHTML = '<svg style="width:18px;height:18px;vertical-align:middle;margin-right:7px;" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#ffe066"/><ellipse cx="16" cy="13" rx="7" ry="5" fill="#FFF"/><ellipse cx="16" cy="22" rx="9" ry="6" fill="#FFFDE7"/><circle cx="14" cy="13" r="1" fill="#222B45"/><circle cx="18" cy="13" r="1" fill="#222B45"/><rect x="13" y="18" width="6" height="2" rx="1" fill="#FFD600"/></svg>' + msg.text;
+    }else{
+      bubble.textContent = msg.text;
+    }
+    row.appendChild(bubble);
+    chatList.appendChild(row);
+  });
+  chatList.scrollTop = chatList.scrollHeight;
+}
+/* --- TÂCHES --- */
+function toggleTaskStatus(id) {
+  const t = state.tasks.find(t=>t.id===id);
+  if(t) t.status = t.status==="Fait"?"À faire":"Fait";
+  renderPageContent();
+}
+function deleteTask(id) {
+  state.tasks = state.tasks.filter(t=>t.id!==id);
+  renderPageContent();
+}
+function addTask() {
+  const inp = document.getElementById('task-add-inp');
+  const uid = +document.getElementById('task-add-user').value;
+  if(inp.value.trim()) {
+    state.tasks.push({id:Date.now(), title:inp.value, status:"À faire", assignee:uid});
+    inp.value = "";
+    renderPageContent();
+  }
+}
+/* --- OVERLAY & MODALS --- */
+function showOverlay(type) {
+  state.overlay = {type};
+  renderOverlay();
+}
+function closeOverlay() {
+  state.overlay = null;
+  document.getElementById("overlay-root")?.remove();
+}
+function renderOverlay() {
+  const existing = document.getElementById("overlay-root");
+  if(existing) existing.remove();
+  const div = document.createElement("div");
+  div.id = "overlay-root";
+  div.className = "overlay-bg";
+  let html = "";
+  if(state.overlay.type==="charte") {
+    html = `<div class="overlay-content">
+      <button class="overlay-close" onclick="closeOverlay()">&times;</button>
+      <h2>Charte d’inclusion</h2>
+      <ul style="font-size:1.13em;">
+        <li><b>Respect</b> des différences et des besoins de chacun</li>
+        <li><b>Équité</b> dans les échanges et la répartition des tâches</li>
+        <li><b>Accessibilité</b> pour tous : design et contenus adaptés</li>
+        <li><b>Bienveillance</b> dans la communication (IA de reformulation, modération)</li>
+        <li>Signalement simple, comité de revue transparent</li>
+      </ul>
+      <div style="font-size:1.02em;color:var(--brand-muted);margin-top:15px;">En utilisant Nesti, vous acceptez ces valeurs.</div>
+    </div>`;
+  }
+  if(state.overlay.type==="privacy") {
+    html = `<div class="overlay-content">
+      <button class="overlay-close" onclick="closeOverlay()">&times;</button>
+      <h2>Politique de confidentialité</h2>
+      <ul style="font-size:1.13em;">
+        <li>Données limitées au strict nécessaire (RGPD ready)</li>
+        <li>Chiffrement en transit et au repos</li>
+        <li>Droit d'accès, de portabilité, de suppression à tout moment</li>
+        <li>Consentement explicite pour localisation, santé, photos</li>
+        <li>Prompts IA anonymisés, pas de profilage</li>
+      </ul>
+      <div style="font-size:1.02em;color:var(--brand-muted);margin-top:15px;">Contact DPO: privacy@nesti-app.fr</div>
+    </div>`;
+  }
+  if(state.overlay.type==="event") {
+    html = `<div class="calendar-modal">
+      <h3>Nouvel événement</h3>
+      <form id="event-form">
+        <label>Titre</label>
+        <input id="event-title" required />
+        <label>Heure</label>
+        <input id="event-time" type="time" required />
+        <label>Jour (septembre)</label>
+        <input id="event-day" type="number" min="1" max="30" required />
+        <label>Note (optionnelle)</label>
+        <input id="event-note" />
+        <div class="calendar-modal-actions">
+          <button class="cancel" type="button" onclick="closeOverlay()">Annuler</button>
+          <button class="save" type="submit">Ajouter</button>
+        </div>
+      </form>
+    </div>`;
+  }
+  div.innerHTML = html;
+  document.body.appendChild(div);
+  if(state.overlay.type==="event") {
+    document.getElementById("event-form").onsubmit = function(e){
+      e.preventDefault();
+      const title = document.getElementById("event-title").value.trim();
+      const time = document.getElementById("event-time").value;
+      const day = +document.getElementById("event-day").value;
+      const note = document.getElementById("event-note").value.trim();
+      if(title && time && day) {
+        state.events.push({id:Date.now(), title, time, day, note, creator:state.user.id, color:"#1c9dea"});
+        closeOverlay();
+        renderPageContent();
+        showNotif("Événement ajouté !");
+      }
+    }
+  }
+}
+function showNotif(msg) {
+  const banner = document.getElementById("notif-banner");
+  if(!banner) return;
+  banner.textContent = msg;
+  banner.style.display = "block";
+  setTimeout(()=>{banner.style.display="none";},2300);
+}
+function toggleEasyRead() {
+  state.easyread = !state.easyread;
+  renderRoot();
+}
+/* --- INIT --- */
+renderRoot();
+</script>
 </body>
 </html>
