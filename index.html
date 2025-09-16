@@ -6291,1634 +6291,847 @@
     </style>
 </head>
 <body>
-    <div class="app">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <!-- ... (le sidebar existant reste inchangé) ... -->
-        </aside>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Nesti — Prototype</h1>
+        <div class="muted">Gestion familiale — Demo local</div>
+      </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="header">
-                <div class="header-left">
-                    <h1 id="page-title">Dashboard</h1>
-                    <p id="page-subtitle">Organisation et bien-être pour toute la famille</p>
-                </div>
-                <div class="header-right">
-                    <button class="btn btn-secondary" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                        <span>Mode sombre</span>
-                    </button>
-                </div>
-            </div>
+      <div id="user-area" class="small right">
+        <div id="not-logged">
+          <button id="btn-show-auth" class="ghost" aria-expanded="false">Se connecter / S'inscrire</button>
+        </div>
 
-            <!-- Dashboard View -->
-            <div class="view-content" id="dashboard-view">
-                <!-- ... (le dashboard existant reste inchangé) ... -->
-            </div>
+        <div id="logged" class="hidden" aria-hidden="true">
+          <span id="user-name" class="pill" title="Utilisateur connecté"></span>
+          <div class="controls" style="display:inline-flex;">
+            <button id="btn-account" class="ghost" title="Mon compte">Compte</button>
+            <button id="btn-logout" class="ghost" title="Se déconnecter">Se déconnecter</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-            <!-- Chat View -->
-            <div class="view-content hidden" id="chat-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Chat Familial</h2>
-                        <div class="family-members">
-                            <div class="family-member">
-                                <div class="member-avatar">M</div>
-                                <div class="member-name">Marie</div>
-                            </div>
-                            <div class="family-member">
-                                <div class="member-avatar">P</div>
-                                <div class="member-name">Pierre</div>
-                            </div>
-                            <div class="family-member">
-                                <div class="member-avatar">E</div>
-                                <div class="member-name">Emma</div>
-                            </div>
-                            <div class="family-member">
-                                <div class="member-avatar">L</div>
-                                <div class="member-name">Lucas</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-messages" id="full-chat-messages" style="height: 400px;">
-                        <!-- Messages will be populated by JavaScript -->
-                    </div>
-                    <div class="chat-input-container">
-                        <input type="text" class="chat-input" placeholder="Écrire un message..." id="full-chat-input">
-                        <button class="chat-send" id="full-chat-send">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
+    <!-- Auth / Register & Login -->
+    <div id="auth-card" class="card hidden" aria-hidden="true">
+      <h3>Connexion / Inscription</h3>
+      <div class="cols">
+        <div>
+          <form id="form-register" autocomplete="on" novalidate>
+            <h4>Créer un compte</h4>
+            <input name="name" placeholder="Nom (optionnel)" />
+            <input name="email" type="email" placeholder="Email" required />
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input name="password" id="reg-password" type="password" placeholder="Mot de passe (min 8 caractères)" required minlength="8" />
+              <button type="button" class="toggle-pass ghost" data-target="#reg-password" aria-pressed="false">Afficher</button>
             </div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button type="submit">S'inscrire</button>
+              <button type="button" id="btn-fill-demo" class="ghost">Remplir (demo)</button>
+            </div>
+            <div id="reg-msg" class="muted small" role="status" aria-live="polite"></div>
+          </form>
+        </div>
 
-            <!-- Calendar View -->
-            <div class="view-content hidden" id="calendar-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Calendrier Familial</h2>
-                        <div class="calendar-nav">
-                            <button class="btn btn-secondary btn-sm" id="prev-month">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <span id="current-month-year">Mois 2023</span>
-                            <button class="btn btn-secondary btn-sm" id="next-month">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="full-calendar-container"></div>
-                    <div class="events-list" id="calendar-events-list">
-                        <!-- Events will be populated by JavaScript -->
-                    </div>
-                </div>
+        <div>
+          <form id="form-login" autocomplete="on" novalidate>
+            <h4>Se connecter</h4>
+            <input name="email" type="email" placeholder="Email" required />
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input name="password" id="login-password" type="password" placeholder="Mot de passe" required />
+              <button type="button" class="toggle-pass ghost" data-target="#login-password" aria-pressed="false">Afficher</button>
             </div>
-
-            <!-- Activities View -->
-            <div class="view-content hidden" id="activities-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Activités Inclusives</h2>
-                        <div class="filter-bar">
-                            <button class="filter-btn active" data-filter="all">Toutes</button>
-                            <button class="filter-btn" data-filter="culture">Culture</button>
-                            <button class="filter-btn" data-filter="nature">Nature</button>
-                            <button class="filter-btn" data-filter="sport">Sport</button>
-                            <button class="filter-btn" data-filter="food">Cuisine</button>
-                        </div>
-                    </div>
-                    <div class="activities-grid" id="activities-grid">
-                        <!-- Activities will be populated by JavaScript -->
-                    </div>
-                </div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button type="submit">Connexion</button>
+              <button type="button" id="btn-demo-login" class="ghost">Demo login</button>
             </div>
-
-            <!-- Wellbeing View -->
-            <div class="view-content hidden" id="wellbeing-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Bien-être Familial</h2>
-                        <div class="streak-counter">
-                            <i class="fas fa-fire" style="color: var(--accent-dark);"></i>
-                            <span class="streak-number">7</span>
-                            <span>jours de méditation consécutifs</span>
-                        </div>
-                    </div>
-                    <div class="wellbeing-content">
-                        <div class="meditation-section">
-                            <h3>Méditation Guidée</h3>
-                            <div class="meditation-timer" id="full-meditation-timer">15:00</div>
-                            <div class="meditation-controls">
-                                <button class="meditation-button" id="full-start-meditation">
-                                    <i class="fas fa-play"></i>
-                                    <span>Démarrer la méditation</span>
-                                </button>
-                                <div class="meditation-options">
-                                    <button class="btn btn-sm btn-secondary" data-duration="300">5 min</button>
-                                    <button class="btn btn-sm btn-secondary" data-duration="600">10 min</button>
-                                    <button class="btn btn-sm btn-secondary" data-duration="900">15 min</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mood-tracker">
-                            <h3>Comment vous sentez-vous aujourd'hui?</h3>
-                            <div class="mood-picker">
-                                <div class="mood-option" data-mood="1">
-                                    <div class="mood-emoji">😢</div>
-                                    <div class="mood-label">Triste</div>
-                                </div>
-                                <div class="mood-option" data-mood="2">
-                                    <div class="mood-emoji">😕</div>
-                                    <div class="mood-label">Fatigué</div>
-                                </div>
-                                <div class="mood-option" data-mood="3">
-                                    <div class="mood-emoji">😐</div>
-                                    <div class="mood-label">Neutre</div>
-                                </div>
-                                <div class="mood-option" data-mood="4">
-                                    <div class="mood-emoji">🙂</div>
-                                    <div class="mood-label">Bien</div>
-                                </div>
-                                <div class="mood-option" data-mood="5">
-                                    <div class="mood-emoji">😄</div>
-                                    <div class="mood-label">Excellent</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tasks View -->
-            <div class="view-content hidden" id="tasks-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Tâches Familiales</h2>
-                        <div class="filter-bar">
-                            <button class="filter-btn active" data-filter="all">Toutes</button>
-                            <button class="filter-btn" data-filter="todo">À faire</button>
-                            <button class="filter-btn" data-filter="completed">Terminées</button>
-                        </div>
-                    </div>
-                    <div class="task-list" id="full-task-list">
-                        <!-- Tasks will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings View -->
-            <div class="view-content hidden" id="settings-view">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Paramètres</h2>
-                    </div>
-                    <div class="settings-content">
-                        <div class="setting-section">
-                            <h3>Profil Familial</h3>
-                            <div class="form-group">
-                                <label class="form-label">Nom de famille</label>
-                                <input type="text" class="input" value="Famille Martin">
-                            </div>
-                            <div class="members-list">
-                                <div class="member-item">
-                                    <div class="member-avatar">M</div>
-                                    <div class="member-info">
-                                        <div class="member-name">Marie</div>
-                                        <div class="member-role">Parent</div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    </div>
-                                </div>
-                                <div class="member-item">
-                                    <div class="member-avatar">P</div>
-                                    <div class="member-info">
-                                        <div class="member-name">Pierre</div>
-                                        <div class="member-role">Parent</div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    </div>
-                                </div>
-                                <div class="member-item">
-                                    <div class="member-avatar">E</div>
-                                    <div class="member-info">
-                                        <div class="member-name">Emma</div>
-                                        <div class="member-role">Enfant</div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    </div>
-                                </div>
-                                <div class="member-item">
-                                    <div class="member-avatar">L</div>
-                                    <div class="member-info">
-                                        <div class="member-name">Lucas</div>
-                                        <div class="member-role">Enfant</div>
-                                    </div>
-                                    <div class="member-actions">
-                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" style="margin-top: 16px;">
-                                <i class="fas fa-plus"></i>
-                                <span>Ajouter un membre</span>
-                            </button>
-                        </div>
-                        
-                        <div class="setting-section">
-                            <h3>Préférences</h3>
-                            <div class="preference-item">
-                                <div class="preference-label">
-                                    <h4>Notifications</h4>
-                                    <p>Recevoir des notifications pour les événements et tâches</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="preference-item">
-                                <div class="preference-label">
-                                    <h4>Rappels quotidiens</h4>
-                                    <p>Recevoir un rappel des activités de la journée</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="preference-item">
-                                <div class="preference-label">
-                                    <h4>Accessibilité</h4>
-                                    <p>Mode haute visibilité</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+            <div id="login-msg" class="muted small" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+      <div class="muted-note">Astuce: utilisez les boutons "Demo" pour remplir rapidement les formulaires en environnement de test.</div>
     </div>
 
-    <!-- Modals -->
-    <!-- ... (les modals existants restent inchangés) ... -->
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden" aria-hidden="true">
+      <div class="card" aria-live="polite">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3>Mes familles</h3>
+            <div class="muted small">Créer une famille ou sélectionnez-en une pour gérer événements & tâches</div>
+          </div>
 
-    <!-- Notification -->
-    <!-- ... (la notification existante reste inchangée) ... -->
-    
-    <footer>
-        <!-- ... (le footer existant reste inchangé) ... -->
+          <div style="min-width:320px;">
+            <form id="form-create-family" style="display:flex; gap:8px; align-items:center;" aria-label="Créer une nouvelle famille">
+              <input name="name" placeholder="Nom famille" required />
+              <input name="slug" placeholder="slug-unique" required pattern="^[a-z0-9-]+$" title="Utilisez lettres minuscules, chiffres et tirets" />
+              <button type="submit">Créer</button>
+            </form>
+            <div id="family-create-msg" class="muted small"></div>
+          </div>
+        </div>
+
+        <div id="families-list" style="margin-top:12px;"></div>
+      </div>
+
+      <div id="family-panel" class="card hidden" aria-hidden="true">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 id="family-title"></h3>
+            <div id="family-meta" class="muted small"></div>
+          </div>
+
+          <div style="min-width:320px;">
+            <form id="form-invite" style="display:flex; gap:8px; align-items:center;" aria-label="Inviter un membre par email">
+              <input name="email" type="email" placeholder="Inviter (email)" required />
+              <button type="submit">Inviter</button>
+            </form>
+            <div id="invite-msg" class="muted small"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <strong>Membres</strong>
+          <div id="members-list" class="muted small" style="margin-top:8px;"></div>
+        </div>
+
+        <div style="margin-top:12px;" class="grid-3">
+          <div>
+            <h4>Événements</h4>
+            <form id="form-create-event" aria-label="Ajouter un événement">
+              <input name="title" placeholder="Titre" required />
+              <div class="form-row">
+                <input name="date" type="date" required />
+                <input name="time" type="time" />
+              </div>
+              <textarea name="description" placeholder="Description" rows="2"></textarea>
+              <div style="margin-top:6px;"><button type="submit">Ajouter événement</button></div>
+            </form>
+            <div id="events-list" style="margin-top:8px;"></div>
+          </div>
+
+          <div>
+            <h4>Tâches</h4>
+            <form id="form-create-task" aria-label="Ajouter une tâche">
+              <input name="title" placeholder="Titre" required />
+              <div class="form-row">
+                <input name="dueDate" type="date" />
+                <select name="priority">
+                  <option value="">Priorité</option>
+                  <option value="low">Faible</option>
+                  <option value="medium">Moyenne</option>
+                  <option value="high">Haute</option>
+                </select>
+              </div>
+              <textarea name="description" placeholder="Description" rows="2"></textarea>
+              <div style="margin-top:6px;"><button type="submit">Ajouter tâche</button></div>
+            </form>
+            <div id="tasks-list" style="margin-top:8px;"></div>
+          </div>
+
+          <div>
+            <h4>Invitations</h4>
+            <div class="muted small">Envoyer et accepter des invitations. Les tokens peuvent être copiés pour partage.</div>
+            <div id="invites-list" style="margin-top:8px;"></div>
+
+            <div style="margin-top:8px;">
+              <div class="muted small">Si vous avez reçu un lien d'invitation, collez ici :</div>
+              <form id="form-accept-invite" style="display:flex; gap:8px; margin-top:6px;" aria-label="Accepter une invitation par token">
+                <input name="token" placeholder="token d'invitation" />
+                <button type="submit">Accepter</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="info" class="muted small" style="margin-top:8px;"></div>
+    </div>
+
+    <footer class="muted small">
+      Prototype local — API attendue sur http://localhost:4000
     </footer>
-    <script>
-        // ========== ÉTAT DE L'APPLICATION ==========
-        const state = {
-            user: {
-                id: 1,
-                name: "Marie",
-                email: "marie@example.com",
-                familyName: "Famille Martin",
-                avatar: "M",
-                role: "parent"
-            },
-            currentView: "dashboard",
-            isAuthenticated: true,
-            theme: "light",
-            events: [],
-            tasks: [],
-            messages: [],
-            activities: [],
-            meditation: {
-                active: false,
-                timer: 0,
-                duration: 15 * 60, // 15 minutes in seconds
-                interval: null
-            },
-            notifications: [],
-            currentMonth: new Date().getMonth(),
-            currentYear: new Date().getFullYear()
+  </div>
+
+  <!-- Toast + Modal -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <div id="modal-content"></div>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px;">
+        <button id="modal-cancel" class="ghost">Annuler</button>
+        <button id="modal-confirm" class="danger">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Enhanced frontend JS: structured state, robust error handling, edit/delete actions,
+       optimistic updates, accessible toasts and modal confirmation dialogs.
+       The API endpoints used are the same as the backend primer; non-implemented endpoints are handled gracefully.
+    */
+
+    const API_BASE = "http://localhost:4000/api";
+
+    // Application state
+    const state = {
+      user: null,
+      families: [],
+      currentFamilyId: null,
+      events: [],
+      tasks: [],
+      invites: []
+    };
+
+    // ---- Helpers ----
+    function $(sel) { return document.querySelector(sel); }
+    function $all(sel) { return Array.from(document.querySelectorAll(sel)); }
+    function show(el){ if(!el) return; el.classList.remove('hidden'); el.setAttribute('aria-hidden','false'); }
+    function hide(el){ if(!el) return; el.classList.add('hidden'); el.setAttribute('aria-hidden','true'); }
+    function isVisible(el){ return el && !el.classList.contains('hidden'); }
+
+    function showToast(msg, opts = {}) {
+      const t = $('#toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      if (opts.success) t.style.background = '#0f172a';
+      setTimeout(() => { t.style.display = 'none'; }, opts.duration || 4000);
+    }
+
+    // Modal: returns a promise that resolves true if confirmed
+    function showModal({ title = 'Confirmer', message = '', confirmText = 'Confirmer', cancelText = 'Annuler' } = {}) {
+      return new Promise(resolve => {
+        const backdrop = $('#modal-backdrop');
+        const content = $('#modal-content');
+        $('#modal-confirm').textContent = confirmText;
+        $('#modal-cancel').textContent = cancelText;
+        content.innerHTML = `<strong>${escapeHtml(title)}</strong><div style="margin-top:8px;">${escapeHtml(message)}</div>`;
+        backdrop.style.display = 'flex';
+        backdrop.setAttribute('aria-hidden','false');
+
+        function cleanup(result){
+          backdrop.style.display = 'none';
+          backdrop.setAttribute('aria-hidden','true');
+          $('#modal-confirm').removeEventListener('click', onConfirm);
+          $('#modal-cancel').removeEventListener('click', onCancel);
+          resolve(result);
+        }
+        function onConfirm(){ cleanup(true); }
+        function onCancel(){ cleanup(false); }
+        $('#modal-confirm').addEventListener('click', onConfirm);
+        $('#modal-cancel').addEventListener('click', onCancel);
+      });
+    }
+
+    function escapeHtml(s) {
+      if (!s && s !== 0) return '';
+      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+    }
+
+    function setToken(token) {
+      if (token) localStorage.setItem('nesti_token', token);
+      else localStorage.removeItem('nesti_token');
+      refreshUI();
+    }
+    function getToken() { return localStorage.getItem('nesti_token'); }
+
+    // Centralized fetch wrapper with JSON parsing + error normalization
+    async function apiFetch(path, { method = 'GET', body = null, headers = {} } = {}) {
+      headers['Content-Type'] = 'application/json';
+      const token = getToken();
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const opts = { method, headers };
+      if (body) opts.body = typeof body === 'string' ? body : JSON.stringify(body);
+
+      let res;
+      try {
+        res = await fetch(API_BASE + path, opts);
+      } catch (err) {
+        throw { error: 'Impossible de joindre le serveur', detail: err.message || err };
+      }
+
+      let json = null;
+      try { json = await res.json(); } catch(e){ json = null; }
+      if (!res.ok) {
+        // unify error shape
+        const message = (json && (json.error || json.message)) || `Erreur ${res.status}`;
+        throw { error: message, status: res.status, detail: json };
+      }
+      return json;
+    }
+
+    // ---- Rendering ----
+
+    function renderAuthArea() {
+      const token = getToken();
+      if (!token) {
+        show($('#not-logged')); hide($('#logged')); hide($('#dashboard')); hide($('#auth-card'));
+        return;
+      }
+      hide($('#not-logged')); show($('#logged')); show($('#dashboard'));
+      // decode token for quick display
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        $('#user-name').textContent = payload.email || payload.name || 'Utilisateur';
+      } catch(e) { $('#user-name').textContent = 'Utilisateur'; }
+    }
+
+    function renderFamiliesList() {
+      const el = $('#families-list');
+      el.innerHTML = '';
+      if (!state.families.length) {
+        el.innerHTML = '<div class="muted small">Aucune famille. Créez-en une.</div>';
+        return;
+      }
+      state.families.forEach(f => {
+        const active = f.id === state.currentFamilyId ? 'box-shadow:0 4px 14px rgba(43,108,176,.06);' : '';
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.innerHTML = `
+          <div class="list-main">
+            <strong>${escapeHtml(f.name)}</strong>
+            <div class="meta">slug: ${escapeHtml(f.slug)} • membres: ${f.members?.length ?? 0}</div>
+          </div>
+          <div class="controls" style="${active}">
+            <button class="ghost btn-open" data-id="${f.id}">Ouvrir</button>
+            <button class="ghost btn-rename" data-id="${f.id}">Renommer</button>
+            <button class="danger btn-delete" data-id="${f.id}">Supprimer</button>
+          </div>`;
+        el.appendChild(div);
+      });
+    }
+
+    function renderFamilyPanel() {
+      const family = state.families.find(f => f.id === state.currentFamilyId);
+      if (!family) { hide($('#family-panel')); return; }
+      show($('#family-panel'));
+      $('#family-title').textContent = family.name;
+      $('#family-meta').textContent = `slug: ${family.slug} — créée: ${new Date(family.createdAt).toLocaleString()}`;
+      // members
+      const membersEl = $('#members-list');
+      membersEl.innerHTML = family.members.map(m => {
+        const role = escapeHtml(m.role || 'member');
+        const email = escapeHtml(m.user.email);
+        return `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+                  <div><strong>${email}</strong><div class="meta">${role}</div></div>
+                  <div class="controls">
+                    <button class="ghost btn-change-role" data-user="${m.userId}" data-family="${family.id}">Role</button>
+                    <button class="ghost btn-remove-member" data-user="${m.userId}" data-family="${family.id}">Retirer</button>
+                  </div>
+                </div>`;
+      }).join('');
+      renderEvents();
+      renderTasks();
+      renderInvites();
+    }
+
+    function renderEvents() {
+      const el = $('#events-list');
+      const events = state.events || [];
+      if (!events.length) { el.innerHTML = '<div class="muted small">Aucun événement</div>'; return; }
+      el.innerHTML = events.map(ev => `
+        <div class="list-item">
+          <div class="list-main">
+            <strong>${escapeHtml(ev.title)}</strong>
+            <div class="meta">${new Date(ev.date).toLocaleDateString()} ${ev.time || ''}</div>
+            <div class="small">${escapeHtml(ev.description || '')}</div>
+          </div>
+          <div class="controls">
+            <button class="ghost btn-edit-event" data-id="${ev.id}">Modifier</button>
+            <button class="danger btn-delete-event" data-id="${ev.id}">Supprimer</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderTasks() {
+      const el = $('#tasks-list');
+      const tasks = state.tasks || [];
+      if (!tasks.length) { el.innerHTML = '<div class="muted small">Aucune tâche</div>'; return; }
+      el.innerHTML = tasks.map(t => `
+        <div class="list-item">
+          <div class="list-main">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="checkbox" class="task-done" data-id="${t.id}" ${t.done ? 'checked' : ''} />
+              <strong style="${t.done ? 'text-decoration:line-through;color:var(--muted)' : ''}">${escapeHtml(t.title)}</strong>
+            </div>
+            <div class="meta">${t.priority ? 'Priorité: ' + escapeHtml(t.priority) : ''} ${t.dueDate ? '• ' + new Date(t.dueDate).toLocaleDateString() : ''}</div>
+            <div class="small">${escapeHtml(t.description || '')}</div>
+          </div>
+          <div class="controls">
+            <button class="ghost btn-edit-task" data-id="${t.id}">Modifier</button>
+            <button class="danger btn-delete-task" data-id="${t.id}">Supprimer</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderInvites() {
+      const el = $('#invites-list');
+      const invites = state.invites || [];
+      if (!invites.length) {
+        el.innerHTML = '<div class="muted small">Aucune invitation</div>';
+        return;
+      }
+      // show token + copy
+      el.innerHTML = invites.map(i => `
+        <div class="list-item">
+          <div class="list-main">
+            <strong>${escapeHtml(i.email)}</strong>
+            <div class="meta">token: <span class="small">${escapeHtml(i.token)}</span> • accepted: ${i.accepted}</div>
+            <div class="small">exp: ${new Date(i.expiresAt).toLocaleString()}</div>
+          </div>
+          <div class="controls">
+            <button class="ghost btn-copy-token" data-token="${escapeHtml(i.token)}">Copier</button>
+            <button class="ghost btn-resend-invite" data-id="${i.id}">Renvoyer</button>
+            <button class="danger btn-cancel-invite" data-id="${i.id}">Annuler</button>
+          </div>
+        </div>`).join('');
+    }
+
+    // ---- Actions / API calls ----
+
+    async function refreshState() {
+      // load families and select current
+      try {
+        const families = await apiFetch('/families');
+        state.families = families;
+        if (!state.currentFamilyId && families.length) state.currentFamilyId = families[0].id;
+        renderFamiliesList();
+        renderFamilyPanel();
+      } catch (err) {
+        // if unauthorized, clear token
+        if (err.status === 401) { setToken(null); showToast('Session expirée'); }
+        else console.warn(err);
+      }
+    }
+
+    async function loadFamilyDetails(familyId) {
+      try {
+        // families endpoint returns members included by primer; events/tasks need separate calls
+        const families = await apiFetch('/families');
+        state.families = families;
+        const family = families.find(f => f.id === familyId);
+        state.currentFamilyId = familyId;
+        // load events/tasks/invites
+        try { state.events = await apiFetch(`/families/${familyId}/events`); } catch(e){ state.events = []; }
+        try { state.tasks = await apiFetch(`/families/${familyId}/tasks`); } catch(e){ state.tasks = []; }
+        try { state.invites = await apiFetch(`/families/${familyId}/invitations`); } catch(e){ state.invites = []; }
+        renderFamiliesList();
+        renderFamilyPanel();
+      } catch (err) {
+        console.warn(err);
+        showToast(err.error || 'Erreur lors du chargement de la famille');
+      }
+    }
+
+    // Register & Login
+    async function handleRegister(form) {
+      const data = { email: form.email.value.trim(), password: form.password.value, name: form.name.value.trim() || null };
+      if (data.password.length < 8) { $('#reg-msg').textContent = 'Mot de passe trop court (min 8)'; return; }
+      $('#reg-msg').textContent = 'Inscription en cours...';
+      try {
+        const res = await apiFetch('/auth/register', { method: 'POST', body: data });
+        setToken(res.token);
+        $('#reg-msg').textContent = 'Inscription réussie';
+        await refreshState();
+      } catch (err) {
+        $('#reg-msg').textContent = err.error || 'Erreur inscription';
+      }
+    }
+
+    async function handleLogin(form) {
+      const data = { email: form.email.value.trim(), password: form.password.value };
+      $('#login-msg').textContent = 'Connexion...';
+      try {
+        const res = await apiFetch('/auth/login', { method: 'POST', body: data });
+        setToken(res.token);
+        $('#login-msg').textContent = 'Connecté';
+        await refreshState();
+      } catch (err) {
+        $('#login-msg').textContent = err.error || 'Erreur connexion';
+      }
+    }
+
+    // Family create / rename / delete
+    async function createFamily(data, form) {
+      try {
+        const f = await apiFetch('/families', { method: 'POST', body: data });
+        showToast('Famille créée', { success:true });
+        form.reset();
+        await refreshState();
+        state.currentFamilyId = f.id;
+        await loadFamilyDetails(f.id);
+      } catch (err) {
+        $('#family-create-msg').textContent = err.error || 'Erreur création';
+      }
+    }
+
+    async function renameFamily(familyId) {
+      const family = state.families.find(f => f.id === familyId);
+      const result = prompt('Nouveau nom pour la famille', family.name);
+      if (!result) return;
+      try {
+        // backend primer doesn't have PATCH family endpoint; attempt and handle failure gracefully
+        await apiFetch(`/families/${familyId}`, { method: 'PATCH', body: { name: result } });
+        showToast('Famille renommée');
+        await refreshState();
+      } catch (err) {
+        showToast('Renommer non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    async function deleteFamily(familyId) {
+      const ok = await showModal({ title: 'Supprimer la famille', message: 'Confirmez la suppression de cette famille (irréversible)', confirmText: 'Supprimer' });
+      if (!ok) return;
+      try {
+        await apiFetch(`/families/${familyId}`, { method: 'DELETE' });
+        showToast('Famille supprimée');
+        if (state.currentFamilyId === familyId) state.currentFamilyId = null;
+        await refreshState();
+      } catch (err) {
+        showToast('Suppression non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    // Invite
+    async function inviteMember(familyId, email, form) {
+      try {
+        const res = await apiFetch(`/families/${familyId}/invite`, { method: 'POST', body: { email } });
+        showToast('Invitation créée');
+        form.reset();
+        // try to refresh invites list
+        try { state.invites = await apiFetch(`/families/${familyId}/invitations`); } catch(e){ /* ignore */ }
+        renderInvites();
+      } catch (err) {
+        showToast(err.error || 'Erreur invitation');
+      }
+    }
+
+    // Accept invite
+    async function acceptInvite(token, form) {
+      try {
+        await apiFetch('/invitations/accept', { method: 'POST', body: { token } });
+        showToast('Invitation acceptée');
+        form.reset();
+        await refreshState();
+      } catch (err) {
+        showToast(err.error || 'Erreur acceptation');
+      }
+    }
+
+    // Events CRUD
+    async function createEvent(familyId, data, form) {
+      try {
+        const e = await apiFetch(`/families/${familyId}/events`, { method: 'POST', body: data });
+        showToast('Événement ajouté');
+        form.reset();
+        state.events.unshift(e);
+        renderEvents();
+      } catch (err) {
+        showToast(err.error || 'Erreur événement');
+      }
+    }
+
+    async function editEvent(eventId) {
+      const ev = state.events.find(x => x.id === eventId);
+      if (!ev) return;
+      const title = prompt('Titre', ev.title); if (!title) return;
+      const date = prompt('Date (YYYY-MM-DD)', new Date(ev.date).toISOString().slice(0,10));
+      try {
+        await apiFetch(`/families/${ev.familyId}/events/${eventId}`, { method: 'PATCH', body: { title, date } });
+        showToast('Modification essayée');
+        await loadFamilyDetails(ev.familyId);
+      } catch(e){
+        showToast('Modification non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    async function deleteEvent(eventId) {
+      const ev = state.events.find(x => x.id === eventId);
+      if (!ev) return;
+      const ok = await showModal({ title: 'Supprimer événement', message: `Supprimer "${ev.title}" ?`, confirmText: 'Supprimer' });
+      if (!ok) return;
+      try {
+        await apiFetch(`/families/${ev.familyId}/events/${eventId}`, { method: 'DELETE' });
+        showToast('Événement supprimé');
+        state.events = state.events.filter(x => x.id !== eventId);
+        renderEvents();
+      } catch(e){
+        showToast('Suppression non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    // Tasks CRUD
+    async function createTask(familyId, data, form) {
+      try {
+        const t = await apiFetch(`/families/${familyId}/tasks`, { method: 'POST', body: data });
+        showToast('Tâche ajoutée');
+        form.reset();
+        state.tasks.unshift(t);
+        renderTasks();
+      } catch (err) {
+        showToast(err.error || 'Erreur tâche');
+      }
+    }
+
+    async function editTask(taskId) {
+      const t = state.tasks.find(x => x.id === taskId);
+      if (!t) return;
+      const title = prompt('Titre', t.title); if (!title) return;
+      try {
+        await apiFetch(`/families/${t.familyId}/tasks/${taskId}`, { method: 'PATCH', body: { title } });
+        showToast('Modification essayée');
+        await loadFamilyDetails(t.familyId);
+      } catch(e){
+        showToast('Modification non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    async function deleteTask(taskId) {
+      const t = state.tasks.find(x => x.id === taskId);
+      if (!t) return;
+      const ok = await showModal({ title: 'Supprimer tâche', message: `Supprimer "${t.title}" ?`, confirmText: 'Supprimer' });
+      if (!ok) return;
+      try {
+        await apiFetch(`/families/${t.familyId}/tasks/${taskId}`, { method: 'DELETE' });
+        showToast('Tâche supprimée');
+        state.tasks = state.tasks.filter(x => x.id !== taskId);
+        renderTasks();
+      } catch(e){
+        showToast('Suppression non disponible sur le backend', { duration:3000 });
+      }
+    }
+
+    // Toggle task done (optimistic)
+    async function toggleTaskDone(taskId, checked) {
+      const t = state.tasks.find(x => x.id === taskId);
+      if (!t) return;
+      const prev = t.done;
+      t.done = checked;
+      renderTasks();
+      try {
+        await apiFetch(`/families/${t.familyId}/tasks/${taskId}`, { method: 'PATCH', body: { done: checked } });
+      } catch (e) {
+        t.done = prev; renderTasks();
+        showToast('Mise à jour non disponible sur le backend', { duration:2000 });
+      }
+    }
+
+    // Invite helpers (copy/resend/cancel)
+    function copyToClipboard(text) {
+      navigator.clipboard?.writeText(text).then(()=> showToast('Copié dans le presse-papiers'));
+    }
+
+    async function resendInvite(inviteId) {
+      try {
+        await apiFetch(`/invitations/${inviteId}/resend`, { method: 'POST' });
+        showToast('Invitation renvoyée');
+      } catch(e) {
+        showToast('Renvoyer non disponible sur le backend');
+      }
+    }
+
+    async function cancelInvite(inviteId) {
+      const ok = await showModal({ title:'Annuler invitation', message:'Voulez-vous annuler cette invitation ?', confirmText: 'Annuler' });
+      if (!ok) return;
+      try {
+        await apiFetch(`/invitations/${inviteId}`, { method: 'DELETE' });
+        showToast('Invitation annulée');
+        state.invites = state.invites.filter(i => i.id !== inviteId);
+        renderInvites();
+      } catch(e){
+        showToast('Annulation non disponible sur le backend');
+      }
+    }
+
+    // ---- Event Delegation & Listeners ----
+    document.addEventListener('click', async (e) => {
+      const target = e.target;
+      // family actions
+      if (target.matches('.btn-open')) {
+        const id = Number(target.dataset.id);
+        await loadFamilyDetails(id);
+      } else if (target.matches('.btn-rename')) {
+        const id = Number(target.dataset.id);
+        await renameFamily(id);
+      } else if (target.matches('.btn-delete')) {
+        const id = Number(target.dataset.id);
+        await deleteFamily(id);
+      }
+
+      // invite list
+      else if (target.matches('.btn-copy-token')) {
+        const token = target.dataset.token;
+        copyToClipboard(token);
+      } else if (target.matches('.btn-resend-invite')) {
+        const id = Number(target.dataset.id);
+        await resendInvite(id);
+      } else if (target.matches('.btn-cancel-invite')) {
+        const id = Number(target.dataset.id);
+        await cancelInvite(id);
+      }
+
+      // events
+      else if (target.matches('.btn-edit-event')) {
+        const id = Number(target.dataset.id);
+        await editEvent(id);
+      } else if (target.matches('.btn-delete-event')) {
+        const id = Number(target.dataset.id);
+        await deleteEvent(id);
+      }
+
+      // tasks
+      else if (target.matches('.btn-edit-task')) {
+        const id = Number(target.dataset.id);
+        await editTask(id);
+      } else if (target.matches('.btn-delete-task')) {
+        const id = Number(target.dataset.id);
+        await deleteTask(id);
+      } else if (target.matches('.task-done')) {
+        const id = Number(target.dataset.id);
+        toggleTaskDone(id, target.checked);
+      }
+
+      // members
+      else if (target.matches('.btn-change-role')) {
+        const userId = Number(target.dataset.user);
+        const familyId = Number(target.dataset.family);
+        const newRole = prompt('Nouveau rôle (owner, admin, member)', 'member');
+        if (!newRole) return;
+        try {
+          await apiFetch(`/families/${familyId}/members/${userId}/role`, { method: 'PATCH', body: { role: newRole } });
+          showToast('Rôle mis à jour');
+          await loadFamilyDetails(familyId);
+        } catch(e){ showToast('Modification non disponible sur le backend'); }
+      } else if (target.matches('.btn-remove-member')) {
+        const userId = Number(target.dataset.user);
+        const familyId = Number(target.dataset.family);
+        const conf = await showModal({ title: 'Retirer membre', message: 'Confirmer le retrait du membre ?' });
+        if (!conf) return;
+        try {
+          await apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' });
+          showToast('Membre retiré');
+          await loadFamilyDetails(familyId);
+        } catch(e){ showToast('Retirer non disponible sur le backend'); }
+      }
+    });
+
+    // Toggle password visibility
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('.toggle-pass')) {
+        const btn = e.target;
+        const target = document.querySelector(btn.dataset.target);
+        if (!target) return;
+        const shown = target.type === 'text';
+        target.type = shown ? 'password' : 'text';
+        btn.textContent = shown ? 'Afficher' : 'Masquer';
+        btn.setAttribute('aria-pressed', (!shown).toString());
+      }
+    });
+
+    // Form listeners
+    document.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      // register
+      if (form.id === 'form-register') {
+        await handleRegister(form);
+      } else if (form.id === 'form-login') {
+        await handleLogin(form);
+      } else if (form.id === 'form-create-family') {
+        const data = { name: form.name.value.trim(), slug: form.slug.value.trim() };
+        const valid = form.slug.checkValidity();
+        if (!valid) { $('#family-create-msg').textContent = form.slug.title; return; }
+        await createFamily(data, form);
+      } else if (form.id === 'form-invite') {
+        const email = form.email.value.trim();
+        const familyId = state.currentFamilyId;
+        if (!familyId) { showToast('Sélectionnez une famille'); return; }
+        await inviteMember(familyId, email, form);
+      } else if (form.id === 'form-accept-invite') {
+        const token = form.token.value.trim();
+        if (!token) { showToast('Fournir un token'); return; }
+        await acceptInvite(token, form);
+      } else if (form.id === 'form-create-event') {
+        const familyId = state.currentFamilyId;
+        if (!familyId) { showToast('Sélectionnez une famille'); return; }
+        const data = {
+          title: form.title.value.trim(),
+          description: form.description.value.trim(),
+          date: form.date.value,
+          time: form.time.value || null
         };
-        
-        // ========== DONNÉES DE DÉMONSTRATION ==========
-        const demoData = {
-            events: [
-                {
-                    id: 1,
-                    title: "Heure du goûter",
-                    time: "15:00",
-                    date: new Date().toISOString().split('T')[0],
-                    description: "Pause gourmande en famille",
-                    color: "#FFD166",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    title: "Cours de piano",
-                    time: "17:00",
-                    date: new Date().toISOString().split('T')[0],
-                    description: "Leçon de piano d'Emma",
-                    color: "#1C9DEA",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 3,
-                    title: "Jeux de famille",
-                    time: "20:00",
-                    date: new Date().toISOString().split('T')[0],
-                    description: "Soirée jeux de société",
-                    color: "#29C48A",
-                    createdAt: new Date().toISOString()
-                }
-            ],
-            tasks: [
-                {
-                    id: 1,
-                    title: "Préparer le dîner",
-                    completed: false,
-                    assignee: "Marie",
-                    dueDate: new Date().toISOString().split('T')[0],
-                    priority: "high",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    title: "Faire les devoirs",
-                    completed: true,
-                    assignee: "Emma",
-                    dueDate: new Date().toISOString().split('T')[0],
-                    priority: "medium",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 3,
-                    title: "Acheter cadeau anniversaire",
-                    completed: false,
-                    assignee: "Pierre",
-                    dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-                    priority: "low",
-                    createdAt: new Date().toISOString()
-                }
-            ],
-            messages: [
-                {
-                    id: 1,
-                    sender: "Emma",
-                    content: "Salut à tous! Quelle activité ce soir?",
-                    timestamp: new Date(Date.now() - 300000).toISOString(),
-                    type: "user"
-                },
-                {
-                    id: 2,
-                    sender: "Nesti",
-                    content: "Bonjour! Je peux vous suggérer la dernière expo sur l'art thérapie à 16h",
-                    timestamp: new Date(Date.now() - 60000).toISOString(),
-                    type: "bot",
-                    suggestions: ["En savoir plus", "Réserver", "Autres suggestions"]
-                }
-            ],
-            activities: [
-                {
-                    id: 1,
-                    title: "Expo sur l'art-thérapie",
-                    location: "Musée de l'art moderne",
-                    date: new Date(Date.now() + 86400000).toISOString(),
-                    price: "Gratuit",
-                    accessibility: ["Accessible PMR", "Audio-guide"],
-                    rating: 4.8,
-                    category: "Culture",
-                    ageRange: "6+"
-                },
-                {
-                    id: 2,
-                    title: "Atelier cuisine du monde",
-                    location: "Centre culturel",
-                    date: new Date(Date.now() + 172800000).toISOString(),
-                    price: "15€",
-                    accessibility: ["Accessible PMR", "Traduction LSF"],
-                    rating: 4.9,
-                    category: "Cuisine",
-                    ageRange: "Tous âges"
-                },
-                {
-                    id: 3,
-                    title: "Parcours nature adapté",
-                    location: "Parc municipal",
-                    date: new Date(Date.now() + 259200000).toISOString(),
-                    price: "5€",
-                    accessibility: ["Accessible PMR", "Chiens guide acceptés"],
-                    rating: 4.7,
-                    category: "Nature",
-                    ageRange: "Tous âges"
-                }
-            ]
+        await createEvent(familyId, data, form);
+      } else if (form.id === 'form-create-task') {
+        const familyId = state.currentFamilyId;
+        if (!familyId) { showToast('Sélectionnez une famille'); return; }
+        const data = {
+          title: form.title.value.trim(),
+          description: form.description.value.trim(),
+          dueDate: form.dueDate.value || null,
+          priority: form.priority.value || null
         };
-        
-        // ========== INITIALISATION ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            // Charger les données depuis le localStorage ou utiliser les données de démo
-            loadData();
-            
-            // Initialiser l'interface
-            initUI();
-            
-            // Initialiser les écouteurs d'événements
-            initEventListeners();
-            
-            // Rendre la vue actuelle
-            renderCurrentView();
-        });
-        
-        // ========== GESTION DES DONNÉES ==========
-        function loadData() {
-            // Essayer de charger depuis le localStorage
-            const savedData = localStorage.getItem('nesti_data');
-            
-            if (savedData) {
-                try {
-                    const parsedData = JSON.parse(savedData);
-                    state.events = parsedData.events || demoData.events;
-                    state.tasks = parsedData.tasks || demoData.tasks;
-                    state.messages = parsedData.messages || demoData.messages;
-                    state.activities = parsedData.activities || demoData.activities;
-                } catch (e) {
-                    console.error("Erreur lors du chargement des données:", e);
-                    loadDemoData();
-                }
-            } else {
-                loadDemoData();
-            }
+        await createTask(familyId, data, form);
+      }
+    });
+
+    // Misc UI interactions
+    $('#btn-show-auth').addEventListener('click', () => {
+      const authCard = $('#auth-card');
+      authCard.classList.toggle('hidden');
+      const expanded = authCard.classList.contains('hidden') ? 'false' : 'true';
+      $('#btn-show-auth').setAttribute('aria-expanded', expanded);
+    });
+    $('#btn-logout').addEventListener('click', () => { setToken(null); showToast('Déconnecté'); });
+
+    $('#btn-fill-demo').addEventListener('click', () => {
+      const f = $('#form-register');
+      f.email.value = `demo${Date.now()%10000}@example.com`;
+      f.password.value = 'password123';
+      f.name.value = 'Demo User';
+    });
+    $('#btn-demo-login').addEventListener('click', () => {
+      const f = $('#form-login');
+      f.email.value = 'demo@example.com';
+      f.password.value = 'password';
+    });
+
+    // Initial load
+    async function refreshUI() {
+      const token = getToken();
+      if (!token) {
+        renderAuthArea();
+        return;
+      }
+      // verify token by calling a protected endpoint
+      try {
+        await refreshState();
+        renderAuthArea();
+      } catch (err) {
+        console.warn(err);
+        setToken(null);
+      }
+    }
+
+    // On page load: check URL token for invite
+    document.addEventListener('DOMContentLoaded', async () => {
+      await refreshUI();
+      const params = new URLSearchParams(location.search);
+      if (params.get('token')) {
+        const token = params.get('token');
+        $('#form-accept-invite').token.value = token;
+        if (!getToken()) {
+          // ask user to login / register first
+          show($('#auth-card'));
+        } else {
+          try {
+            await acceptInvite(token, $('#form-accept-invite'));
+            showToast('Invitation acceptée via lien');
+          } catch(e){ console.warn(e); }
         }
-        
-        function loadDemoData() {
-            state.events = demoData.events;
-            state.tasks = demoData.tasks;
-            state.messages = demoData.messages;
-            state.activities = demoData.activities;
-        }
-        
-        function saveData() {
-            const dataToSave = {
-                events: state.events,
-                tasks: state.tasks,
-                messages: state.messages,
-                activities: state.activities
-            };
-            
-            localStorage.setItem('nesti_data', JSON.stringify(dataToSave));
-        }
-        
-        // ========== INITIALISATION DE L'INTERFACE ==========
-        function initUI() {
-            // Appliquer le thème
-            applyTheme();
-            
-            // Générer le calendrier
-            generateCalendar();
-            
-            // Remplir les événements d'aujourd'hui
-            renderTodaysEvents();
-            
-            // Remplir les tâches
-            renderTasks();
-            
-            // Remplir les messages
-            renderMessages();
-            
-            // Remplir les activités
-            renderActivities();
-        }
-        
-        function initEventListeners() {
-            // Navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const view = this.getAttribute('data-view');
-                    switchView(view);
-                });
-            });
-            
-            // Thème
-            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-            
-            // Déconnexion
-            document.getElementById('logout-btn').addEventListener('click', logout);
-            
-            // Modals événements
-            document.getElementById('add-event-btn').addEventListener('click', openEventModal);
-            document.getElementById('event-modal-close').addEventListener('click', closeEventModal);
-            document.getElementById('event-cancel').addEventListener('click', closeEventModal);
-            document.getElementById('event-form').addEventListener('submit', handleEventSubmit);
-            
-            // Modals tâches
-            document.getElementById('add-task-btn').addEventListener('click', openTaskModal);
-            document.getElementById('task-modal-close').addEventListener('click', closeTaskModal);
-            document.getElementById('task-cancel').addEventListener('click', closeTaskModal);
-            document.getElementById('task-form').addEventListener('submit', handleTaskSubmit);
-            
-            // Chat
-            document.getElementById('chat-send').addEventListener('click', sendMessage);
-            document.getElementById('chat-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            // Chat complet
-            document.getElementById('full-chat-send').addEventListener('click', sendFullMessage);
-            document.getElementById('full-chat-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendFullMessage();
-            });
-            
-            // Méditation
-            document.getElementById('start-meditation').addEventListener('click', toggleMeditation);
-            document.getElementById('full-start-meditation').addEventListener('click', toggleFullMeditation);
-            
-            // Options de méditation
-            document.querySelectorAll('.meditation-options button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const duration = parseInt(this.getAttribute('data-duration'));
-                    setMeditationDuration(duration);
-                });
-            });
-            
-            // Suivi d'humeur
-            document.querySelectorAll('.mood-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const mood = this.getAttribute('data-mood');
-                    trackMood(mood);
-                });
-            });
-            
-            // Filtres d'activités
-            document.querySelectorAll('.filter-bar .filter-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter');
-                    filterActivities(filter);
-                });
-            });
-            
-            // Navigation du calendrier
-            document.getElementById('prev-month').addEventListener('click', function() {
-                navigateMonth(-1);
-            });
-            
-            document.getElementById('next-month').addEventListener('click', function() {
-                navigateMonth(1);
-            });
-            
-            // Notifications
-            document.getElementById('notification-close').addEventListener('click', hideNotification);
-        }
-        
-        // ========== GESTION DES VUES ==========
-        function switchView(view) {
-            // Mettre à jour la navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            document.querySelector(`.nav-item[data-view="${view}"]`).classList.add('active');
-            
-            // Cacher toutes les vues
-            document.querySelectorAll('.view-content').forEach(viewEl => {
-                viewEl.classList.add('hidden');
-            });
-            
-            // Afficher la vue actuelle
-            document.getElementById(`${view}-view`).classList.remove('hidden');
-            
-            // Mettre à jour le titre
-            document.getElementById('page-title').textContent = getViewTitle(view);
-            document.getElementById('page-subtitle').textContent = getViewSubtitle(view);
-            
-            // Mettre à jour l'état
-            state.currentView = view;
-            
-            // Rendre le contenu spécifique à la vue
-            renderViewContent(view);
-        }
-        
-        function getViewTitle(view) {
-            const titles = {
-                dashboard: "Dashboard",
-                chat: "Chat familial",
-                calendar: "Calendrier",
-                activities: "Activités",
-                wellbeing: "Bien-être",
-                tasks: "Tâches",
-                settings: "Paramètres"
-            };
-            
-            return titles[view] || "Nesti";
-        }
-        
-        function getViewSubtitle(view) {
-            const subtitles = {
-                dashboard: "Organisation et bien-être pour toute la famille",
-                chat: "Discutez avec votre famille et l'assistant Nesti",
-                calendar: "Planifiez vos événements familialux",
-                activities: "Découvrez des activités inclusives",
-                wellbeing: "Prenez soin de votre bien-être familial",
-                tasks: "Gérez vos tâches quotidiennes",
-                settings: "Personnalisez votre expérience Nesti"
-            };
-            
-            return subtitles[view] || "";
-        }
-        
-        function renderViewContent(view) {
-            switch (view) {
-                case "dashboard":
-                    renderDashboard();
-                    break;
-                case "chat":
-                    renderChat();
-                    break;
-                case "calendar":
-                    renderCalendar();
-                    break;
-                case "activities":
-                    renderActivitiesView();
-                    break;
-                case "wellbeing":
-                    renderWellbeing();
-                    break;
-                case "tasks":
-                    renderTasksView();
-                    break;
-                case "settings":
-                    renderSettings();
-                    break;
-            }
-        }
-        
-        function renderCurrentView() {
-            renderViewContent(state.currentView);
-        }
-        
-        // ========== FONCTIONNALITÉS DU TABLEAU DE BORD ==========
-        function renderDashboard() {
-            // Cette fonction est appelée lorsque le tableau de bord est affiché
-            // On peut mettre à jour les statistiques ou autres éléments dynamiques
-            updateStats();
-        }
-        
-        function updateStats() {
-            // Mettre à jour les statistiques affichées sur le tableau de bord
-            const today = new Date().toISOString().split('T')[0];
-            const todayEvents = state.events.filter(event => event.date === today).length;
-            const pendingTasks = state.tasks.filter(task => !task.completed).length;
-            
-            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = todayEvents;
-            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = pendingTasks;
-        }
-        
-        // ========== CALENDRIER ==========
-        function generateCalendar() {
-            const calendarContainer = document.getElementById('calendar-container');
-            const today = new Date();
-            const currentMonth = today.getMonth();
-            const currentYear = today.getFullYear();
-            
-            // Créer l'en-tête du calendrier avec les jours de la semaine
-            const weekdays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-            let calendarHTML = '<div class="calendar-grid">';
-            
-            // Ajouter les en-têtes des jours
-            weekdays.forEach(day => {
-                calendarHTML += `<div class="calendar-weekday">${day}</div>`;
-            });
-            
-            // Obtenir le premier jour du mois
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            // Obtenir le dernier jour du mois
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            
-            // Calculer le nombre de jours à afficher avant le premier jour du mois
-            const daysOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-            
-            // Commencer à partir du lundi précédent si nécessaire
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - daysOffset);
-            
-            // Générer les jours du calendrier
-            for (let i = 0; i < 42; i++) {
-                const currentDate = new Date(startDate);
-                currentDate.setDate(startDate.getDate() + i);
-                
-                const isToday = currentDate.toDateString() === today.toDateString();
-                const isCurrentMonth = currentDate.getMonth() === currentMonth;
-                const hasEvent = state.events.some(event => {
-                    const eventDate = new Date(event.date);
-                    return eventDate.toDateString() === currentDate.toDateString();
-                });
-                
-                let dayClass = 'calendar-day';
-                if (isToday) dayClass += ' today';
-                if (!isCurrentMonth) dayClass += ' other-month';
-                if (hasEvent) dayClass += ' has-event';
-                
-                calendarHTML += `
-                    <div class="${dayClass}" data-date="${currentDate.toISOString().split('T')[0]}">
-                        ${currentDate.getDate()}
-                    </div>
-                `;
-            }
-            
-            calendarHTML += '</div>';
-            calendarContainer.innerHTML = calendarHTML;
-            
-            // Ajouter les écouteurs d'événements pour les jours
-            document.querySelectorAll('.calendar-day').forEach(day => {
-                day.addEventListener('click', function() {
-                    const date = this.getAttribute('data-date');
-                    selectDate(date);
-                });
-            });
-        }
-        
-        function selectDate(date) {
-            // Mettre en surbrillance la date sélectionnée
-            document.querySelectorAll('.calendar-day').forEach(day => {
-                day.classList.remove('selected');
-            });
-            
-            document.querySelector(`.calendar-day[data-date="${date}"]`).classList.add('selected');
-            
-            // Afficher les événements de cette date
-            showEventsForDate(date);
-        }
-        
-        function showEventsForDate(date) {
-            const events = state.events.filter(event => event.date === date);
-            const eventsList = document.getElementById('today-events-list');
-            
-            if (events.length === 0) {
-                eventsList.innerHTML = '<p class="no-events">Aucun événement prévu pour cette date</p>';
-                return;
-            }
-            
-            let eventsHTML = '';
-            events.forEach(event => {
-                eventsHTML += `
-                    <div class="event-item">
-                        <div class="event-time">${event.time}</div>
-                        <div class="event-details">
-                            <div class="event-title">${event.title}</div>
-                            <div class="event-description">${event.description}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            eventsList.innerHTML = eventsHTML;
-        }
-        
-        function renderTodaysEvents() {
-            const today = new Date().toISOString().split('T')[0];
-            showEventsForDate(today);
-        }
-        
-        // ========== TÂCHES ==========
-        function renderTasks() {
-            const taskList = document.getElementById('task-list-container');
-            let tasksHTML = '';
-            
-            state.tasks.forEach(task => {
-                const priorityClass = `priority-${task.priority}`;
-                
-                tasksHTML += `
-                    <div class="task-item" data-task-id="${task.id}">
-                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" data-task-id="${task.id}">
-                            ${task.completed ? '<i class="fas fa-check"></i>' : ''}
-                        </div>
-                        <div class="task-details">
-                            <div class="task-title">${task.title}</div>
-                            <div class="task-meta">
-                                <span>${task.assignee}</span>
-                                <span class="task-priority ${priorityClass}">${getPriorityLabel(task.priority)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            taskList.innerHTML = tasksHTML;
-            
-            // Ajouter les écouteurs d'événements pour les cases à cocher
-            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', function() {
-                    const taskId = this.getAttribute('data-task-id');
-                    toggleTaskCompletion(taskId);
-                });
-            });
-        }
-        
-        function getPriorityLabel(priority) {
-            const labels = {
-                low: 'Basse',
-                medium: 'Moyenne',
-                high: 'Haute'
-            };
-            
-            return labels[priority] || priority;
-        }
-        
-        function toggleTaskCompletion(taskId) {
-            const task = state.tasks.find(t => t.id == taskId);
-            if (task) {
-                task.completed = !task.completed;
-                saveData();
-                renderTasks();
-                
-                showNotification(
-                    task.completed ? 'Tâche complétée' : 'Tâche réactivée',
-                    `"${task.title}" a été ${task.completed ? 'complétée' : 'réactivée'}`,
-                    'success'
-                );
-            }
-        }
-        
-        // ========== CHAT ==========
-        function renderMessages() {
-            const chatMessages = document.getElementById('chat-messages');
-            let messagesHTML = '';
-            
-            state.messages.forEach(message => {
-                const time = new Date(message.timestamp).toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                if (message.type === 'user') {
-                    messagesHTML += `
-                        <div class="message user">
-                            <div class="message-content">${message.content}</div>
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                } else {
-                    let suggestionsHTML = '';
-                    if (message.suggestions && message.suggestions.length > 0) {
-                        suggestionsHTML = '<div class="message-suggestions">';
-                        message.suggestions.forEach(suggestion => {
-                            suggestionsHTML += `<div class="suggestion">${suggestion}</div>`;
-                        });
-                        suggestionsHTML += '</div>';
-                    }
-                    
-                    messagesHTML += `
-                        <div class="message bot">
-                            <div class="message-content">${message.content}</div>
-                            ${suggestionsHTML}
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            chatMessages.innerHTML = messagesHTML;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            
-            if (message === '') return;
-            
-            // Ajouter le message de l'utilisateur
-            const userMessage = {
-                id: Date.now(),
-                sender: state.user.name,
-                content: message,
-                timestamp: new Date().toISOString(),
-                type: 'user'
-            };
-            
-            state.messages.push(userMessage);
-            saveData();
-            renderMessages();
-            
-            // Réinitialiser l'input
-            input.value = '';
-            
-            // Simuler une réponse de l'IA après un délai
-            setTimeout(() => {
-                const aiResponse = generateAIResponse(message);
-                state.messages.push(aiResponse);
-                saveData();
-                renderMessages();
-            }, 1000);
-        }
-        
-        function generateAIResponse(message) {
-            const responses = [
-                "C'est une excellente idée ! Voulez-vous que je vous aide à organiser cela ?",
-                "J'ai trouvé quelques activités qui pourraient vous intéresser. Souhaitez-vous les voir ?",
-                "Parfait ! Je vais ajouter cela à votre planning familial.",
-                "Excellente question ! Laissez-moi vous proposer quelques suggestions personnalisées."
-            ];
-            
-            return {
-                id: Date.now(),
-                sender: 'Nesti',
-                content: responses[Math.floor(Math.random() * responses.length)],
-                timestamp: new Date().toISOString(),
-                type: 'bot',
-                suggestions: ['En savoir plus', 'Réserver', 'Autres suggestions']
-            };
-        }
-        
-        // ========== VUE CHAT COMPLÈTE ==========
-        function renderChat() {
-            const chatMessages = document.getElementById('full-chat-messages');
-            let messagesHTML = '';
-            
-            state.messages.forEach(message => {
-                const time = new Date(message.timestamp).toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                if (message.type === 'user') {
-                    messagesHTML += `
-                        <div class="message user">
-                            <div class="message-content">${message.content}</div>
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                } else {
-                    let suggestionsHTML = '';
-                    if (message.suggestions && message.suggestions.length > 0) {
-                        suggestionsHTML = '<div class="message-suggestions">';
-                        message.suggestions.forEach(suggestion => {
-                            suggestionsHTML += `<div class="suggestion">${suggestion}</div>`;
-                        });
-                        suggestionsHTML += '</div>';
-                    }
-                    
-                    messagesHTML += `
-                        <div class="message bot">
-                            <div class="message-content">${message.content}</div>
-                            ${suggestionsHTML}
-                            <div class="message-time">${time}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            chatMessages.innerHTML = messagesHTML;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        function sendFullMessage() {
-            const input = document.getElementById('full-chat-input');
-            const message = input.value.trim();
-            
-            if (message === '') return;
-            
-            // Ajouter le message de l'utilisateur
-            const userMessage = {
-                id: Date.now(),
-                sender: state.user.name,
-                content: message,
-                timestamp: new Date().toISOString(),
-                type: 'user'
-            };
-            
-            state.messages.push(userMessage);
-            saveData();
-            renderChat();
-            
-            // Réinitialiser l'input
-            input.value = '';
-            
-            // Simuler une réponse de l'IA après un délai
-            setTimeout(() => {
-                const aiResponse = generateAIResponse(message);
-                state.messages.push(aiResponse);
-                saveData();
-                renderChat();
-            }, 1000);
-        }
-        
-        // ========== VUE CALENDRIER COMPLÈTE ==========
-        function renderCalendar() {
-            generateFullCalendar();
-            updateMonthYearDisplay();
-        }
-        
-        function generateFullCalendar() {
-            const calendarContainer = document.getElementById('full-calendar-container');
-            const month = state.currentMonth;
-            const year = state.currentYear;
-            
-            // Créer l'en-tête du calendrier avec les jours de la semaine
-            const weekdays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-            let calendarHTML = '<div class="calendar-grid">';
-            
-            // Ajouter les en-têtes des jours
-            weekdays.forEach(day => {
-                calendarHTML += `<div class="calendar-weekday">${day}</div>`;
-            });
-            
-            // Obtenir le premier jour du mois
-            const firstDay = new Date(year, month, 1);
-            // Obtenir le dernier jour du mois
-            const lastDay = new Date(year, month + 1, 0);
-            
-            // Calculer le nombre de jours à afficher avant le premier jour du mois
-            const daysOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-            
-            // Commencer à partir du lundi précédent si nécessaire
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - daysOffset);
-            
-            // Générer les jours du calendrier
-            for (let i = 0; i < 42; i++) {
-                const currentDate = new Date(startDate);
-                currentDate.setDate(startDate.getDate() + i);
-                
-                const today = new Date();
-                const isToday = currentDate.toDateString() === today.toDateString();
-                const isCurrentMonth = currentDate.getMonth() === month;
-                const hasEvent = state.events.some(event => {
-                    const eventDate = new Date(event.date);
-                    return eventDate.toDateString() === currentDate.toDateString();
-                });
-                
-                let dayClass = 'calendar-day';
-                if (isToday) dayClass += ' today';
-                if (!isCurrentMonth) dayClass += ' other-month';
-                if (hasEvent) dayClass += ' has-event';
-                
-                calendarHTML += `
-                    <div class="${dayClass}" data-date="${currentDate.toISOString().split('T')[0]}">
-                        ${currentDate.getDate()}
-                    </div>
-                `;
-            }
-            
-            calendarHTML += '</div>';
-            calendarContainer.innerHTML = calendarHTML;
-            
-            // Ajouter les écouteurs d'événements pour les jours
-            document.querySelectorAll('#full-calendar-container .calendar-day').forEach(day => {
-                day.addEventListener('click', function() {
-                    const date = this.getAttribute('data-date');
-                    selectFullCalendarDate(date);
-                });
-            });
-        }
-        
-        function selectFullCalendarDate(date) {
-            // Mettre en surbrillance la date sélectionnée
-            document.querySelectorAll('#full-calendar-container .calendar-day').forEach(day => {
-                day.classList.remove('selected');
-            });
-            
-            document.querySelector(`#full-calendar-container .calendar-day[data-date="${date}"]`).classList.add('selected');
-            
-            // Afficher les événements de cette date
-            showFullCalendarEventsForDate(date);
-        }
-        
-        function showFullCalendarEventsForDate(date) {
-            const events = state.events.filter(event => event.date === date);
-            const eventsList = document.getElementById('calendar-events-list');
-            
-            if (events.length === 0) {
-                eventsList.innerHTML = '<p class="no-events">Aucun événement prévu pour cette date</p>';
-                return;
-            }
-            
-            let eventsHTML = '';
-            events.forEach(event => {
-                eventsHTML += `
-                    <div class="event-item">
-                        <div class="event-time">${event.time}</div>
-                        <div class="event-details">
-                            <div class="event-title">${event.title}</div>
-                            <div class="event-description">${event.description}</div>
-                        </div>
-                        <button class="btn btn-sm btn-secondary event-action" data-event-id="${event.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            
-            eventsList.innerHTML = eventsHTML;
-        }
-        
-        function navigateMonth(direction) {
-            state.currentMonth += direction;
-            
-            if (state.currentMonth < 0) {
-                state.currentMonth = 11;
-                state.currentYear--;
-            } else if (state.currentMonth > 11) {
-                state.currentMonth = 0;
-                state.currentYear++;
-            }
-            
-            generateFullCalendar();
-            updateMonthYearDisplay();
-        }
-        
-        function updateMonthYearDisplay() {
-            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-            ];
-            
-            document.getElementById('current-month-year').textContent = 
-                `${monthNames[state.currentMonth]} ${state.currentYear}`;
-        }
-        
-        // ========== ACTIVITÉS ==========
-        function renderActivities() {
-            const activityList = document.getElementById('activity-list');
-            let activitiesHTML = '';
-            
-            state.activities.slice(0, 3).forEach(activity => {
-                activitiesHTML += `
-                    <div class="activity-item">
-                        <div class="activity-header">
-                            <div>
-                                <div class="activity-title">${activity.title}</div>
-                                <div class="activity-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    ${activity.location}
-                                </div>
-                            </div>
-                            <div class="activity-rating">
-                                <i class="fas fa-star"></i>
-                                ${activity.rating}
-                            </div>
-                        </div>
-                        <div class="activity-tags">
-                            <span class="activity-tag">${activity.category}</span>
-                            <span class="activity-tag">${activity.ageRange}</span>
-                            <span class="activity-tag">${activity.price}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            activityList.innerHTML = activitiesHTML;
-        }
-        
-        // ========== VUE ACTIVITÉS COMPLÈTE ==========
-        function renderActivitiesView() {
-            const activitiesGrid = document.getElementById('activities-grid');
-            let activitiesHTML = '';
-            
-            state.activities.forEach(activity => {
-                activitiesHTML += `
-                    <div class="activity-card" data-category="${activity.category.toLowerCase()}">
-                        <div class="activity-card-header">
-                            <div class="activity-card-title">${activity.title}</div>
-                            <div class="activity-card-rating">
-                                <i class="fas fa-star"></i>
-                                ${activity.rating}
-                            </div>
-                        </div>
-                        <div class="activity-card-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            ${activity.location}
-                        </div>
-                        <div class="activity-card-date">
-                            <i class="fas fa-calendar"></i>
-                            ${formatDate(activity.date)}
-                        </div>
-                        <div class="activity-card-info">
-                            <span class="activity-card-price">${activity.price}</span>
-                            <span class="activity-card-age">${activity.ageRange}</span>
-                        </div>
-                        <div class="activity-card-accessibility">
-                            ${activity.accessibility.map(acc => `<span class="accessibility-tag">${acc}</span>`).join('')}
-                        </div>
-                        <div class="activity-card-actions">
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-info-circle"></i>
-                                Détails
-                            </button>
-                            <button class="btn btn-accent btn-sm">
-                                <i class="fas fa-calendar-plus"></i>
-                                Planifier
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            activitiesGrid.innerHTML = activitiesHTML;
-        }
-        
-        function filterActivities(filter) {
-            // Mettre à jour les boutons de filtre
-            document.querySelectorAll('.filter-bar .filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.querySelector(`.filter-bar .filter-btn[data-filter="${filter}"]`).classList.add('active');
-            
-            // Filtrer les activités
-            const activityCards = document.querySelectorAll('.activity-card');
-            
-            activityCards.forEach(card => {
-                if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-        
-        // ========== BIEN-ÊTRE ==========
-        function toggleMeditation() {
-            const button = document.getElementById('start-meditation');
-            const timer = document.getElementById('meditation-timer');
-            
-            if (!state.meditation.active) {
-                // Démarrer la méditation
-                state.meditation.active = true;
-                state.meditation.timer = state.meditation.duration;
-                
-                button.innerHTML = '<i class="fas fa-stop"></i><span>Arrêter la méditation</span>';
-                button.classList.add('stop');
-                
-                // Mettre à jour le timer
-                updateMeditationTimer();
-                
-                // Démarrer le compte à rebours
-                state.meditation.interval = setInterval(() => {
-                    state.meditation.timer--;
-                    updateMeditationTimer();
-                    
-                    if (state.meditation.timer <= 0) {
-                        clearInterval(state.meditation.interval);
-                        state.meditation.active = false;
-                        
-                        button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
-                        button.classList.remove('stop');
-                        
-                        showNotification(
-                            'Méditation terminée',
-                            'Vous avez complété une session de méditation de 15 minutes!',
-                            'success'
-                        );
-                    }
-                }, 1000);
-            } else {
-                // Arrêter la méditation
-                clearInterval(state.meditation.interval);
-                state.meditation.active = false;
-                state.meditation.timer = state.meditation.duration;
-                
-                button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
-                button.classList.remove('stop');
-                
-                updateMeditationTimer();
-                
-                showNotification(
-                    'Méditation arrêtée',
-                    'Vous pouvez reprendre votre session plus tard.',
-                    'info'
-                );
-            }
-        }
-        
-        function toggleFullMeditation() {
-            const button = document.getElementById('full-start-meditation');
-            const timer = document.getElementById('full-meditation-timer');
-            
-            if (!state.meditation.active) {
-                // Démarrer la méditation
-                state.meditation.active = true;
-                state.meditation.timer = state.meditation.duration;
-                
-                button.innerHTML = '<i class="fas fa-stop"></i><span>Arrêter la méditation</span>';
-                button.classList.add('stop');
-                
-                // Mettre à jour le timer
-                updateFullMeditationTimer();
-                
-                // Démarrer le compte à rebours
-                state.meditation.interval = setInterval(() => {
-                    state.meditation.timer--;
-                    updateFullMeditationTimer();
-                    
-                    if (state.meditation.timer <= 0) {
-                        clearInterval(state.meditation.interval);
-                        state.meditation.active = false;
-                        
-                        button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
-                        button.classList.remove('stop');
-                        
-                        showNotification(
-                            'Méditation terminée',
-                            'Vous avez complété une session de méditation!',
-                            'success'
-                        );
-                    }
-                }, 1000);
-            } else {
-                // Arrêter la méditation
-                clearInterval(state.meditation.interval);
-                state.meditation.active = false;
-                state.meditation.timer = state.meditation.duration;
-                
-                button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
-                button.classList.remove('stop');
-                
-                updateFullMeditationTimer();
-                
-                showNotification(
-                    'Méditation arrêtée',
-                    'Vous pouvez reprendre votre session plus tard.',
-                    'info'
-                );
-            }
-        }
-        
-        function setMeditationDuration(duration) {
-            state.meditation.duration = duration;
-            state.meditation.timer = duration;
-            
-            const minutes = Math.floor(duration / 60);
-            document.getElementById('full-meditation-timer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:00`;
-        }
-        
-        function updateMeditationTimer() {
-            const timer = document.getElementById('meditation-timer');
-            const minutes = Math.floor(state.meditation.timer / 60);
-            const seconds = state.meditation.timer % 60;
-            
-            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        function updateFullMeditationTimer() {
-            const timer = document.getElementById('full-meditation-timer');
-            const minutes = Math.floor(state.meditation.timer / 60);
-            const seconds = state.meditation.timer % 60;
-            
-            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        function trackMood(mood) {
-            // Mettre à jour l'interface
-            document.querySelectorAll('.mood-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            document.querySelector(`.mood-option[data-mood="${mood}"]`).classList.add('selected');
-            
-            // Enregistrer l'humeur (dans un cas réel, on enverrait ces données à un serveur)
-            const moodData = {
-                date: new Date().toISOString().split('T')[0],
-                mood: parseInt(mood),
-                userId: state.user.id
-            };
-            
-            showNotification(
-                'Humeur enregistrée',
-                'Merci d\'avoir partagé votre état d\'esprit aujourd\'hui.',
-                'success'
-            );
-        }
-        
-        function renderWellbeing() {
-            // Mettre à jour le timer de méditation
-            const minutes = Math.floor(state.meditation.duration / 60);
-            document.getElementById('full-meditation-timer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:00`;
-        }
-        
-        // ========== VUE TÂCHES COMPLÈTE ==========
-        function renderTasksView() {
-            const taskList = document.getElementById('full-task-list');
-            let tasksHTML = '';
-            
-            state.tasks.forEach(task => {
-                const priorityClass = `priority-${task.priority}`;
-                const dueDate = new Date(task.dueDate);
-                const today = new Date();
-                const isOverdue = !task.completed && dueDate < today && dueDate.toDateString() !== today.toDateString();
-                
-                tasksHTML += `
-                    <div class="task-item ${isOverdue ? 'overdue' : ''}" data-task-id="${task.id}">
-                        <div class="task-checkbox ${task.completed ? 'checked' : ''}" data-task-id="${task.id}">
-                            ${task.completed ? '<i class="fas fa-check"></i>' : ''}
-                        </div>
-                        <div class="task-details">
-                            <div class="task-title">${task.title}</div>
-                            <div class="task-meta">
-                                <span>Assigné à: ${task.assignee}</span>
-                                <span>Échéance: ${formatDate(task.dueDate)}</span>
-                                <span class="task-priority ${priorityClass}">${getPriorityLabel(task.priority)}</span>
-                                ${isOverdue ? '<span class="task-overdue">En retard</span>' : ''}
-                            </div>
-                        </div>
-                        <div class="task-actions">
-                            <button class="btn btn-sm btn-secondary task-edit" data-task-id="${task.id}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger task-delete" data-task-id="${task.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            taskList.innerHTML = tasksHTML;
-            
-            // Ajouter les écouteurs d'événements pour les cases à cocher
-            document.querySelectorAll('#full-task-list .task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', function() {
-                    const taskId = this.getAttribute('data-task-id');
-                    toggleTaskCompletion(taskId);
-                });
-            });
-        }
-        
-        // ========== VUE PARAMÈTRES ==========
-        function renderSettings() {
-            // Cette fonction pourrait charger les préférences utilisateur depuis le state
-            // et les afficher dans le formulaire des paramètres
-        }
-        
-        // ========== GESTION DES MODALS ==========
-        function openEventModal() {
-            document.getElementById('event-modal').classList.add('active');
-            document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
-        }
-        
-        function closeEventModal() {
-            document.getElementById('event-modal').classList.remove('active');
-            document.getElementById('event-form').reset();
-        }
-        
-        function handleEventSubmit(e) {
-            e.preventDefault();
-            
-            const newEvent = {
-                id: Date.now(),
-                title: document.getElementById('event-title').value,
-                date: document.getElementById('event-date').value,
-                time: document.getElementById('event-time').value,
-                description: document.getElementById('event-description').value,
-                color: "#1C9DEA",
-                createdAt: new Date().toISOString()
-            };
-            
-            state.events.push(newEvent);
-            saveData();
-            
-            closeEventModal();
-            renderTodaysEvents();
-            generateCalendar();
-            updateStats();
-            
-            showNotification(
-                'Événement créé',
-                `"${newEvent.title}" a été ajouté à votre calendrier`,
-                'success'
-            );
-        }
-        
-        function openTaskModal() {
-            document.getElementById('task-modal').classList.add('active');
-            document.getElementById('task-due-date').value = new Date().toISOString().split('T')[0];
-        }
-        
-        function closeTaskModal() {
-            document.getElementById('task-modal').classList.remove('active');
-            document.getElementById('task-form').reset();
-        }
-        
-        function handleTaskSubmit(e) {
-            e.preventDefault();
-            
-            const newTask = {
-                id: Date.now(),
-                title: document.getElementById('task-title').value,
-                assignee: document.getElementById('task-assignee').value,
-                priority: document.getElementById('task-priority').value,
-                dueDate: document.getElementById('task-due-date').value,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-            
-            state.tasks.push(newTask);
-            saveData();
-            
-            closeTaskModal();
-            renderTasks();
-            updateStats();
-            
-            showNotification(
-                'Tâche créée',
-                `"${newTask.title}" a été ajoutée à votre liste`,
-                'success'
-            );
-        }
-        
-        // ========== GESTION DU THÈME ==========
-        function toggleTheme() {
-            state.theme = state.theme === 'light' ? 'dark' : 'light';
-            applyTheme();
-            saveThemePreference();
-        }
-        
-        function applyTheme() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const icon = themeToggle.querySelector('i');
-            const text = themeToggle.querySelector('span');
-            
-            if (state.theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                text.textContent = 'Mode clair';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                text.textContent = 'Mode sombre';
-            }
-        }
-        
-        function saveThemePreference() {
-            localStorage.setItem('nesti_theme', state.theme);
-        }
-        
-        function loadThemePreference() {
-            const savedTheme = localStorage.getItem('nesti_theme');
-            if (savedTheme) {
-                state.theme = savedTheme;
-            }
-        }
-        
-        // ========== NOTIFICATIONS ==========
-        function showNotification(title, message, type = 'info') {
-            const notification = document.getElementById('notification');
-            const notificationIcon = document.getElementById('notification-icon');
-            const notificationTitle = document.getElementById('notification-title');
-            const notificationMessage = document.getElementById('notification-message');
-            
-            // Définir l'icône en fonction du type
-            notificationIcon.innerHTML = type === 'success' ? 
-                '<i class="fas fa-check"></i>' : 
-                '<i class="fas fa-info-circle"></i>';
-            
-            // Définir le titre et le message
-            notificationTitle.textContent = title;
-            notificationMessage.textContent = message;
-            
-            // Afficher la notification
-            notification.classList.add('active', type);
-            
-            // Masquer automatiquement après 5 secondes
-            setTimeout(() => {
-                hideNotification();
-            }, 5000);
-        }
-        
-        function hideNotification() {
-            const notification = document.getElementById('notification');
-            notification.classList.remove('active', 'success', 'info');
-        }
-        
-        // ========== DÉCONNEXION ==========
-        function logout() {
-            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                state.isAuthenticated = false;
-                // Rediriger vers la page de connexion
-                window.location.href = 'login.html';
-            }
-        }
-        
-        // ========== FONCTIONS UTILITAIRES ==========
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-    </script>
+      }
+    });
+  </script>
 </body>
 </html>
-
-    
-    
