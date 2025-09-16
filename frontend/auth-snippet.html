@@ -1,45 +1,49 @@
-<!-- Place this script near the end of body -->
+<!-- Place ce script dans ton index.html (avant </body>) pour gérer register/login basiques -->
 <script>
-const API = "http://localhost:4000/api";
+const API_BASE = "http://localhost:4000/api";
 
 async function register(email, password, name) {
-  const res = await fetch(API + '/auth/register', {
+  const r = await fetch(API_BASE + '/auth/register', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ email, password, name })
   });
-  const json = await res.json();
-  if (res.ok) {
-    localStorage.setItem('token', json.token);
-    return json.user;
-  } else {
-    throw new Error(json.error || 'Registration failed');
-  }
+  const json = await r.json();
+  if (!r.ok) throw new Error(json.error || JSON.stringify(json));
+  localStorage.setItem('nesti_token', json.token);
+  return json.user;
 }
 
 async function login(email, password) {
-  const res = await fetch(API + '/auth/login', {
+  const r = await fetch(API_BASE + '/auth/login', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ email, password })
   });
-  const json = await res.json();
-  if (res.ok) {
-    localStorage.setItem('token', json.token);
-    return json.user;
-  } else {
-    throw new Error(json.error || 'Login failed');
-  }
+  const json = await r.json();
+  if (!r.ok) throw new Error(json.error || JSON.stringify(json));
+  localStorage.setItem('nesti_token', json.token);
+  return json.user;
 }
 
 function authFetch(path, opts = {}) {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('nesti_token');
   opts.headers = opts.headers || {};
   opts.headers['Content-Type'] = 'application/json';
   if (token) opts.headers['Authorization'] = 'Bearer ' + token;
-  return fetch(API + path, opts).then(r => r.json().then(b => ({ ok: r.ok, status: r.status, body: b })));
+  return fetch(API_BASE + path, opts).then(async r => {
+    const body = await r.json().catch(()=>null);
+    return { ok: r.ok, status: r.status, body };
+  });
 }
 
-// usage example (hook to your UI):
-// document.getElementById('registerForm').addEventListener('submit', async (e) => { ... })
+/* Exemple d'utilisation :
+register('alex@example.com','motdepasse','Alex')
+  .then(u => console.log('registered', u))
+  .catch(e => alert(e.message));
+
+login('alex@example.com','motdepasse')
+  .then(u => console.log('logged', u))
+  .catch(e => alert(e.message));
+*/
 </script>
