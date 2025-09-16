@@ -1,0 +1,45 @@
+<!-- Place this script near the end of body -->
+<script>
+const API = "http://localhost:4000/api";
+
+async function register(email, password, name) {
+  const res = await fetch(API + '/auth/register', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email, password, name })
+  });
+  const json = await res.json();
+  if (res.ok) {
+    localStorage.setItem('token', json.token);
+    return json.user;
+  } else {
+    throw new Error(json.error || 'Registration failed');
+  }
+}
+
+async function login(email, password) {
+  const res = await fetch(API + '/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email, password })
+  });
+  const json = await res.json();
+  if (res.ok) {
+    localStorage.setItem('token', json.token);
+    return json.user;
+  } else {
+    throw new Error(json.error || 'Login failed');
+  }
+}
+
+function authFetch(path, opts = {}) {
+  const token = localStorage.getItem('token');
+  opts.headers = opts.headers || {};
+  opts.headers['Content-Type'] = 'application/json';
+  if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+  return fetch(API + path, opts).then(r => r.json().then(b => ({ ok: r.ok, status: r.status, body: b })));
+}
+
+// usage example (hook to your UI):
+// document.getElementById('registerForm').addEventListener('submit', async (e) => { ... })
+</script>
