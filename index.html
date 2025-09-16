@@ -6429,9 +6429,8 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-
     <script>
-        // ========== ÉTAT DE L'APPLICATION ==========
+            // ========== ÉTAT DE L'APPLICATION ==========
         const state = {
             user: {
                 id: 1,
@@ -6456,7 +6455,7 @@
             },
             notifications: []
         };
-
+        
         // ========== DONNÉES DE DÉMONSTRATION ==========
         const demoData = {
             events: [
@@ -6570,7 +6569,7 @@
                 }
             ]
         };
-
+        
         // ========== INITIALISATION ==========
         document.addEventListener('DOMContentLoaded', function() {
             // Charger les données depuis le localStorage ou utiliser les données de démo
@@ -6585,7 +6584,7 @@
             // Rendre la vue actuelle
             renderCurrentView();
         });
-
+        
         // ========== GESTION DES DONNÉES ==========
         function loadData() {
             // Essayer de charger depuis le localStorage
@@ -6606,14 +6605,14 @@
                 loadDemoData();
             }
         }
-
+        
         function loadDemoData() {
             state.events = demoData.events;
             state.tasks = demoData.tasks;
             state.messages = demoData.messages;
             state.activities = demoData.activities;
         }
-
+        
         function saveData() {
             const dataToSave = {
                 events: state.events,
@@ -6624,7 +6623,7 @@
             
             localStorage.setItem('nesti_data', JSON.stringify(dataToSave));
         }
-
+        
         // ========== INITIALISATION DE L'INTERFACE ==========
         function initUI() {
             // Appliquer le thème
@@ -6645,7 +6644,7 @@
             // Remplir les activités
             renderActivities();
         }
-
+        
         function initEventListeners() {
             // Navigation
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -6685,7 +6684,7 @@
             // Notifications
             document.getElementById('notification-close').addEventListener('click', hideNotification);
         }
-
+        
         // ========== GESTION DES VUES ==========
         function switchView(view) {
             // Mettre à jour la navigation
@@ -6710,7 +6709,7 @@
             // Mettre à jour l'état
             state.currentView = view;
         }
-
+        
         function getViewTitle(view) {
             const titles = {
                 dashboard: "Dashboard",
@@ -6724,7 +6723,7 @@
             
             return titles[view] || "Nesti";
         }
-
+        
         function getViewSubtitle(view) {
             const subtitles = {
                 dashboard: "Organisation et bien-être pour toute la famille",
@@ -6738,7 +6737,7 @@
             
             return subtitles[view] || "";
         }
-
+        
         function renderCurrentView() {
             switch (state.currentView) {
                 case "dashboard":
@@ -6764,14 +6763,14 @@
                     break;
             }
         }
-
+        
         // ========== FONCTIONNALITÉS DU TABLEAU DE BORD ==========
         function renderDashboard() {
             // Cette fonction est appelée lorsque le tableau de bord est affiché
             // On peut mettre à jour les statistiques ou autres éléments dynamiques
             updateStats();
         }
-
+        
         function updateStats() {
             // Mettre à jour les statistiques affichées sur le tableau de bord
             const today = new Date().toISOString().split('T')[0];
@@ -6781,7 +6780,7 @@
             document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = todayEvents;
             document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = pendingTasks;
         }
-
+        
         // ========== CALENDRIER ==========
         function generateCalendar() {
             const calendarContainer = document.getElementById('calendar-container');
@@ -6845,7 +6844,7 @@
                 });
             });
         }
-
+        
         function selectDate(date) {
             // Mettre en surbrillance la date sélectionnée
             document.querySelectorAll('.calendar-day').forEach(day => {
@@ -6857,7 +6856,7 @@
             // Afficher les événements de cette date
             showEventsForDate(date);
         }
-
+        
         function showEventsForDate(date) {
             const events = state.events.filter(event => event.date === date);
             const eventsList = document.getElementById('today-events-list');
@@ -6882,12 +6881,12 @@
             
             eventsList.innerHTML = eventsHTML;
         }
-
+        
         function renderTodaysEvents() {
             const today = new Date().toISOString().split('T')[0];
             showEventsForDate(today);
         }
-
+        
         // ========== TÂCHES ==========
         function renderTasks() {
             const taskList = document.getElementById('task-list-container');
@@ -6922,7 +6921,7 @@
                 });
             });
         }
-
+        
         function getPriorityLabel(priority) {
             const labels = {
                 low: 'Basse',
@@ -6932,7 +6931,7 @@
             
             return labels[priority] || priority;
         }
-
+        
         function toggleTaskCompletion(taskId) {
             const task = state.tasks.find(t => t.id == taskId);
             if (task) {
@@ -6947,12 +6946,12 @@
                 );
             }
         }
-
+        
         function renderTasksView() {
             // Implémentation pour la vue complète des tâches
             // Similaire à renderTasks() mais avec plus de détails et de fonctionnalités
         }
-
+        
         // ========== CHAT ==========
         function renderMessages() {
             const chatMessages = document.getElementById('chat-messages');
@@ -6994,7 +6993,7 @@
             chatMessages.innerHTML = messagesHTML;
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
+        
         function sendMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
@@ -7025,7 +7024,7 @@
                 renderMessages();
             }, 1000);
         }
-
+        
         function generateAIResponse(message) {
             const responses = [
                 "C'est une excellente idée ! Voulez-vous que je vous aide à organiser cela ?",
@@ -7043,12 +7042,12 @@
                 suggestions: ['En savoir plus', 'Réserver', 'Autres suggestions']
             };
         }
-
+        
         function renderChat() {
             // Implémentation pour la vue complète du chat
             // Similaire à renderMessages() mais avec plus de détails et de fonctionnalités
         }
-
+        
         // ========== ACTIVITÉS ==========
         function renderActivities() {
             const activityList = document.getElementById('activity-list');
@@ -7072,7 +7071,7 @@
                         </div>
                         <div class="activity-tags">
                             <span class="activity-tag">${activity.category}</span>
-                            <span class="activity-tag">${activity.ageRange</span>
+                            <span class="activity-tag">${activity.ageRange}</span>
                             <span class="activity-tag">${activity.price}</span>
                         </div>
                     </div>
@@ -7081,12 +7080,12 @@
             
             activityList.innerHTML = activitiesHTML;
         }
-
+        
         function renderActivitiesView() {
             // Implémentation pour la vue complète des activités
             // Similaire à renderActivities() mais avec plus de détails et de fonctionnalités
         }
-
+        
         // ========== BIEN-ÊTRE ==========
         function toggleMeditation() {
             const button = document.getElementById('start-meditation');
@@ -7117,7 +7116,7 @@
                         
                         showNotification(
                             'Méditation terminée',
-                            'Vous avez complété une session de méditation de 15 minutes',
+                            'Vous avez complété une session de méditation de 15 minutes!',
                             'success'
                         );
                     }
@@ -7126,18 +7125,21 @@
                 // Arrêter la méditation
                 clearInterval(state.meditation.interval);
                 state.meditation.active = false;
+                state.meditation.timer = state.meditation.duration;
                 
                 button.innerHTML = '<i class="fas fa-play"></i><span>Démarrer la méditation</span>';
                 button.classList.remove('stop');
                 
+                updateMeditationTimer();
+                
                 showNotification(
-                    'Méditation interrompue',
-                    'Vous pouvez reprendre votre méditation à tout moment',
-                    'warning'
+                    'Méditation arrêtée',
+                    'Vous pouvez reprendre votre session plus tard.',
+                    'info'
                 );
             }
         }
-
+        
         function updateMeditationTimer() {
             const timer = document.getElementById('meditation-timer');
             const minutes = Math.floor(state.meditation.timer / 60);
@@ -7145,45 +7147,37 @@
             
             timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
-
+        
         function renderWellbeing() {
             // Implémentation pour la vue complète du bien-être
         }
-
+        
         // ========== PARAMÈTRES ==========
         function renderSettings() {
             // Implémentation pour la vue des paramètres
         }
-
-        // ========== MODALS ==========
+        
+        // ========== GESTION DES MODALS ==========
         function openEventModal() {
             document.getElementById('event-modal').classList.add('active');
-            
-            // Définir la date du jour par défaut
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('event-date').value = today;
+            document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
         }
-
+        
         function closeEventModal() {
             document.getElementById('event-modal').classList.remove('active');
             document.getElementById('event-form').reset();
         }
-
+        
         function handleEventSubmit(e) {
             e.preventDefault();
             
-            const title = document.getElementById('event-title').value;
-            const date = document.getElementById('event-date').value;
-            const time = document.getElementById('event-time').value;
-            const description = document.getElementById('event-description').value;
-            
             const newEvent = {
                 id: Date.now(),
-                title,
-                date,
-                time,
-                description,
-                color: '#1C9DEA',
+                title: document.getElementById('event-title').value,
+                date: document.getElementById('event-date').value,
+                time: document.getElementById('event-time').value,
+                description: document.getElementById('event-description').value,
+                color: "#1C9DEA",
                 createdAt: new Date().toISOString()
             };
             
@@ -7193,41 +7187,34 @@
             closeEventModal();
             renderTodaysEvents();
             generateCalendar();
+            updateStats();
             
             showNotification(
                 'Événement créé',
-                `"${title}" a été ajouté à votre calendrier`,
+                `"${newEvent.title}" a été ajouté à votre calendrier`,
                 'success'
             );
         }
-
+        
         function openTaskModal() {
             document.getElementById('task-modal').classList.add('active');
-            
-            // Définir la date du jour par défaut
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('task-due-date').value = today;
+            document.getElementById('task-due-date').value = new Date().toISOString().split('T')[0];
         }
-
+        
         function closeTaskModal() {
             document.getElementById('task-modal').classList.remove('active');
             document.getElementById('task-form').reset();
         }
-
+        
         function handleTaskSubmit(e) {
             e.preventDefault();
             
-            const title = document.getElementById('task-title').value;
-            const assignee = document.getElementById('task-assignee').value;
-            const priority = document.getElementById('task-priority').value;
-            const dueDate = document.getElementById('task-due-date').value;
-            
             const newTask = {
                 id: Date.now(),
-                title,
-                assignee,
-                priority,
-                dueDate,
+                title: document.getElementById('task-title').value,
+                assignee: document.getElementById('task-assignee').value,
+                priority: document.getElementById('task-priority').value,
+                dueDate: document.getElementById('task-due-date').value,
                 completed: false,
                 createdAt: new Date().toISOString()
             };
@@ -7237,103 +7224,90 @@
             
             closeTaskModal();
             renderTasks();
+            updateStats();
             
             showNotification(
                 'Tâche créée',
-                `"${title}" a été ajoutée à votre liste`,
+                `"${newTask.title}" a été ajoutée à votre liste`,
                 'success'
             );
         }
-
-        // ========== THÈME ==========
+        
+        // ========== GESTION DU THÈME ==========
         function toggleTheme() {
             state.theme = state.theme === 'light' ? 'dark' : 'light';
             applyTheme();
-            saveTheme();
+            saveThemePreference();
         }
-
+        
         function applyTheme() {
-            document.documentElement.setAttribute('data-theme', state.theme);
-            
             const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            const text = themeToggle.querySelector('span');
+            
             if (state.theme === 'dark') {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Mode clair</span>';
+                document.body.classList.add('dark-theme');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                text.textContent = 'Mode clair';
             } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Mode sombre</span>';
+                document.body.classList.remove('dark-theme');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                text.textContent = 'Mode sombre';
             }
         }
-
-        function saveTheme() {
+        
+        function saveThemePreference() {
             localStorage.setItem('nesti_theme', state.theme);
         }
-
-        function loadTheme() {
+        
+        function loadThemePreference() {
             const savedTheme = localStorage.getItem('nesti_theme');
             if (savedTheme) {
                 state.theme = savedTheme;
-            } else {
-                // Détection automatique du préférence système
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                state.theme = prefersDark ? 'dark' : 'light';
             }
-            
-            applyTheme();
         }
-
+        
         // ========== NOTIFICATIONS ==========
-        function showNotification(title, message, type = 'success') {
+        function showNotification(title, message, type = 'info') {
             const notification = document.getElementById('notification');
             const notificationIcon = document.getElementById('notification-icon');
             const notificationTitle = document.getElementById('notification-title');
             const notificationMessage = document.getElementById('notification-message');
             
-            // Mettre à jour le contenu
+            // Définir l'icône en fonction du type
+            notificationIcon.innerHTML = type === 'success' ? 
+                '<i class="fas fa-check"></i>' : 
+                '<i class="fas fa-info-circle"></i>';
+            
+            // Définir le titre et le message
             notificationTitle.textContent = title;
             notificationMessage.textContent = message;
             
-            // Mettre à jour l'icône et la couleur
-            notificationIcon.className = 'notification-icon';
-            let iconClass = 'fas fa-check';
-            
-            if (type === 'success') {
-                notificationIcon.classList.add('success');
-                iconClass = 'fas fa-check';
-            } else if (type === 'error') {
-                notificationIcon.classList.add('error');
-                iconClass = 'fas fa-exclamation';
-            } else if (type === 'warning') {
-                notificationIcon.classList.add('warning');
-                iconClass = 'fas fa-exclamation-triangle';
-            }
-            
-            notificationIcon.innerHTML = `<i class="${iconClass}"></i>`;
-            
             // Afficher la notification
-            notification.classList.add('active');
+            notification.classList.add('active', type);
             
             // Masquer automatiquement après 5 secondes
             setTimeout(() => {
                 hideNotification();
             }, 5000);
         }
-
+        
         function hideNotification() {
-            document.getElementById('notification').classList.remove('active');
+            const notification = document.getElementById('notification');
+            notification.classList.remove('active', 'success', 'info');
         }
-
-        // ========== AUTHENTIFICATION ==========
+        
+        // ========== DÉCONNEXION ==========
         function logout() {
-            state.isAuthenticated = false;
-            // Rediriger vers la page de connexion
-            // Dans une application réelle, vous voudriez rediriger vers une page de connexion
-            showNotification(
-                'Déconnexion',
-                'Vous avez été déconnecté avec succès',
-                'success'
-            );
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                state.isAuthenticated = false;
+                // Rediriger vers la page de connexion
+                window.location.href = 'login.html';
+            }
         }
-
-        // ========== FONCTIONS UTILITAIRES ==========
+         // ========== FONCTIONS UTILITAIRES ==========
         function formatDate(date) {
             return new Date(date).toLocaleDateString('fr-FR', {
                 weekday: 'long',
