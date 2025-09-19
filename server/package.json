@@ -22,4 +22,5 @@
     "nodemon": "^2.0.20",
     "prisma": "^5.0.0"
   }
+  "type": "module"
 }
