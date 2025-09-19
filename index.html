@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Cocon Familial (UX/UI améliorée)</title>
+    <title>Mon Cocon Familial (Pro)</title>
     
     <style>
         /* Variables de couleur et de thème */
@@ -29,6 +29,7 @@
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
+        /* Styles de base et mise en page */
         body {
             font-family: var(--font-family);
             background-color: var(--bg-color);
@@ -41,13 +42,31 @@
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
-            opacity: 0;
-            animation: fadeInBody 1s forwards;
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
-        @keyframes fadeInBody {
-            to { opacity: 1; }
+        /* Effet de parallaxe sur le body */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%),
+                        radial-gradient(circle, rgba(var(--secondary-rgb), 0.1) 0%, transparent 70%);
+            background-size: 800px 800px, 600px 600px;
+            background-position: top left, bottom right;
+            animation: moveGradient 20s linear infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        @keyframes moveGradient {
+            0% { background-position: top left, bottom right; }
+            100% { background-position: top right, bottom left; }
+        }
+        body.dark-mode::before {
+            filter: invert(1);
         }
 
         /* Conteneurs et mise en page */
@@ -56,18 +75,19 @@
             max-width: 1200px;
             text-align: center;
             padding: 1.5rem 0;
+            transition: transform 0.3s ease;
         }
+        header { transform: translateY(-50px) scale(0.9); opacity: 0; animation: header-in 1s forwards; }
+        footer { transform: translateY(50px) scale(0.9); opacity: 0; animation: footer-in 1s forwards; animation-delay: 1s; }
+        @keyframes header-in { to { transform: translateY(0) scale(1); opacity: 1; } }
+        @keyframes footer-in { to { transform: translateY(0) scale(1); opacity: 1; } }
 
         header h1 {
             font-size: clamp(2rem, 5vw, 3rem);
             color: var(--primary-color);
             margin-bottom: 0.5rem;
-            animation: popIn 0.5s ease-out;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
         main {
@@ -78,7 +98,7 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             padding: 2rem 0;
         }
-        
+
         /* Composants de l'interface utilisateur */
         .card {
             background-color: var(--card-bg);
@@ -91,16 +111,10 @@
             justify-content: space-between;
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInCard 1s ease-out forwards;
-            animation-delay: 0.2s;
         }
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        @keyframes fadeInCard {
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .button {
@@ -126,7 +140,7 @@
         .button:active {
             transform: scale(0.98);
         }
-
+        
         /* Styles spécifiques des sections */
         .image-gallery {
             display: grid;
@@ -147,44 +161,22 @@
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-        
-        .quiz-container .option {
-            display: block;
-            padding: 14px;
-            background-color: var(--border-color);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color var(--transition-speed), transform 0.2s ease;
-            text-align: center;
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
-        .quiz-container .option:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: scale(1.01);
-        }
-        .quiz-container .option.correct {
-            background-color: #4caf50;
-            color: white;
-            animation: flashCorrect 0.5s ease;
-        }
-        .quiz-container .option.wrong {
-            background-color: #f44336;
-            color: white;
-            animation: shake 0.5s ease-in-out;
-        }
 
-        @keyframes flashCorrect {
-            0% { background-color: #4caf50; }
-            50% { background-color: white; color: #4caf50; }
-            100% { background-color: #4caf50; color: white; }
+        /* Effet de 'nappe' sur les images */
+        .image-gallery img::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+        .image-gallery img:hover::after {
+            opacity: 1;
         }
 
         /* Modal et pop-ups */
@@ -204,9 +196,7 @@
             transition: opacity 0.4s ease;
             backdrop-filter: blur(5px);
         }
-        .modal.open {
-            opacity: 1;
-        }
+        .modal.open { opacity: 1; }
         .modal-content {
             max-width: 90%;
             max-height: 90%;
@@ -215,9 +205,7 @@
             transform: scale(0.7);
             transition: transform 0.4s ease;
         }
-        .modal.open .modal-content {
-            transform: scale(1);
-        }
+        .modal.open .modal-content { transform: scale(1); }
 
         /* Notifications (toasts) */
         #notification-container {
@@ -239,17 +227,14 @@
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .notification.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
     <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2.5rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
 
     <header>
-        <h1 id="welcome-message">Bienvenue !</h1>
+        <h1 id="welcome-message"></h1>
         <p>Un lieu pour partager nos histoires et nos souvenirs les plus précieux.</p>
     </header>
 
@@ -441,6 +426,14 @@
                     notification.classList.remove('show');
                     setTimeout(() => container.removeChild(notification), 500);
                 }, 3000);
+            },
+
+            animateCards: () => {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${0.2 + index * 0.1}s`;
+                    card.style.animationName = 'fadeInCard';
+                });
             }
         };
 
@@ -464,7 +457,7 @@
                 App.renderAllSections();
                 App.setupEventListeners();
                 App.applyInitialTheme();
-                App.personalizeWelcome();
+                App.animateWelcomeMessage();
             },
 
             renderAllSections: () => {
@@ -502,20 +495,27 @@
                 localStorage.setItem('theme', App.state.theme);
                 App.elements.themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             },
-            personalizeWelcome: () => {
-                if (App.state.userName) {
-                    App.elements.welcomeMessage.textContent = `Bienvenue, ${App.state.userName} !`;
-                } else {
-                    setTimeout(() => {
-                        const newName = prompt('Bienvenue ! Quel est votre prénom ?');
-                        if (newName && newName.trim() !== '') {
-                            App.state.userName = newName.trim();
-                            localStorage.setItem('userName', App.state.userName);
-                            App.elements.welcomeMessage.textContent = `Bienvenue, ${App.state.userName} !`;
-                            UI.showNotification(`Bienvenue, ${App.state.userName}! 😊`);
-                        }
-                    }, 1000);
+            animateWelcomeMessage: async () => {
+                const message = App.state.userName ? `Bienvenue, ${App.state.userName} !` : 'Bienvenue !';
+                App.elements.welcomeMessage.style.opacity = 1;
+                for (const char of message) {
+                    App.elements.welcomeMessage.textContent += char;
+                    await new Promise(resolve => setTimeout(resolve, 50));
                 }
+                setTimeout(() => App.askForName(), 1500);
+            },
+            askForName: () => {
+                if (!App.state.userName) {
+                    const newName = prompt('Nous aimons connaître nos visiteurs ! Quel est votre prénom ?');
+                    if (newName && newName.trim() !== '') {
+                        App.state.userName = newName.trim();
+                        localStorage.setItem('userName', App.state.userName);
+                        App.elements.welcomeMessage.textContent = '';
+                        App.animateWelcomeMessage();
+                        UI.showNotification(`Heureux de vous rencontrer, ${App.state.userName} !`, 'success');
+                    }
+                }
+                UI.animateCards();
             },
             handleImageClick: (event) => {
                 if (event.target.tagName === 'IMG') {
@@ -573,7 +573,6 @@
                         opt.classList.add('correct');
                     }
                 });
-
                 if (selectedOption === correctAnswer) {
                     App.state.quiz.score++;
                     element.classList.add('correct');
