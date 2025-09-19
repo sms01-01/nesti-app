@@ -233,16 +233,299 @@
 <body>
     <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2.5rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
 
+<body>
+
+    <!-- ==================== HEADER ==================== -->
     <header>
-        <h1 id="welcome-message"></h1>
-        <p>Un lieu pour partager nos histoires et nos souvenirs les plus précieux.</p>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo"><i class="fas fa-hands-helping"></i> Nesti</a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="nav-link active">Accueil</a></li>
+                    <li><a href="#discover" class="nav-link">Découvrir</a></li>
+                    <li><a href="#experience" class="nav-link">Expérience</a></li>
+                    <li><a href="#about" class="nav-link">À Propos</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
+            </nav>
+        </div>
     </header>
 
-    <main id="app-container">
-        </main>
-    
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>L'Assistant Familial qui Démocratise l'Inclusion</h1>
+                <p>Faire de chaque famille un acteur d'inclusion grâce à l'IA et aux données locales.</p>
+                <div class="hero-buttons">
+                    <a href="#discover" class="btn btn-primary"><i class="fas fa-rocket"></i> Commencez l'aventure</a>
+                    <a href="#about" class="btn btn-outline"><i class="fas fa-info-circle"></i> En savoir plus</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-decoration"><i class="fas fa-heart" style="font-size: 20rem;"></i></div>
+    </section>
+
+    <!-- ==================== PROBLEM/SOLUTION ==================== -->
+    <section>
+        <div class="container">
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3><span class="icon">🤔</span> Le Problème</h3>
+                    <p>86% des parents veulent sensibiliser leurs enfants à la diversité, mais moins de 30% trouvent facilement des activités inclusives.</p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3><span class="icon">💡</span> Notre Solution</h3>
+                    <p>Une IA qui trouve, adapte et explique les activités inclusives pour toute la famille, de manière ludique et bienveillante.</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3><span class="icon">🌟</span> Votre Impact</h3>
+                    <p>Chaque sortie devient une leçon de vie. Transformez votre famille en ambassadrice de l'inclusion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== DISCOVER ==================== -->
+    <section id="discover">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Découvrez un Monde d'Inclusion</h2>
+                <p class="section-subtitle">Notre technologie rend l'accessibilité simple et intuitive pour toutes les familles</p>
+            </div>
+            <div class="mockup-container">
+                <div class="phone-mockup fade-in">
+                    <div class="screen map-screen">
+                        <div class="map-placeholder"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="map-card">
+                            <h4>Parc Aventure La Forêt Enchantée</h4>
+                            <p>Un parcours sensoriel adapté à tous les âges. Accès fauteuil OK.</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                <span>5km - PMR, visuel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mockup-content fade-in delay-1">
+                    <div class="card">
+                        <h3><span class="icon">1️⃣</span> Cartographie Inclusive Intelligente</h3>
+                        <p>Grâce à notre <strong>IA géolocalisée</strong>, trouvez en un clin d'œil les lieux et activités adaptés à vos besoins. Fini les recherches fastidieuses !</p>
+                        <ul>
+                            <li><strong>Filtres précis :</strong> PMR, malvoyants, troubles autistiques...</li>
+                            <li><strong>Score d'inclusion :</strong> Une note fiable basée sur l'expérience des autres familles.</li>
+                            <li><strong>Alertes accessibilité :</strong> Recevez des notifications pour les nouveaux lieux adaptés près de chez vous.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EXPERIENCE ==================== -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Vivez l'Inclusion, Partagez l'Expérience</h2>
+                <p class="section-subtitle">Notre assistant pédagogique rend l'inclusion simple et ludique</p>
+            </div>
+
+            <div class="mockup-container">
+                <div class="phone-mockup fade-in delay-1">
+                    <div class="screen chat-screen">
+                        <div class="chat-container">
+                            <div class="chat-bubble ai">Bonjour ! Souhaitez-vous découvrir une activité pour toute la famille ?</div>
+                            <div class="chat-bubble user">Oui, pour ce week-end !</div>
+                            <div class="chat-bubble ai">Voici le Parc Aventure La Forêt Enchantée, accessible et ludique.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-content fade-in">
+                    <div class="card">
+                        <h3><span class="icon">2️⃣</span> Expérience Interactive & Pédagogique</h3>
+                        <p>Nos conseils et dialogues interactifs permettent à vos enfants de comprendre la diversité et de participer activement.</p>
+                        <div class="photo-grid">
+                            <div class="photo-cell">Photo 1</div>
+                            <div class="photo-cell">Photo 2</div>
+                            <div class="photo-cell">Photo 3</div>
+                            <div class="photo-cell">Photo 4</div>
+                        </div>
+
+                        <h4>Journal de vos sorties</h4>
+                        <div class="diary-entry">
+                            <h4>🗓 12 Septembre 2025</h4>
+                            <p>Sortie au musée inclusif : mes enfants ont adoré le parcours tactile et les explications adaptées.</p>
+                        </div>
+                        <div class="diary-entry">
+                            <h4>🗓 14 Septembre 2025</h4>
+                            <p>Parc aventure : tout le monde a pu participer grâce aux modules PMR et sensoriels.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">À Propos de Nesti</h2>
+                <p class="section-subtitle">Notre mission : rendre chaque sortie familiale inclusive et pédagogique</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3><i class="fas fa-bullseye"></i> Mission</h3>
+                    <p>Permettre à chaque famille, quel que soit son contexte, de vivre des expériences inclusives et enrichissantes.</p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3><i class="fas fa-eye"></i> Vision</h3>
+                    <p>Créer une société où l’inclusion est naturelle et partagée dès le plus jeune âge.</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3><i class="fas fa-heart"></i> Valeurs</h3>
+                    <ul>
+                        <li>Bienveillance</li>
+                        <li>Accessibilité</li>
+                        <li>Innovation</li>
+                        <li>Éducation</li>
+                        <li>Partage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS ==================== -->
+    <section id="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Témoignages</h2>
+                <p class="section-subtitle">Ce que nos utilisateurs disent de Nesti</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3>Marie L.</h3>
+                    <p>"Grâce à Nesti, mes enfants comprennent mieux la diversité et participent à des activités adaptées. C’est un vrai changement !" </p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3>Paul D.</h3>
+                    <p>"Je trouve enfin des sorties inclusives pour mon fils en fauteuil. L’application est intuitive et très pratique."</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3>Claire M.</h3>
+                    <p>"Les conseils pédagogiques pour expliquer la diversité sont précieux. Nesti rend l’éducation inclusive simple et ludique."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section id="faq">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Questions Fréquentes</h2>
+                <p class="section-subtitle">Nous répondons aux questions les plus courantes sur Nesti</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3>Comment Nesti garantit-il l'accessibilité ?</h3>
+                    <p>Nous vérifions les lieux via des critères précis : accès fauteuil, signalisation sensorielle et retours d’expérience des familles.</p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3>L’IA peut-elle s’adapter à tous les âges ?</h3>
+                    <p>Oui, le moteur pédagogique adapte les explications et conseils selon l’âge et le profil de chaque enfant.</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3>Les données sont-elles sécurisées ?</h3>
+                    <p>Toutes les informations personnelles sont chiffrées et ne sont jamais partagées sans consentement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== NEWSLETTER ==================== -->
+    <section id="newsletter" style="background: var(--primary-light); color:white; border-radius: var(--border-radius); margin:4rem 0; padding:3rem 0;">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Abonnez-vous à notre Newsletter</h2>
+                <p class="section-subtitle">Recevez les dernières activités inclusives et conseils pédagogiques directement dans votre boîte mail.</p>
+            </div>
+
+            <form id="newsletterForm" class="fade-in delay-1" style="max-width:600px; margin: 0 auto; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <input type="email" placeholder="Votre email" class="form-control" required style="flex:1; min-width:200px;">
+                <button type="submit" class="btn btn-primary" style="flex-shrink:0;">S’inscrire</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Contactez-nous</h2>
+                <p class="section-subtitle">Une question, un retour ou une suggestion ? Écrivez-nous !</p>
+            </div>
+
+            <form id="contactForm" class="fade-in delay-1" style="max-width:700px; margin:0 auto;">
+                <div class="form-group">
+                    <label for="name">Nom</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
     <footer>
-        <p>© 2024 Notre Famille. Tous droits réservés.</p>
+        <div class="container">
+            <div class="footer-content fade-in">
+                <div class="footer-about">
+                    <span class="footer-logo">Nesti</span>
+                    <p>L’assistant familial pour un monde inclusif. Trouvez et partagez des expériences adaptées à tous.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Liens Utiles</h4>
+                    <ul>
+                        <li><a href="#home">Accueil</a></li>
+                        <li><a href="#discover">Découvrir</a></li>
+                        <li><a href="#experience">Expérience</a></li>
+                        <li><a href="#about">À Propos</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Suivez-nous</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom fade-in delay-1">
+                <p>&copy; 2025 Nesti. Tous droits réservés.</p>
+            </div>
+        </div>
     </footer>
 
     <div id="notification-container"></div>
