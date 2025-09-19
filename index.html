@@ -1416,7 +1416,12 @@
                             <option value="other">Autre</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%;">Créer mon compte</button>
+                        <form id="signup-form">
+                            <!-- Vos champs de formulaire ici -->
+                            <button type="submit" class="btn" id="signup-btn" style="width: 100%;">
+                                Créer mon compte
+                            </button>
+                        </form>
                 </form>
             </div>
         </div>
@@ -1495,6 +1500,15 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Ici vous ajouteriez le code pour traiter l'inscription
+            // Par exemple, validation, envoi des données au serveur, etc.
+            
+            // Puis redirection vers le dashboard
+            window.location.href = 'dashboard.html';
+        });
         // Navigation entre les pages
         document.querySelectorAll('[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
