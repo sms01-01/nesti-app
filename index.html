@@ -3,1205 +3,670 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nesti - Découvrez des lieux accessibles</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/1.25.0/iconfont/lucide.min.css">
+    <title>Nesti : Votre Assistant Familial d'Inclusion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #6a1b9a;
+            --secondary-color: #f3e5f5;
+            --text-color: #333;
+            --light-bg: #f4f4f9;
+            --dark-bg: #fff;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --container-max-width: 1100px;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
+
         body {
-            background-color: #f3f4f6;
-            color: #1f2937;
-            line-height: 1.5;
-        }
-        
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            background: white;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        header.main-header {
+            background-color: var(--dark-bg);
+            box-shadow: 0 2px 10px var(--shadow-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        main {
+            flex: 1;
+            padding-top: 2rem;
+        }
+
+        .page-section {
+            display: none;
+            padding: 4rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), #8e24aa);
+            color: #fff;
+            text-align: center;
+            padding: 6rem 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--dark-bg);
+            color: var(--primary-color);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background-color: #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--dark-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 8px 24px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px var(--shadow-medium);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .card p, .card ul {
+            font-size: 1rem;
+            color: #666;
         }
         
-        /* Utilitaires */
-        .flex { display: flex; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-center { justify-content: center; }
-        .flex-col { flex-direction: column; }
-        .flex-1 { flex: 1; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-3 > * + * { margin-left: 0.75rem; }
-        .space-y-2 > * + * { margin-top: 0.5rem; }
-        .space-y-3 > * + * { margin-top: 0.75rem; }
-        .space-y-4 > * + * { margin-top: 1rem; }
-        
-        .bg-white { background-color: white; }
-        .bg-gray-50 { background-color: #f9fafb; }
-        .bg-gray-100 { background-color: #f3f4f6; }
-        .bg-gray-200 { background-color: #e5e7eb; }
-        .bg-blue-50 { background-color: #eff6ff; }
-        .bg-blue-100 { background-color: #dbeafe; }
-        .bg-green-50 { background-color: #f0fdf4; }
-        .bg-green-100 { background-color: #dcfce7; }
-        .bg-yellow-50 { background-color: #fefce8; }
-        .bg-yellow-100 { background-color: #fef9c3; }
-        .bg-purple-100 { background-color: #f3e8ff; }
-        .bg-teal-50 { background-color: #f0fdfa; }
-        .bg-teal-100 { background-color: #ccfbf1; }
-        .bg-teal-500 { background-color: #14b8a6; }
-        .bg-teal-600 { background-color: #0d9488; }
-        .bg-red-50 { background-color: #fef2f2; }
-        .bg-pink-100 { background-color: #fce7f3; }
-        
-        .text-white { color: white; }
-        .text-gray-400 { color: #9ca3af; }
-        .text-gray-500 { color: #6b7280; }
-        .text-gray-600 { color: #4b5563; }
-        .text-gray-700 { color: #374151; }
-        .text-gray-800 { color: #1f2937; }
-        .text-gray-900 { color: #111827; }
-        .text-blue-600 { color: #2563eb; }
-        .text-blue-800 { color: #1e40af; }
-        .text-green-600 { color: #16a34a; }
-        .text-green-800 { color: #166534; }
-        .text-yellow-600 { color: #ca8a04; }
-        .text-yellow-700 { color: #a16207; }
-        .text-yellow-800 { color: #854d0e; }
-        .text-purple-600 { color: #9333ea; }
-        .text-purple-800 { color: #6b21a8; }
-        .text-teal-600 { color: #0d9488; }
-        .text-teal-800 { color: #115e59; }
-        .text-red-600 { color: #dc2626; }
-        .text-pink-600 { color: #db2777; }
-        .text-orange-600 { color: #ea580c; }
-        
-        .rounded { border-radius: 0.25rem; }
-        .rounded-lg { border-radius: 0.5rem; }
-        .rounded-full { border-radius: 9999px; }
-        .rounded-xl { border-radius: 0.75rem; }
-        
-        .p-2 { padding: 0.5rem; }
-        .p-3 { padding: 0.75rem; }
-        .p-4 { padding: 1rem; }
-        .p-6 { padding: 1.5rem; }
-        
-        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 0.75rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .mr-1 { margin-right: 0.25rem; }
-        .mr-2 { margin-right: 0.5rem; }
-        .mr-3 { margin-right: 0.75rem; }
-        .ml-2 { margin-left: 0.5rem; }
-        .ml-3 { margin-left: 0.75rem; }
-        .ml-4 { margin-left: 1rem; }
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        
-        .text-xs { font-size: 0.75rem; }
-        .text-sm { font-size: 0.875rem; }
-        .text-base { font-size: 1rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .text-3xl { font-size: 1.875rem; }
-        .text-4xl { font-size: 2.25rem; }
-        .text-5xl { font-size: 3rem; }
-        .text-6xl { font-size: 3.75rem; }
-        
-        .font-medium { font-weight: 500; }
-        .font-semibold { font-weight: 600; }
-        .font-bold { font-weight: 700; }
-        
-        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        
-        .border { border-width: 1px; }
-        .border-t { border-top-width: 1px; }
-        .border-b { border-bottom-width: 1px; }
-        .border-gray-200 { border-color: #e5e7eb; }
-        .border-gray-300 { border-color: #d1d5db; }
-        .border-teal-200 { border-color: #99f6e4; }
-        
-        .cursor-pointer { cursor: pointer; }
-        
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+        .card ul {
+            padding-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            border: 2px dashed var(--primary-color);
+        }
+
+        .mockup-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .phone-mockup {
+            background-color: var(--text-color);
+            border-radius: 40px;
+            width: 250px;
+            height: 500px;
+            padding: 1rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
             overflow: hidden;
         }
-        
-        .grid { display: grid; }
-        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        .gap-2 { gap: 0.5rem; }
-        .gap-3 { gap: 0.75rem; }
-        .gap-4 { gap: 1rem; }
-        
-        .overflow-x-auto { overflow-x: auto; }
-        .overflow-y-auto { overflow-y: auto; }
-        
-        .fixed { position: fixed; }
-        .relative { position: relative; }
-        .absolute { position: absolute; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        
-        .w-full { width: 100%; }
-        .w-8 { width: 2rem; }
-        .w-10 { width: 2.5rem; }
-        .w-16 { width: 4rem; }
-        .h-6 { height: 1.5rem; }
-        .h-8 { height: 2rem; }
-        .h-10 { height: 2.5rem; }
-        .h-16 { height: 4rem; }
-        
-        .top-3 { top: 0.75rem; }
-        .left-3 { left: 0.75rem; }
-        .right-3 { right: 0.75rem; }
-        
-        .z-50 { z-index: 50; }
-        
-        .opacity-75 { opacity: 0.75; }
-        .opacity-80 { opacity: 0.8; }
-        .opacity-90 { opacity: 0.9; }
-        
-        .hidden { display: none; }
-        
-        /* Styles spécifiques */
-        input:focus, textarea:focus {
-            outline: none;
-            ring: 2px;
-            ring-color: #0d9488;
-            border-color: transparent;
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 8px;
+            background-color: #444;
+            border-radius: 5px;
         }
         
-        input {
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-        }
-        
-        button {
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-        
-        .btn-primary {
-            background-color: #0d9488;
-            color: white;
-            font-weight: 500;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0f766e;
-        }
-        
-        .icon-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-        }
-        
-        .icon-button:hover {
-            background-color: #f3f4f6;
-        }
-        
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-around;
-            padding: 0.75rem;
-        }
-        
-        .nav-item {
+        .screen-content {
+            background-color: #fff;
+            height: 100%;
+            border-radius: 25px;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0.5rem 1rem;
-            color: #9ca3af;
-        }
-        
-        .nav-item.active {
-            color: #0d9488;
-        }
-        
-        .emoji-large {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        .chat-message {
-            max-width: 80%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .chat-message.user {
-            background-color: #0d9488;
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 0.25rem;
-        }
-        
-        .chat-message.assistant {
-            background-color: white;
-            color: #1f2937;
-            margin-right: auto;
-            border-bottom-left-radius: 0.25rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .accessibility-score {
-            height: 1.5rem;
-            background-color: #e5e7eb;
-            border-radius: 0.75rem;
-            overflow: hidden;
+            justify-content: flex-start;
             position: relative;
         }
+
+        .map-screen img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .map-info-card {
+            background-color: var(--dark-bg);
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px var(--shadow-medium);
+            text-align: left;
+        }
         
-        .score-fill {
+        .explain-screen {
+            display: flex;
+            flex-direction: column;
             height: 100%;
-            border-radius: 0.75rem;
-            background: linear-gradient(90deg, #0d9488, #14b8a6);
+            justify-content: space-between;
+        }
+
+        .explain-screen .chat-bubble.ai {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .explain-screen .chat-bubble.user {
+            background-color: #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            text-align: right;
+            align-self: flex-end;
+        }
+
+        .experience-screen .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .experience-screen .photo-grid img {
+            width: 100%;
+            border-radius: 8px;
         }
         
-        /* Animation pour le chat */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .experience-screen .diary-entry {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+        }
+
+        .btn.submit {
+            width: 100%;
+            border: none;
+            background-color: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn.submit:hover {
+            background-color: #8e24aa;
+            transform: none;
         }
         
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
+        footer {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            text-decoration: none;
+            color: #fff;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark-bg);
+                box-shadow: 0 10px 15px var(--shadow-medium);
+                border-top: 1px solid #ddd;
+                padding: 1rem 0;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-section {
+                padding: 4rem 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Vue principale de l'application -->
-        <div id="app">
-            <!-- Le contenu sera généré dynamiquement par JavaScript -->
+
+    <header class="main-header">
+        <nav class="navbar container">
+            <a href="#" class="logo">Nesti.</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="nav-link active" data-page="home">Accueil</a></li>
+                <li><a href="#discover-section" class="nav-link" data-page="discover">Découvrir</a></li>
+                <li><a href="#experience-section" class="nav-link" data-page="experience">Expérience</a></li>
+                <li><a href="#about-section" class="nav-link" data-page="about">À Propos</a></li>
+                <li><a href="#contact-section" class="nav-link" data-page="contact">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-section active" id="home-section">
+            <div class="container">
+                <div class="hero-section">
+                    <h1>L'Assistant Familial qui Démocratise l'Inclusion</h1>
+                    <p>Faire de chaque famille un acteur d'inclusion grâce à l'IA et aux données locales.</p>
+                    <a href="#discover-section" class="btn" data-page="discover">Commencez l'aventure !</a>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Le Problème</h3>
+                        <p>86% des parents veulent sensibiliser leurs enfants à la diversité, mais moins de 30% trouvent facilement des activités inclusives.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Notre Solution</h3>
+                        <p>Une IA qui trouve, adapte et explique les activités inclusives pour toute la famille, de manière ludique et bienveillante.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Votre Impact</h3>
+                        <p>Chaque sortie devient une leçon de vie. Transformez votre famille en ambassadrice de l'inclusion.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="discover-section">
+            <div class="container">
+                <h2 class="section-title">Découvrez un Monde d'Inclusion</h2>
+                <div class="mockup-container">
+                    <div class="phone-mockup">
+                        <div class="screen-content map-screen">
+                            <img src="https://via.placeholder.com/200x350.png?text=Carte+Inclusive" alt="Capture d'écran de la carte de Nesti">
+                            <div class="map-info-card">
+                                <h4>Parc Aventure La Forêt Enchantée</h4>
+                                <small>5km - ★★★★☆ (PMR, visuel)</small>
+                                <p>Un parcours sensoriel adapté à tous les âges. Accès fauteuil OK.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>1️⃣ Cartographie Inclusive Intelligente</h3>
+                        <p>Grâce à notre **IA géolocalisée**, trouvez en un clin d'œil les lieux et activités adaptés à vos besoins. Fini les recherches fastidieuses !</p>
+                        <ul>
+                            <li><strong>Filtres précis :</strong> PMR, malvoyants, troubles autistiques...</li>
+                            <li><strong>Score d'inclusion :</strong> Une note fiable basée sur l'expérience des autres familles.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="experience-section">
+            <div class="container">
+                <h2 class="section-title">Vivez l'Inclusion, Partagez l'Expérience</h2>
+                <div class="mockup-container">
+                    <div class="card">
+                        <h3>2️⃣ L'Assistant Pédagogique</h3>
+                        <p>Notre "BienVeillance Engine" rend l'inclusion simple à comprendre et à expliquer. Des conversations adaptées pour chaque enfant.</p>
+                        <ul>
+                            <li><strong>"Mode Explain" :</strong> L'IA explique l'importance de l'activité.</li>
+                            <li><strong>Simulations :</strong> Des scénarios pour préparer les enfants à la diversité.</li>
+                        </ul>
+                    </div>
+                    <div class="phone-mockup">
+                        <div class="screen-content explain-screen">
+                            <div class="chat-bubble ai">
+                                C'est super que tu ailles visiter la ferme de l'Arche ! On y apprend à s'occuper des animaux en fauteuil roulant. Ça s'appelle l'inclusion ! 🌍
+                            </div>
+                            <div class="chat-bubble user">
+                                Et si mon ami en fauteuil veut donner à manger aux lapins ?
+                            </div>
+                            <div class="chat-bubble ai">
+                                C'est une super question ! On pourrait l'aider en tenant le seau de carottes à sa hauteur. On fait équipe ! 💪
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mockup-container" style="margin-top: 3rem;">
+                    <div class="phone-mockup">
+                        <div class="screen-content experience-screen">
+                            <div class="photo-grid">
+                                <img src="https://via.placeholder.com/100.png?text=Photo+1" alt="Photo de l'activité">
+                                <img src="https://via.placeholder.com/100.png?text=Photo+2" alt="Photo de l'activité">
+                                <img src="https://via.placeholder.com/100.png?text=Photo+3" alt="Photo de l'activité">
+                                <img src="https://via.placeholder.com/100.png?text=Photo+4" alt="Photo de l'activité">
+                            </div>
+                            <div class="diary-entry">
+                                <h4>Carnet d'Expériences</h4>
+                                <p>Notre première visite au musée en langue des signes. J'ai appris à dire "bonjour" et "merci" ! 🤩</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>3️⃣ Suivi d'Impact Familial</h3>
+                        <p>Nesti vous aide à mesurer votre impact et à partager vos expériences. C'est l'album photo de votre engagement pour l'inclusion !</p>
+                        <ul>
+                            <li><strong>Carnet :</strong> Sauvegardez vos souvenirs et apprentissages.</li>
+                            <li><strong>Défis :</strong> Des challenges ludiques pour explorer de nouvelles activités.</li>
+                            <li><strong>Réseau :</strong> Connectez-vous avec d'autres familles.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="about-section">
+            <div class="container">
+                <h2 class="section-title">Notre Mission, Notre Équipe</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Vision et Impact</h3>
+                        <p>Nous pensons que l'inclusion se construit jour après jour, en famille. Nesti est l'outil qui rend cette démarche facile et naturelle pour tous. Nous ne vendons pas une app, nous créons un changement comportemental.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Notre Équipe</h3>
+                        <p>Une équipe complémentaire de passionnés : un **CTO** expert en IA, une **CPO** psychologue et UX designer, et un **CEO** spécialiste du marketing social. Et surtout, un **Comité d'Éthique** pour garantir nos valeurs.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Technologie</h3>
+                        <p>Nous avons créé le **"BienVeillance Engine"**, un modèle IA unique, et l'**"InclusionMap"**, une base de données collaborative. Tout est conçu avec une architecture robuste et sécurisée, respectant la vie privée.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="contact-section">
+            <div class="container">
+                <h2 class="section-title">Rejoignez l'Aventure Nesti</h2>
+                <div class="contact-form">
+                    <form action="VOTRE_ENDPOINT_FORM" method="POST">
+                        <div class="form-group">
+                            <label for="name">Votre Nom</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Votre Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Votre Message</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn submit">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <ul class="footer-links">
+                <li><a href="#" class="footer-link">Politique de Confidentialité</a></li>
+                <li><a href="#" class="footer-link">Conditions d'Utilisation</a></li>
+                <li><a href="#" class="footer-link">Presse</a></li>
+            </ul>
+            <p>&copy; 2025 Nesti. Tous droits réservés.</p>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // Données mockées
-        const mockPlaces = [
-            {
-                id: 1,
-                name: "Parc de Bercy",
-                address: "128 Quai de Bercy, 75012 Paris",
-                phone: "01 43 28 47 63",
-                website: "www.paris.fr/equipements/parc-de-bercy",
-                distance: 1.2,
-                rating: 4.5,
-                reviewCount: 127,
-                price: "Gratuit",
-                category: "Parc & Nature",
-                pmr: true,
-                blind: true,
-                autism: false,
-                description: "Grand parc urbain de 14 hectares avec jardins thématiques, aires de jeux inclusives et espaces de détente. Conçu pour accueillir tous les publics avec des aménagements spécialisés.",
-                longDescription: "Le Parc de Bercy s'étend sur 14 hectares et propose une expérience unique aux familles. Divisé en trois jardins thématiques (romantique, parterres, prairie), il offre une diversité d'environnements adaptés à tous les âges.",
-                openHours: "6h00-20h30 (été) / 8h00-17h30 (hiver)",
-                lastEntry: "30 minutes avant fermeture",
-                image: "🏞️",
-                images: ["🏞️", "🌳", "🎠", "⛲"],
-                tags: ["Plein air", "Jeux inclusifs", "Pique-nique", "Jardins thématiques", "Gratuit"],
-                specialFeatures: {
-                    accessibility: "Aire de jeux 100% inclusive, chemins PMR, bancs ergonomiques, toilettes adaptées avec table à langer adulte",
-                    sensory: "Jardin sensoriel avec plantes aromatiques, fontaines musicales, zones de calme ombragées",
-                    services: "Prêt gratuit de fauteuils roulants, personnel formé aux handicaps, signalétique braille et pictogrammes"
-                },
-                amenities: {
-                    parking: true,
-                    wifi: false,
-                    restaurant: false,
-                    toilets: true,
-                    babyChange: true,
-                    petsFriendly: true,
-                    playground: true,
-                    picnicArea: true
-                },
-                accessibilityScore: {
-                    mobility: 95,
-                    visual: 85,
-                    hearing: 70,
-                    cognitive: 60,
-                    overall: 78
-                },
-                certifications: ["Tourisme & Handicap", "Label Famille Plus"],
-                bestTimeToVisit: "Matinée pour éviter l'affluence, après-midi pour les activités sensorielles",
-                tips: [
-                    "Évitez les week-ends après 14h (trop de monde pour enfants autistes)",
-                    "Parking gratuit 2h max, préférez les transports en commun",
-                    "Aire de jeux fermée en cas de pluie pour sécurité"
-                ],
-                nearbyTransport: {
-                    metro: "Bercy (ligne 6, 14) - 300m",
-                    bus: "Lignes 24, 87 - Arrêt Parc de Bercy",
-                    accessibility: "Toutes les stations sont accessibles PMR"
-                }
-            },
-            {
-                id: 2,
-                name: "Musée des Arts et Métiers",
-                address: "60 Rue Réaumur, 75003 Paris",
-                phone: "01 53 01 82 00",
-                website: "www.arts-et-metiers.net",
-                distance: 2.8,
-                rating: 4.3,
-                reviewCount: 892,
-                price: "12€ adulte / Gratuit -18ans / 9€ réduit",
-                category: "Culture & Éducation",
-                pmr: true,
-                blind: true,
-                autism: true,
-                description: "Musée national des techniques avec collections exceptionnelles d'objets scientifiques et techniques. Parcours multisensoriels et ateliers adaptés pour tous les publics.",
-                longDescription: "Le Musée des Arts et Métiers présente l'évolution des techniques et des innovations depuis le Moyen Âge. Ses 7 départements proposent une approche ludique et interactive de la science.",
-                openHours: "Mardi-Dimanche 10h00-18h00 (fermé lundi)",
-                lastEntry: "17h15",
-                image: "🏛️",
-                images: ["🏛️", "⚙️", "🔬", "✈️"],
-                tags: ["Science", "Interactif", "Éducatif", "Histoire", "Technologie", "Accessible"],
-                specialFeatures: {
-                    accessibility: "Ascenseurs dans tout le musée, boucles magnétiques, fauteuils roulants en prêt, toilettes PMR à chaque niveau",
-                    sensory: "Parcours tactile avec 15 stations, audioguides adaptés, maquettes en relief, ateliers sensoriels sur réservation",
-                    services: "Visites en LSF 1er dimanche du mois, médiateurs formés, livret facile à lire et comprendre (FALC)"
-                },
-                amenities: {
-                    parking: false,
-                    wifi: true,
-                    restaurant: true,
-                    toilets: true,
-                    babyChange: true,
-                    petsFriendly: false,
-                    playground: false,
-                    picnicArea: false
-                },
-                accessibilityScore: {
-                    mobility: 90,
-                    visual: 95,
-                    hearing: 85,
-                    cognitive: 80,
-                    overall: 88
-                },
-                certifications: ["Tourisme & Handicap (4 déficiences)", "Musée de France"],
-                bestTimeToVisit: "Mardi-Jeudi matin pour moins d'affluence, créneaux sensoriels le samedi 9h-10h",
-                tips: [
-                    "Réservez les ateliers tactiles 15 jours à l'avance",
-                    "Créneaux calmes : mardi-jeudi 10h-12h",
-                    "Application mobile avec réalité augmentée disponible"
-                ],
-                nearbyTransport: {
-                    metro: "Arts et Métiers (ligne 3, 11) - 100m",
-                    bus: "Lignes 20, 38, 39, 47 - Arrêt Arts et Métiers",
-                    accessibility: "Station Arts et Métiers non accessible (escaliers historiques), utiliser Réaumur-Sébastopol (300m)"
-                }
-            },
-            {
-                id: 3,
-                name: "Piscine Joséphine Baker",
-                address: "Quai François Mauriac, 75013 Paris",
-                phone: "01 56 61 96 50",
-                website: "www.paris.fr/piscines",
-                distance: 3.1,
-                rating: 4.1,
-                reviewCount: 456,
-                price: "4€ adulte / 2,50€ enfant / Gratuit -3ans",
-                category: "Sport & Aquatique",
-                pmr: true,
-                blind: false,
-                autism: true,
-                description: "Piscine flottante unique sur la Seine avec bassins intérieur et extérieur. Équipements spécialisés et créneaux adaptés aux personnes en situation de handicap.",
-                longDescription: "La piscine Joséphine Baker, barge flottante amarrée sur la Seine, offre une expérience aquatique unique à Paris. Avec ses bassins de 25m intérieur et extérieur, elle propose toute l'année la natation en plein cœur de la capitale.",
-                openHours: "Lundi-Vendredi 7h00-20h30 / Weekend 10h00-19h00",
-                lastEntry: "45 minutes avant fermeture",
-                image: "🏊‍♀️",
-                images: ["🏊‍♀️", "🌊", "☀️", "🚢"],
-                tags: ["Natation", "Unique", "Seine", "Accessible", "Sport adapté", "Extérieur"],
-                specialFeatures: {
-                    accessibility: "Rampe d'accès flottante stabilisée, élévateur de mise à l'eau, vestiaires PMR spacieux, douches à barres d'appui",
-                    sensory: "Créneaux 'eau calme' sans musique, éclairage tamisé possible, accompagnateur autorisé gratuitement",
-                    services: "Maîtres-nageurs formés handicap, prêt de matériel flottant adapté, parking réservé PMR"
-                },
-                amenities: {
-                    parking: true,
-                    wifi: false,
-                    restaurant: false,
-                    toilets: true,
-                    babyChange: true,
-                    petsFriendly: false,
-                    playground: false,
-                    picnicArea: false
-                },
-                accessibilityScore: {
-                    mobility: 85,
-                    visual: 45,
-                    hearing: 75,
-                    cognitive: 70,
-                    overall: 69
-                },
-                certifications: ["Label Handisport"],
-                bestTimeToVisit: "Créneaux eau calme : mardi 14h-15h, samedi 9h-10h",
-                tips: [
-                    "Créneaux sensoriels sur réservation uniquement",
-                    "Température extérieure fermée si <15°C",
-                    "Bonnet obligatoire, vente sur place"
-                ],
-                nearbyTransport: {
-                    metro: "Quai de la Gare (ligne 6) - 400m",
-                    bus: "Lignes 89, 325 - Arrêt Bibliothèque F. Mitterrand",
-                    accessibility: "Accès PMR depuis la passerelle Simone de Beauvoir"
-                }
-            }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.getElementById('hamburger');
+            const pageSections = document.querySelectorAll('.page-section');
+            const navLinksList = document.querySelectorAll('.nav-link');
 
-        const mockReviews = [
-            {
-                id: 1,
-                placeId: 1,
-                userName: "Marie L.",
-                userAvatar: "ML",
-                rating: 5,
-                comment: "Parfait pour mon fils Tom (9 ans, autiste) ! L'aire de jeux inclusive est fantastique et le personnel très accueillant. Nous y retournons chaque semaine.",
-                detailedComment: "Première sortie réussie depuis longtemps ! Tom a adoré le jardin sensoriel avec les plantes aromatiques. Les bancs ombragés permettent de faire des pauses quand il est submergé.",
-                date: "Il y a 2 jours",
-                helpful: 23,
-                visited: "Avec 1 enfant (9 ans)",
-                needsUsed: ["autism"],
-                photos: 2,
-                tips: "Évitez les mercredi après-midi, trop de centres aérés. Matinée parfaite !"
-            },
-            {
-                id: 2,
-                placeId: 1,
-                userName: "Pierre D.",
-                userAvatar: "PD",
-                rating: 4,
-                comment: "Très accessible pour ma fille Léa en fauteuil. Dommage que tous les jeux ne soient pas encore adaptés mais l'effort est réel.",
-                detailedComment: "Les chemins sont parfaits pour le fauteuil de Léa (10 ans). Elle a pu accéder à la plupart des jeux grâce aux rampes.",
-                date: "Il y a 1 semaine",
-                helpful: 18,
-                visited: "Avec 1 enfant (10 ans)",
-                needsUsed: ["pmr"],
-                photos: 3,
-                tips: "Parking gratuit 2h, après c'est payant. Station Vélib' juste devant."
-            }
-        ];
+            // Toggle mobile menu
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
 
-        const mockCategories = [
-            { id: 'all', name: 'Tous', icon: '🏠', count: 156 },
-            { id: 'culture', name: 'Culture', icon: '🏛️', count: 34 },
-            { id: 'parc', name: 'Parcs', icon: '🌳', count: 28 },
-            { id: 'sport', name: 'Sport', icon: '🏊‍♀️', count: 19 },
-            { id: 'famille', name: 'Famille', icon: '👨‍👩‍👧‍👦', count: 42 }
-        ];
+            // Smooth scroll and page section display
+            navLinksList.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const targetPageId = e.target.getAttribute('data-page');
+                    if (targetPageId) {
+                        showPage(targetPageId);
+                    } else {
+                        // Handle links with # anchors for sections on the same page
+                        const targetSection = document.querySelector(e.target.getAttribute('href'));
+                        if (targetSection) {
+                            showPage(targetSection.id.replace('-section', ''));
+                            setTimeout(() => {
+                                targetSection.scrollIntoView({ behavior: 'smooth' });
+                            }, 500); 
+                        }
+                    }
 
-        // Application principale
-        class NestiApp {
-            constructor() {
-                this.state = {
-                    currentView: 'search',
-                    selectedPlace: null,
-                    searchQuery: '',
-                    filters: {
-                        pmr: false,
-                        blind: false,
-                        autism: false,
-                        category: 'all'
-                    },
-                    showFilters: false,
-                    user: null,
-                    showChat: false,
-                    favorites: [1, 3],
-                    chatMessages: [
-                        { id: 1, sender: 'assistant', message: '👋 Bonjour ! Je suis là pour vous aider à trouver les meilleures activités inclusives pour votre famille.' },
-                        { id: 2, sender: 'assistant', message: 'Vous pouvez me poser des questions sur l\'accessibilité des lieux, les horaires, ou demander des recommandations personnalisées !' }
-                    ],
-                    newMessage: ''
-                };
-                
-                this.appElement = document.getElementById('app');
-                this.init();
-            }
-            
-            init() {
-                // Simuler le chargement de l'utilisateur
-                this.setState({
-                    user: {
-                        name: "Sophie Martin",
-                        email: "sophie.martin@email.com",
-                        familySize: 2,
-                        children: [{ name: "Emma", age: 8, needs: ["autism"] }],
-                        memberSince: "Mars 2024",
-                        placesVisited: 12,
-                        reviewsWritten: 5
+                    // Hide mobile menu after click
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
                     }
                 });
-                
-                this.render();
-                this.attachEventListeners();
-            }
-            
-            setState(newState) {
-                this.state = { ...this.state, ...newState };
-                this.render();
-            }
-            
-            toggleFavorite(placeId) {
-                const favorites = this.state.favorites.includes(placeId) 
-                    ? this.state.favorites.filter(id => id !== placeId)
-                    : [...this.state.favorites, placeId];
-                
-                this.setState({ favorites });
-            }
-            
-            sendMessage() {
-                if (this.state.newMessage.trim()) {
-                    const newMessages = [
-                        ...this.state.chatMessages,
-                        { id: this.state.chatMessages.length + 1, sender: 'user', message: this.state.newMessage },
-                        { id: this.state.chatMessages.length + 2, sender: 'assistant', message: 'Merci pour votre message ! Notre équipe vous répond sous 2h en semaine. 😊' }
-                    ];
-                    
-                    this.setState({ 
-                        chatMessages: newMessages,
-                        newMessage: '' 
-                    });
+            });
+
+            function showPage(pageId) {
+                // Remove active class from all sections and links
+                pageSections.forEach(section => section.classList.remove('active'));
+                navLinksList.forEach(link => link.classList.remove('active'));
+
+                // Add active class to the selected section and link
+                const sectionToShow = document.getElementById(`${pageId}-section`);
+                if (sectionToShow) {
+                    sectionToShow.classList.add('active');
+                }
+                const linkToActivate = document.querySelector(`[data-page="${pageId}"]`);
+                if (linkToActivate) {
+                    linkToActivate.classList.add('active');
                 }
             }
-            
-            filteredPlaces() {
-                return mockPlaces.filter(place => {
-                    const matchesSearch = place.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()) ||
-                                         place.category.toLowerCase().includes(this.state.searchQuery.toLowerCase());
-                    
-                    const matchesFilters = (!this.state.filters.pmr || place.pmr) &&
-                                          (!this.state.filters.blind || place.blind) &&
-                                          (!this.state.filters.autism || place.autism) &&
-                                          (this.state.filters.category === 'all' || place.category.toLowerCase().includes(this.state.filters.category));
-                    
-                    return matchesSearch && matchesFilters;
-                });
-            }
-            
-            renderPlaceCard(place) {
-                const isFavorite = this.state.favorites.includes(place.id);
-                
-                return `
-                    <div class="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
-                         onclick="nestiApp.setState({ selectedPlace: ${JSON.stringify(place).replace(/"/g, '&quot;')}, currentView: 'place-detail' })">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">${place.image}</span>
-                                    <div>
-                                        <h3 class="font-semibold text-lg text-gray-900">${place.name}</h3>
-                                        <p class="text-sm text-gray-600 flex items-center">
-                                            <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>
-                                            ${place.distance}km • ${place.category}
-                                        </p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center mb-2">
-                                    <div class="flex items-center mr-4">
-                                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current mr-1"></i>
-                                        <span class="text-sm font-medium">${place.rating}</span>
-                                        <span class="text-sm text-gray-500 ml-1">(${place.reviewCount})</span>
-                                    </div>
-                                    <span class="text-sm font-medium text-green-600">${place.price}</span>
-                                </div>
 
-                                <div class="flex items-center space-x-3 mb-3">
-                                    ${place.pmr ? `
-                                        <div class="flex items-center text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                            <i data-lucide="accessibility" class="w-3 h-3 mr-1"></i>
-                                            PMR
-                                        </div>
-                                    ` : ''}
-                                    ${place.blind ? `
-                                        <div class="flex items-center text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                                            <i data-lucide="eye" class="w-3 h-3 mr-1"></i>
-                                            Malvoyants
-                                        </div>
-                                    ` : ''}
-                                    ${place.autism ? `
-                                        <div class="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                            <i data-lucide="brain" class="w-3 h-3 mr-1"></i>
-                                            Autisme
-                                        </div>
-                                    ` : ''}
-                                </div>
-
-                                <p class="text-sm text-gray-700 line-clamp-2">${place.description}</p>
-                            </div>
-                            <i data-lucide="heart" 
-                               class="w-5 h-5 cursor-pointer ml-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}"
-                               onclick="event.stopPropagation(); nestiApp.toggleFavorite(${place.id})"></i>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            renderPlaceDetail(place) {
-                const isFavorite = this.state.favorites.includes(place.id);
-                const placeReviews = mockReviews.filter(r => r.placeId === place.id);
-                
-                return `
-                    <div class="bg-white min-h-screen">
-                        <!-- Header -->
-                        <div class="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-4">
-                            <div class="flex items-center mb-4">
-                                <i data-lucide="arrow-left" class="w-6 h-6 cursor-pointer mr-3" 
-                                   onclick="nestiApp.setState({ currentView: 'search' })"></i>
-                                <span class="text-2xl mr-3">${place.image}</span>
-                                <div>
-                                    <h1 class="text-xl font-bold">${place.name}</h1>
-                                    <p class="text-sm opacity-90">${place.category}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-300 fill-current mr-1"></i>
-                                    <span class="font-medium mr-2">${place.rating}</span>
-                                    <span class="text-sm opacity-75">(${place.reviewCount} avis)</span>
-                                </div>
-                                <i data-lucide="heart" 
-                                   class="w-6 h-6 cursor-pointer ${isFavorite ? 'text-red-300 fill-current' : 'text-white'}"
-                                   onclick="nestiApp.toggleFavorite(${place.id})"></i>
-                            </div>
-                        </div>
-
-                        <!-- Galerie d'images -->
-                        <div class="p-4 bg-gray-50">
-                            <div class="flex space-x-2 overflow-x-auto">
-                                ${place.images.map(img => `
-                                    <div class="text-4xl bg-white rounded-lg p-4 shadow-sm flex-shrink-0">${img}</div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <!-- Info principale -->
-                        <div class="p-4">
-                            <div class="mb-6">
-                                <h2 class="text-lg font-semibold mb-3">Informations pratiques</h2>
-                                
-                                <div class="space-y-3">
-                                    <div class="flex items-start">
-                                        <i data-lucide="map-pin" class="w-5 h-5 text-gray-500 mr-3 mt-1"></i>
-                                        <div>
-                                            <span class="text-sm">${place.address}</span>
-                                            <p class="text-xs text-gray-500 mt-1">
-                                                Transport: ${place.nearbyTransport.metro}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-center">
-                                        <i data-lucide="clock" class="w-5 h-5 text-gray-500 mr-3"></i>
-                                        <span class="text-sm">${place.openHours}</span>
-                                    </div>
-                                    
-                                    <div class="flex items-center">
-                                        <i data-lucide="euro" class="w-5 h-5 text-gray-500 mr-3"></i>
-                                        <span class="text-sm font-medium text-green-600">${place.price}</span>
-                                    </div>
-
-                                    <div class="flex items-center">
-                                        <i data-lucide="phone-call" class="w-5 h-5 text-gray-500 mr-3"></i>
-                                        <span class="text-sm">${place.phone}</span>
-                                    </div>
-
-                                    <div class="flex items-center">
-                                        <i data-lucide="globe" class="w-5 h-5 text-gray-500 mr-3"></i>
-                                        <span class="text-sm text-blue-600">${place.website}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Score d'accessibilité -->
-                            <div class="mb-6">
-                                <h2 class="text-lg font-semibold mb-3">Accessibilité</h2>
-                                
-                                <div class="bg-gray-50 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span class="font-medium">Score global</span>
-                                        <span class="text-2xl font-bold text-teal-600">${place.accessibilityScore.overall}/100</span>
-                                    </div>
-                                    
-                                    <div class="space-y-3">
-                                        <div>
-                                            <div class="flex justify-between text-sm mb-1">
-                                                <span>Mobilité réduite</span>
-                                                <span>${place.accessibilityScore.mobility}/100</span>
-                                            </div>
-                                            <div class="accessibility-score">
-                                                <div class="score-fill" style="width: ${place.accessibilityScore.mobility}%"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="flex justify-between text-sm mb-1">
-                                                <span>Déficience visuelle</span>
-                                                <span>${place.accessibilityScore.visual}/100</span>
-                                            </div>
-                                            <div class="accessibility-score">
-                                                <div class="score-fill" style="width: ${place.accessibilityScore.visual}%"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="flex justify-between text-sm mb-1">
-                                                <span>Déficience auditive</span>
-                                                <span>${place.accessibilityScore.hearing}/100</span>
-                                            </div>
-                                            <div class="accessibility-score">
-                                                <div class="score-fill" style="width: ${place.accessibilityScore.hearing}%"></div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div>
-                                            <div class="flex justify-between text-sm mb-1">
-                                                <span>Déficience cognitive</span>
-                                                <span>${place.accessibilityScore.cognitive}/100</span>
-                                            </div>
-                                            <div class="accessibility-score">
-                                                <div class="score-fill" style="width: ${place.accessibilityScore.cognitive}%"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Équipements -->
-                            <div class="mb-6">
-                                <h2 class="text-lg font-semibold mb-3">Équipements disponibles</h2>
-                                
-                                <div class="grid grid-cols-2 gap-3">
-                                    ${place.amenities.parking ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="car" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Parking</span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${place.amenities.restaurant ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="utensils" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Restaurant</span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${place.amenities.toilets ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="restroom" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Toilettes</span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${place.amenities.babyChange ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="baby" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Table à langer</span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${place.amenities.playground ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="gamepad" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Aire de jeux</span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${place.amenities.petsFriendly ? `
-                                        <div class="flex items-center">
-                                            <i data-lucide="paw-print" class="w-4 h-4 text-green-600 mr-2"></i>
-                                            <span class="text-sm">Animaux acceptés</span>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-
-                            <!-- Description -->
-                            <div class="mb-6">
-                                <h2 class="text-lg font-semibold mb-3">Description</h2>
-                                <p class="text-gray-700">${place.longDescription}</p>
-                            </div>
-
-                            <!-- Avis -->
-                            <div class="mb-6">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h2 class="text-lg font-semibold">Avis (${placeReviews.length})</h2>
-                                    <button class="text-sm text-teal-600 font-medium">Voir tous</button>
-                                </div>
-                                
-                                ${placeReviews.length > 0 ? placeReviews.slice(0, 2).map(review => `
-                                    <div class="bg-gray-50 rounded-lg p-4 mb-3">
-                                        <div class="flex items-center mb-2">
-                                            <div class="w-8 h-8 bg-teal-100 text-teal-800 rounded-full flex items-center justify-center font-medium mr-2">
-                                                ${review.userAvatar}
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">${review.userName}</p>
-                                                <div class="flex items-center">
-                                                    <div class="flex mr-2">
-                                                        ${Array(5).fill(0).map((_, i) => `
-                                                            <i data-lucide="star" class="w-3 h-3 ${i < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}"></i>
-                                                        `).join('')}
-                                                    </div>
-                                                    <span class="text-xs text-gray-500">${review.date}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p class="text-sm text-gray-700">${review.comment}</p>
-                                        <div class="flex items-center mt-2">
-                                            <span class="text-xs text-gray-500">${review.visited}</span>
-                                            <span class="text-xs text-gray-500 mx-2">•</span>
-                                            <span class="text-xs text-teal-600">${review.helpful} utiles</span>
-                                        </div>
-                                    </div>
-                                `).join('') : `
-                                    <div class="text-center py-6 bg-gray-50 rounded-lg">
-                                        <i data-lucide="message-circle" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
-                                        <p class="text-gray-500">Aucun avis pour le moment</p>
-                                    </div>
-                                `}
-                            </div>
-                        </div>
-
-                        <!-- Bouton d'action fixe -->
-                        <div class="fixed bottom-20 left-0 right-0 p-4 bg-white border-t border-gray-200">
-                            <button class="btn-primary w-full">
-                                <i data-lucide="navigation" class="w-5 h-5 mr-2"></i>
-                                Itinéraire
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            renderSearchView() {
-                const filteredPlaces = this.filteredPlaces();
-                
-                return `
-                    <!-- Header de recherche -->
-                    <div class="bg-white p-4 border-b border-gray-200 sticky top-0 z-10">
-                        <div class="flex items-center mb-4">
-                            <h1 class="text-2xl font-bold text-teal-600">Nesti</h1>
-                            <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full ml-2">BETA</span>
-                        </div>
-                        
-                        <div class="relative">
-                            <i data-lucide="search" class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
-                            <input type="text" 
-                                   placeholder="Rechercher un lieu, une activité..." 
-                                   class="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-lg"
-                                   value="${this.state.searchQuery}"
-                                   oninput="nestiApp.setState({ searchQuery: this.value })">
-                            <i data-lucide="sliders-horizontal" 
-                               class="w-5 h-5 text-gray-600 absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer ${this.state.showFilters ? 'text-teal-600' : ''}"
-                               onclick="nestiApp.setState({ showFilters: !nestiApp.state.showFilters })"></i>
-                        </div>
-                    </div>
-
-                    <!-- Filtres -->
-                    ${this.state.showFilters ? `
-                        <div class="bg-white p-4 border-b border-gray-200">
-                            <h3 class="font-medium mb-3">Filtrer par accessibilité</h3>
-                            <div class="grid grid-cols-3 gap-2 mb-4">
-                                <button class="flex flex-col items-center p-2 rounded-lg border ${this.state.filters.pmr ? 'border-teal-300 bg-teal-50 text-teal-700' : 'border-gray-200'}"
-                                        onclick="nestiApp.setState({ filters: { ...nestiApp.state.filters, pmr: !nestiApp.state.filters.pmr } })">
-                                    <i data-lucide="accessibility" class="w-5 h-5 mb-1"></i>
-                                    <span class="text-xs">PMR</span>
-                                </button>
-                                <button class="flex flex-col items-center p-2 rounded-lg border ${this.state.filters.blind ? 'border-teal-300 bg-teal-50 text-teal-700' : 'border-gray-200'}"
-                                        onclick="nestiApp.setState({ filters: { ...nestiApp.state.filters, blind: !nestiApp.state.filters.blind } })">
-                                    <i data-lucide="eye" class="w-5 h-5 mb-1"></i>
-                                    <span class="text-xs">Malvoyants</span>
-                                </button>
-                                <button class="flex flex-col items-center p-2 rounded-lg border ${this.state.filters.autism ? 'border-teal-300 bg-teal-50 text-teal-700' : 'border-gray-200'}"
-                                        onclick="nestiApp.setState({ filters: { ...nestiApp.state.filters, autism: !nestiApp.state.filters.autism } })">
-                                    <i data-lucide="brain" class="w-5 h-5 mb-1"></i>
-                                    <span class="text-xs">Autisme</span>
-                                </button>
-                            </div>
-                            
-                            <h3 class="font-medium mb-3">Catégories</h3>
-                            <div class="flex overflow-x-auto space-x-2 pb-2">
-                                ${mockCategories.map(cat => `
-                                    <button class="flex flex-col items-center p-3 rounded-lg border flex-shrink-0 ${this.state.filters.category === cat.id ? 'border-teal-300 bg-teal-50 text-teal-700' : 'border-gray-200'}"
-                                            onclick="nestiApp.setState({ filters: { ...nestiApp.state.filters, category: '${cat.id}' } })">
-                                        <span class="text-xl mb-1">${cat.icon}</span>
-                                        <span class="text-xs font-medium">${cat.name}</span>
-                                        <span class="text-xs text-gray-500 mt-1">${cat.count}</span>
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    <!-- Résultats -->
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="font-semibold">${filteredPlaces.length} lieu${filteredPlaces.length !== 1 ? 'x' : ''} trouvé${filteredPlaces.length !== 1 ? 's' : ''}</h2>
-                            <button class="text-sm text-teal-600 font-medium">Carte</button>
-                        </div>
-                        
-                        ${filteredPlaces.length > 0 ? filteredPlaces.map(place => this.renderPlaceCard(place)).join('') : `
-                            <div class="text-center py-12">
-                                <div class="emoji-large">🔍</div>
-                                <h3 class="font-medium text-gray-900 mb-2">Aucun résultat</h3>
-                                <p class="text-gray-500">Essayez de modifier vos filtres ou votre recherche</p>
-                            </div>
-                        `}
-                    </div>
-                `;
-            }
-            
-            renderChatView() {
-                return `
-                    <div class="bg-white h-screen flex flex-col">
-                        <!-- Header -->
-                        <div class="flex items-center p-4 border-b border-gray-200">
-                            <i data-lucide="arrow-left" class="w-6 h-6 cursor-pointer mr-3" 
-                               onclick="nestiApp.setState({ showChat: false })"></i>
-                            <div>
-                                <h2 class="font-semibold">Assistant Nesti</h2>
-                                <p class="text-xs text-gray-500">En ligne • Réponse sous 2h</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Messages -->
-                        <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
-                            <div class="space-y-3">
-                                ${this.state.chatMessages.map(msg => `
-                                    <div class="chat-message ${msg.sender} fade-in">
-                                        <p>${msg.message}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        
-                        <!-- Input -->
-                        <div class="p-4 border-t border-gray-200 bg-white">
-                            <div class="flex items-center">
-                                <input type="text" 
-                                       placeholder="Écrivez votre message..." 
-                                       class="flex-1 border border-gray-300 rounded-l-lg py-3 px-4"
-                                       value="${this.state.newMessage}"
-                                       oninput="nestiApp.setState({ newMessage: this.value })"
-                                       onkeypress="if(event.key === 'Enter') nestiApp.sendMessage()">
-                                <button class="bg-teal-600 text-white p-3 rounded-r-lg" onclick="nestiApp.sendMessage()">
-                                    <i data-lucide="send" class="w-5 h-5"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            renderProfileView() {
-                const user = this.state.user;
-                return `
-                    <div class="bg-white min-h-screen">
-                        <!-- Header -->
-                        <div class="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold mr-4">
-                                    ${user.name.split(' ').map(n => n[0]).join('')}
-                                </div>
-                                <div>
-                                    <h1 class="text-xl font-bold">${user.name}</h1>
-                                    <p class="text-sm opacity-90">Membre depuis ${user.memberSince}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 gap-4 text-center">
-                                <div>
-                                    <div class="text-2xl font-bold">${user.placesVisited}</div>
-                                    <div class="text-xs opacity-90">Lieux visités</div>
-                                </div>
-                                <div>
-                                    <div class="text-2xl font-bold">${user.reviewsWritten}</div>
-                                    <div class="text-xs opacity-90">Avis écrits</div>
-                                </div>
-                                <div>
-                                    <div class="text-2xl font-bold">${this.state.favorites.length}</div>
-                                    <div class="text-xs opacity-90">Favoris</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Famille -->
-                        <div class="p-4 border-b border-gray-200">
-                            <h2 class="font-semibold mb-3">Ma famille</h2>
-                            <div class="space-y-3">
-                                ${user.children.map(child => `
-                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                        <div class="w-10 h-10 bg-teal-100 text-teal-800 rounded-full flex items-center justify-center font-medium mr-3">
-                                            ${child.name[0]}
-                                        </div>
-                                        <div>
-                                            <p class="font-medium">${child.name}, ${child.age} ans</p>
-                                            <div class="flex items-center mt-1">
-                                                ${child.needs.map(need => `
-                                                    <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded mr-1">${need}</span>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                                
-                                <button class="flex items-center justify-center p-3 border border-dashed border-gray-300 rounded-lg text-gray-500 w-full">
-                                    <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
-                                    Ajouter un membre
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Menu -->
-                        <div class="p-4">
-                            <h2 class="font-semibold mb-3">Mon compte</h2>
-                            <div class="space-y-2">
-                                <div class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                    <i data-lucide="heart" class="w-5 h-5 text-pink-500 mr-3"></i>
-                                    <span>Mes favoris</span>
-                                </div>
-                                
-                                <div class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-500 mr-3"></i>
-                                    <span>Mes avis</span>
-                                </div>
-                                
-                                <div class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                    <i data-lucide="settings" class="w-5 h-5 text-gray-500 mr-3"></i>
-                                    <span>Préférences</span>
-                                </div>
-                                
-                                <div class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                    <i data-lucide="help-circle" class="w-5 h-5 text-blue-500 mr-3"></i>
-                                    <span>Aide & Support</span>
-                                </div>
-                                
-                                <div class="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                    <i data-lucide="log-out" class="w-5 h-5 text-red-500 mr-3"></i>
-                                    <span>Déconnexion</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            render() {
-                let content = '';
-                
-                if (this.state.showChat) {
-                    content = this.renderChatView();
-                } else {
-                    switch (this.state.currentView) {
-                        case 'search':
-                            content = this.renderSearchView();
-                            break;
-                        case 'place-detail':
-                            content = this.renderPlaceDetail(this.state.selectedPlace);
-                            break;
-                        case 'profile':
-                            content = this.renderProfileView();
-                            break;
-                        default:
-                            content = this.renderSearchView();
-                    }
-                }
-                
-                this.appElement.innerHTML = content + this.renderBottomNav();
-                
-                // Initialiser les icônes Lucide
-                if (window.lucide) {
-                    lucide.createIcons();
-                }
-            }
-            
-            renderBottomNav() {
-                if (this.state.showChat || this.state.currentView === 'place-detail') return '';
-                
-                return `
-                    <div class="bottom-nav">
-                        <div class="nav-item ${this.state.currentView === 'search' ? 'active' : ''}" 
-                             onclick="nestiApp.setState({ currentView: 'search' })">
-                            <i data-lucide="search" class="w-6 h-6"></i>
-                            <span class="text-xs mt-1">Rechercher</span>
-                        </div>
-                        
-                        <div class="nav-item" onclick="nestiApp.setState({ showChat: true })">
-                            <i data-lucide="message-circle" class="w-6 h-6"></i>
-                            <span class="text-xs mt-1">Assistant</span>
-                        </div>
-                        
-                        <div class="nav-item ${this.state.currentView === 'profile' ? 'active' : ''}" 
-                             onclick="nestiApp.setState({ currentView: 'profile' })">
-                            <i data-lucide="user" class="w-6 h-6"></i>
-                            <span class="text-xs mt-1">Profil</span>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            attachEventListeners() {
-                // Gestionnaire pour la touche Entrée dans le chat
-                document.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && this.state.showChat) {
-                        this.sendMessage();
-                    }
-                });
-            }
-        }
-
-        // Initialiser l'application
-        const nestiApp = new NestiApp();
+            // Initial page load
+            const initialPage = window.location.hash ? window.location.hash.substring(1) : 'home';
+            showPage(initialPage);
+        });
     </script>
+
 </body>
 </html>
