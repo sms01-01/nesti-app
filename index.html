@@ -3,574 +3,991 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Cocon Familial</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <title>Nesti : Votre Assistant Familial d'Inclusion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Variables de thème pour une ambiance cosy */
         :root {
-            --bg-color: #f5f0e1; /* Jaune sable très clair */
-            --text-color: #5d4037; /* Marron foncé pour la chaleur */
-            --card-bg: #fffbf5;
-            --primary-color: #a1887f; /* Taupe doux */
-            --secondary-color: #ffab91; /* Corail pastel */
-            --border-color: #e0d9c4;
-            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-            --transition-speed: 0.5s;
-            --font-family-prose: 'Quicksand', sans-serif;
-            --font-family-title: 'Dancing Script', cursive;
+            --primary: #7E57C2;
+            --primary-light: #B39DDB;
+            --primary-dark: #5E35B1;
+            --secondary: #26A69A;
+            --text: #37474F;
+            --text-light: #78909C;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --error: #EF5350;
+            --success: #66BB6A;
+            --border-radius: 16px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
         }
 
-        body.dark-mode {
-            --bg-color: #2b2b2b;
-            --text-color: #e0e0e0;
-            --card-bg: #3c3c3c;
-            --primary-color: #d7ccc8; /* Gris clair */
-            --secondary-color: #ffccbc; /* Rose clair */
-            --border-color: #4f4f4f;
-            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Styles de base */
-        body {
-            font-family: var(--font-family-prose);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        * {
             margin: 0;
-            padding: 2rem 1rem;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--background);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary);
+            transition: var(--transition);
+            border-radius: 10px;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-decoration {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 40%;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 .icon {
+            font-size: 1.8rem;
+        }
+
+        .card p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .card li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .card li:before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        /* Mockups */
+        .mockup-container {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .mockup-content {
+            flex: 1;
+        }
+
+        .phone-mockup {
+            flex-shrink: 0;
+            width: 280px;
+            height: 560px;
+            background: #222;
+            border-radius: 40px;
+            padding: 15px;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .phone-mockup:before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 6px;
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .screen {
+            background: white;
+            height: 100%;
+            border-radius: 30px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            line-height: 1.6;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
-        /* Animation de fond, comme des motifs de papier peint doux */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Chat bubbles */
+        .chat-container {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            font-size: 0.9rem;
+        }
+
+        .chat-bubble.ai {
+            background-color: #F5F5F5;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-bubble.user {
+            background-color: var(--primary-light);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Map screen */
+        .map-screen {
+            position: relative;
+        }
+
+        .map-placeholder {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, var(--primary-color) 0%, transparent 40%),
-                        radial-gradient(circle, var(--secondary-color) 0%, transparent 40%);
-            background-size: 400px 400px, 300px 300px;
-            background-position: top 20% left 30%, bottom 20% right 40%;
-            animation: cozyBreathe 30s infinite ease-in-out alternate;
-            opacity: 0.1;
-            z-index: -1;
-        }
-        @keyframes cozyBreathe {
-            from { background-position: top 20% left 30%, bottom 20% right 40%; }
-            to { background-position: top 25% left 35%, bottom 25% right 45%; }
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+            font-size: 1.5rem;
         }
 
-        /* Conteneurs et mise en page */
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            border-radius: 24px;
-            background-color: rgba(var(--text-color), 0.02);
-            backdrop-filter: blur(2px);
-            animation: cozy-load 1s ease-out;
+        .map-card {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
         }
-        @keyframes cozy-load {
-            from { opacity: 0; transform: translateY(30px); }
+
+        .map-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .map-card p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #FFA000;
+            font-size: 0.9rem;
+        }
+
+        /* Photo grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 1rem;
+        }
+
+        .photo-cell {
+            background: #F5F5F5;
+            border-radius: 8px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+
+        .diary-entry {
+            padding: 0 1rem 1rem;
+        }
+
+        .diary-entry h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .diary-entry p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(126, 87, 194, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-links h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .mockup-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .phone-mockup {
+                margin: 0 auto;
+            }
+            
+            .mockup-content {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                gap: 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-link {
+                padding: 1rem;
+                border-bottom: 1px solid #EEEEEE;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.75rem 1.5rem;
+            }
+            
+            section {
+                padding: 3rem 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .phone-mockup {
+                width: 250px;
+                height: 500px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        header, footer {
-            width: 100%;
-            max-width: 1000px;
-            text-align: center;
-            padding: 1.5rem 0;
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
         }
 
-        /* Composants de l'interface utilisateur */
-        .card {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            opacity: 0.3;
-            transition: height 0.3s ease;
-        }
-        .card:hover::before { height: 100%; opacity: 0.1; }
-
-        h1 {
-            font-family: var(--font-family-title);
-            font-size: clamp(3rem, 7vw, 5rem);
-            color: var(--primary-color);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0;
-            animation: title-appear 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        @keyframes title-appear {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        h2 {
-            font-family: var(--font-family-title);
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: var(--secondary-color);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        h3 {
-            font-family: var(--font-family-prose);
-            font-weight: 700;
-            color: var(--primary-color);
-            border-bottom: 2px dashed var(--secondary-color);
-            display: inline-block;
-            padding-bottom: 0.3rem;
-            margin-top: 0;
-        }
-        p {
-            font-family: var(--font-family-prose);
-            font-size: 1.1rem;
-        }
-
-        /* Boutons */
-        .button {
-            display: inline-block;
-            padding: 12px 28px;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: background-color var(--transition-speed), transform 0.2s ease;
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 1rem;
-        }
-        .button:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.02);
-        }
-
-        /* Galerie d'images */
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        .image-gallery img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            filter: grayscale(10%);
-        }
-        .image-gallery img:hover {
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            filter: grayscale(0%);
-        }
-
-        /* Formulaires */
-        .contact-form label, .quiz-question {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        .contact-form input, .contact-form textarea, .quiz-options input {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            width: 100%;
-            margin-bottom: 1rem;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: border-color 0.3s ease;
-        }
-        .contact-form input:focus, .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-        }
-
-        /* Styles spécifiques des sections */
-        .story-section {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        .story-section img {
-            max-width: 40%;
-            border-radius: 16px;
-            box-shadow: var(--box-shadow);
-        }
-        .story-section.reverse {
-            flex-direction: row-reverse;
-        }
-
-        .memory-entry {
-            border-left: 4px solid var(--primary-color);
-            padding-left: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .memory-entry.is-visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .memory-entry::before {
-            content: '📌';
-            position: absolute;
-            left: -15px;
-            top: -5px;
-            font-size: 1.5rem;
-        }
-        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
-    <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
-
+    <!-- Header -->
     <header>
         <div class="container">
-            <h1>Mon Cocon Familial</h1>
-            <p>Un recueil de nos plus beaux moments et de nos souvenirs précieux.</p>
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-hands-helping"></i> Nesti
+                </a>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="nav-link active">Accueil</a></li>
+                    <li><a href="#discover" class="nav-link">Découvrir</a></li>
+                    <li><a href="#experience" class="nav-link">Expérience</a></li>
+                    <li><a href="#about" class="nav-link">À Propos</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
         </div>
     </header>
 
-    <main class="container">
-        <section class="card">
-            <h2>Notre album photo</h2>
-            <div id="image-gallery-container"></div>
-        </section>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>L'Assistant Familial qui Démocratise l'Inclusion</h1>
+                <p>Faire de chaque famille un acteur d'inclusion grâce à l'IA et aux données locales.</p>
+                <div class="hero-buttons">
+                    <a href="#discover" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Commencez l'aventure
+                    </a>
+                    <a href="#about" class="btn btn-outline">
+                        <i class="fas fa-info-circle"></i> En savoir plus
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-decoration">
+            <i class="fas fa-heart" style="font-size: 20rem;"></i>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Nos recettes secrètes</h2>
-            <div id="recipes-container"></div>
-        </section>
+    <!-- Problem/Solution Section -->
+    <section>
+        <div class="container">
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3><span class="icon">🤔</span> Le Problème</h3>
+                    <p>86% des parents veulent sensibiliser leurs enfants à la diversité, mais moins de 30% trouvent facilement des activités inclusives.</p>
+                </div>
+                
+                <div class="card fade-in delay-1">
+                    <h3><span class="icon">💡</span> Notre Solution</h3>
+                    <p>Une IA qui trouve, adapte et explique les activités inclusives pour toute la famille, de manière ludique et bienveillante.</p>
+                </div>
+                
+                <div class="card fade-in delay-2">
+                    <h3><span class="icon">🌟</span> Votre Impact</h3>
+                    <p>Chaque sortie devient une leçon de vie. Transformez votre famille en ambassadrice de l'inclusion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Le quiz de la famille</h2>
-            <div id="quiz-container"></div>
-        </section>
+    <!-- Discover Section -->
+    <section id="discover">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Découvrez un Monde d'Inclusion</h2>
+                <p class="section-subtitle">Notre technologie rend l'accessibilité simple et intuitive pour toutes les familles</p>
+            </div>
+            
+            <div class="mockup-container">
+                <div class="phone-mockup fade-in">
+                    <div class="screen map-screen">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="map-card">
+                            <h4>Parc Aventure La Forêt Enchantée</h4>
+                            <p>Un parcours sensoriel adapté à tous les âges. Accès fauteuil OK.</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>5km - PMR, visuel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mockup-content fade-in delay-1">
+                    <div class="card">
+                        <h3><span class="icon">1️⃣</span> Cartographie Inclusive Intelligente</h3>
+                        <p>Grâce à notre <strong>IA géolocalisée</strong>, trouvez en un clin d'œil les lieux et activités adaptés à vos besoins. Fini les recherches fastidieuses !</p>
+                        <ul>
+                            <li><strong>Filtres précis :</strong> PMR, malvoyants, troubles autistiques...</li>
+                            <li><strong>Score d'inclusion :</strong> Une note fiable basée sur l'expérience des autres familles.</li>
+                            <li><strong>Alertes accessibilité :</strong> Recevez des notifications pour les nouveaux lieux adaptés près de chez vous.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Notre histoire, nos traditions</h2>
-            <div id="history-container"></div>
-        </section>
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Vivez l'Inclusion, Partagez l'Expérience</h2>
+                <p class="section-subtitle">Notre assistant pédagogique rend l'inclusion simple à comprendre et à expliquer</p>
+            </div>
+            
+            <div class="mockup-container">
+                <div class="mockup-content fade-in">
+                    <div class="card">
+                        <h3><span class="icon">2️⃣</span> L'Assistant Pédagogique</h3>
+                        <p>Notre "BienVeillance Engine" rend l'inclusion simple à comprendre et à expliquer. Des conversations adaptées pour chaque enfant.</p>
+                        <ul>
+                            <li><strong>"Mode Explain" :</strong> L'IA explique l'importance de l'activité.</li>
+                            <li><strong>Simulations :</strong> Des scénarios pour préparer les enfants à la diversité.</li>
+                            <li><strong>Adaptation :</strong> Des explications personnalisées selon l'âge et les besoins.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="phone-mockup fade-in delay-1">
+                    <div class="screen">
+                        <div class="chat-container">
+                            <div class="chat-bubble ai">
+                                C'est super que tu ailles visiter la ferme de l'Arche ! On y apprend à s'occuper des animaux en fauteuil roulant. Ça s'appelle l'inclusion ! 🌍
+                            </div>
+                            <div class="chat-bubble user">
+                                Et si mon ami en fauteuil veut donner à manger aux lapins ?
+                            </div>
+                            <div class="chat-bubble ai">
+                                C'est une super question ! On pourrait l'aider en tenant le seau de carottes à sa hauteur. On fait équipe ! 💪
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mockup-container">
+                <div class="phone-mockup fade-in">
+                    <div class="screen">
+                        <div class="photo-grid">
+                            <div class="photo-cell"><i class="fas fa-image"></i></div>
+                            <div class="photo-cell"><i class="fas fa-image"></i></div>
+                            <div class="photo-cell"><i class="fas fa-image"></i></div>
+                            <div class="photo-cell"><i class="fas fa-image"></i></div>
+                        </div>
+                        <div class="diary-entry">
+                            <h4>Carnet d'Expériences</h4>
+                            <p>Notre première visite au musée en langue des signes. J'ai appris à dire "bonjour" et "merci" ! 🤩</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mockup-content fade-in delay-1">
+                    <div class="card">
+                        <h3><span class="icon">3️⃣</span> Suivi d'Impact Familial</h3>
+                        <p>Nesti vous aide à mesurer votre impact et à partager vos expériences. C'est l'album photo de votre engagement pour l'inclusion !</p>
+                        <ul>
+                            <li><strong>Carnet :</strong> Sauvegardez vos souvenirs et apprentissages.</li>
+                            <li><strong>Défis :</strong> Des challenges ludiques pour explorer de nouvelles activités.</li>
+                            <li><strong>Réseau :</strong> Connectez-vous avec d'autres familles.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Notre journal de bord</h2>
-            <div id="blog-container"></div>
-        </section>
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Notre Mission, Notre Équipe</h2>
+                <p class="section-subtitle">Une équipe passionnée au service de l'inclusion pour tous</p>
+            </div>
+            
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3><span class="icon">🎯</span> Vision et Impact</h3>
+                    <p>Nous pensons que l'inclusion se construit jour après jour, en famille. Nesti est l'outil qui rend cette démarche facile et naturelle pour tous.</p>
+                    <p>Nous ne vendons pas une app, nous créons un changement comportemental.</p>
+                </div>
+                
+                <div class="card fade-in delay-1">
+                    <h3><span class="icon">👥</span> Notre Équipe</h3>
+                    <p>Une équipe complémentaire de passionnés : un <strong>CTO</strong> expert en IA, une <strong>CPO</strong> psychologue et UX designer, et un <strong>CEO</strong> spécialiste du marketing social.</p>
+                    <p>Et surtout, un <strong>Comité d'Éthique</strong> pour garantir nos valeurs.</p>
+                </div>
+                
+                <div class="card fade-in delay-2">
+                    <h3><span class="icon">🔧</span> Technologie</h3>
+                    <p>Nous avons créé le <strong>"BienVeillance Engine"</strong>, un modèle IA unique, et l'<strong>"InclusionMap"</strong>, une base de données collaborative.</p>
+                    <p>Tout est conçu avec une architecture robuste et sécurisée, respectant la vie privée.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Nos souvenirs les plus précieux</h2>
-            <div id="memories-container"></div>
-        </section>
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Rejoignez l'Aventure Nesti</h2>
+                <p class="section-subtitle">Nous sommes à votre écoute pour toute question ou suggestion</p>
+            </div>
+            
+            <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Votre Nom</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Votre Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Votre Message</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Envoyer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
 
-        <section class="card">
-            <h2>Laissez-nous un petit mot</h2>
-            <div id="contact-container"></div>
-        </section>
-    </main>
-
+    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>Merci de faire partie de notre histoire. © 2025</p>
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">Nesti</a>
+                    <p>L'application qui transforme chaque famille en acteur de l'inclusion.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Liens Rapides</h4>
+                    <ul>
+                        <li><a href="#home">Accueil</a></li>
+                        <li><a href="#discover">Découvrir</a></li>
+                        <li><a href="#experience">Expérience</a></li>
+                        <li><a href="#about">À Propos</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Politique de Confidentialité</a></li>
+                        <li><a href="#">Conditions d'Utilisation</a></li>
+                        <li><a href="#">Mentions Légales</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:contact@nesti.app">contact@nesti.app</a></li>
+                        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+                        <li>Paris, France</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Nesti. Tous droits réservés.</p>
+            </div>
         </div>
     </footer>
 
-    <div id="notification-container"></div>
-
     <script>
-        /**
-         * Couche 1 : LES DONNÉES DE L'APPLICATION
-         * Toutes les données du site sont stockées ici pour une gestion facile.
-         */
-        const APP_DATA = {
-            images: [
-                { src: 'https://images.unsplash.com/photo-1542042168-5e263a2a677e?q=80&w=1470&auto=format&fit=crop', alt: 'Famille souriant sur une plage' },
-                { src: 'https://images.unsplash.com/photo-1628151241187-73d28d052d92?q=80&w=1470&auto=format&fit=crop', alt: 'Famille en vacances' },
-                { src: 'https://images.unsplash.com/photo-1544458514-633b49c717be?q=80&w=1470&auto=format&fit=crop', alt: 'Repas de famille' },
-                { src: 'https://images.unsplash.com/photo-1517404215738-15263e9f9850?q=80&w=1470&auto=format&fit=crop', alt: 'Pique-nique en famille' },
-                { src: 'https://images.unsplash.com/photo-1513589255018-b2a63274641c?q=80&w=1470&auto=format&fit=crop', alt: 'Noël en famille' },
-                { src: 'https://images.unsplash.com/photo-1582239474944-ec85317796d1?q=80&w=1470&auto=format&fit=crop', alt: 'Anniversaire' },
-            ],
-            recipes: [
-                { title: "Lasagnes à la bolognaise", author: "Maman", description: "Un classique indémodable qui rassemble tout le monde autour de la table. La recette secrète de Maman avec une touche d'amour !", prepTime: "1h30" },
-                { title: "Gâteau au chocolat fondant", author: "Papa", description: "Un dessert irrésistible pour les gourmands, toujours réussi et parfait pour les moments de fête.", prepTime: "45min" },
-                { title: "Gratin dauphinois", author: "Grand-Mère", description: "La recette traditionnelle qui nous rappelle les dimanches en famille. Un régal simple et réconfortant.", prepTime: "1h" },
-            ],
-            quizQuestions: [
-                { question: "Quel est notre plat préféré du dimanche ?", options: ["Lasagnes", "Pizza", "Riz Cantonais", "Pâtes au pesto"], answer: "Lasagnes" },
-                { question: "Quelle est notre destination de vacances préférée ?", options: ["La mer", "La montagne", "La campagne", "La ville"], answer: "La montagne" },
-                { question: "Qui est le roi du barbecue l'été ?", options: ["Papa", "Maman", "Thomas", "Léa"], answer: "Papa" },
-            ],
-            history: {
-                title: "De nos origines à nos traditions",
-                paragraphs: [
-                    "L'histoire de notre famille commence il y a plusieurs générations, dans un petit village au cœur des montagnes. C'est de là que nous tenons notre amour pour les grands espaces et les repas partagés.",
-                    "Au fil du temps, notre famille s'est agrandie et dispersée, mais le lien qui nous unit est resté indéfectible. Les fêtes de Noël, les anniversaires d'été et les longs appels du dimanche sont devenus nos rituels sacrés.",
-                    "Aujourd'hui, ce site web est notre manière de préserver notre histoire, de la raconter aux générations futures et de célébrer chaque moment qui fait de nous une famille."
-                ]
-            },
-            blogPosts: [
-                { title: "Un week-end inoubliable à la campagne", date: "24/10/2024", content: "Nous avons passé un week-end magnifique à la campagne, loin du tumulte de la ville. Le soleil était au rendez-vous et nous avons pu faire de longues balades en forêt, jouer au ballon et se raconter des histoires autour d'un feu de camp. Un vrai moment de bonheur pur." },
-                { title: "Les premiers pas de notre petite Léa", date: "12/09/2024", content: "Quelle joie ! Notre petite Léa a fait ses tout premiers pas. Un moment rempli d'émotion que nous n'oublierons jamais. C'est fou comme le temps passe vite, et nous sommes si fiers de la voir grandir chaque jour." }
-            ],
-            memories: [
-                { date: "15/07/2023", event: "Mariage de Thomas et Sophie", description: "Un jour magique, rempli de rires et d'amour. On s'est tous retrouvés pour célébrer cette union sous les oliviers. Le soleil, la musique, et les larmes de joie... un souvenir gravé à jamais." },
-                { date: "03/01/2022", event: "Notre grand voyage en Italie", description: "Notre premier grand voyage en famille. Les pizzas, les glaces, les monuments... des souvenirs qui nous font encore sourire. On se promet de recommencer dès que possible !" },
-                { date: "24/12/2021", event: "Noël à la maison de Grand-Père", description: "Le Noël le plus mémorable. Toute la famille réunie, les cadeaux sous le sapin, l'odeur du pain d'épices et les histoires de Grand-Père au coin du feu." }
-            ]
-        };
-
-        /**
-         * Couche 2 : GESTION DE L'INTERFACE UTILISATEUR (UI)
-         * Fonctions pour créer les éléments HTML et les afficher.
-         */
-        const UI = {
-            createElement: (tag, attributes = {}, ...children) => {
-                const element = document.createElement(tag);
-                for (const key in attributes) {
-                    element.setAttribute(key, attributes[key]);
-                }
-                children.forEach(child => {
-                    if (typeof child === 'string') {
-                        element.appendChild(document.createTextNode(child));
-                    } else {
-                        element.appendChild(child);
-                    }
-                });
-                return element;
-            },
-
-            renderGallery: (parent) => {
-                const gallery = UI.createElement('div', { class: 'image-gallery' });
-                APP_DATA.images.forEach(image => {
-                    const img = UI.createElement('img', { src: image.src, alt: image.alt, loading: 'lazy' });
-                    gallery.appendChild(img);
-                });
-                parent.appendChild(gallery);
-            },
-
-            renderRecipes: (parent) => {
-                const list = UI.createElement('div');
-                APP_DATA.recipes.forEach(recipe => {
-                    const item = UI.createElement('div', { class: 'recipe-item' });
-                    item.innerHTML = `
-                        <h3>${recipe.title}</h3>
-                        <p><strong>Par :</strong> ${recipe.author}</p>
-                        <p>${recipe.description}</p>
-                        <p><small>Préparation : ${recipe.prepTime}</small></p>
-                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
-                    `;
-                    list.appendChild(item);
-                });
-                parent.appendChild(list);
-            },
-
-            renderQuiz: (parent) => {
-                let score = 0;
-                let currentQuestionIndex = 0;
-                const container = UI.createElement('div', { class: 'quiz-container' });
-                const questionDiv = UI.createElement('div', { id: 'quiz-questions' });
-                const resultDiv = UI.createElement('div', { id: 'quiz-result' });
-                const button = UI.createElement('button', { class: 'button', id: 'quiz-button' }, 'Lancer le quiz !');
-
-                const renderQuestion = () => {
-                    questionDiv.innerHTML = '';
-                    if (currentQuestionIndex >= APP_DATA.quizQuestions.length) {
-                        resultDiv.textContent = `Quiz terminé ! Votre score est de ${score} sur ${APP_DATA.quizQuestions.length}.`;
-                        button.textContent = 'Recommencer';
-                        currentQuestionIndex = 0;
-                        score = 0;
-                        return;
-                    }
-                    const q = APP_DATA.quizQuestions[currentQuestionIndex];
-                    const questionElement = UI.createElement('div', { class: 'quiz-question' }, q.question);
-                    const optionsContainer = UI.createElement('div', { class: 'quiz-options' });
-                    q.options.forEach(option => {
-                        const label = UI.createElement('label');
-                        const input = UI.createElement('input', { type: 'radio', name: `question-${currentQuestionIndex}`, value: option });
-                        label.appendChild(input);
-                        label.appendChild(document.createTextNode(option));
-                        optionsContainer.appendChild(label);
-                    });
-                    questionDiv.appendChild(questionElement);
-                    questionDiv.appendChild(optionsContainer);
-                    button.textContent = 'Répondre';
-                };
-
-                button.addEventListener('click', () => {
-                    if (button.textContent === 'Lancer le quiz !') {
-                        renderQuestion();
-                    } else if (button.textContent === 'Répondre') {
-                        const selectedOption = document.querySelector(`input[name="question-${currentQuestionIndex}"]:checked`);
-                        if (selectedOption) {
-                            if (selectedOption.value === APP_DATA.quizQuestions[currentQuestionIndex].answer) {
-                                score++;
-                                resultDiv.textContent = 'Bonne réponse ! 🎉';
-                            } else {
-                                resultDiv.textContent = `Mauvaise réponse. La bonne réponse était "${APP_DATA.quizQuestions[currentQuestionIndex].answer}".`;
-                            }
-                            currentQuestionIndex++;
-                            setTimeout(() => {
-                                renderQuestion();
-                                resultDiv.textContent = '';
-                            }, 1500);
-                        } else {
-                            alert('Veuillez sélectionner une option !');
-                        }
-                    } else if (button.textContent === 'Recommencer') {
-                        renderQuestion();
-                        resultDiv.textContent = '';
-                    }
-                });
-
-                container.appendChild(questionDiv);
-                container.appendChild(resultDiv);
-                container.appendChild(button);
-                parent.appendChild(container);
-            },
-
-            renderHistory: (parent) => {
-                const historyDiv = UI.createElement('div');
-                APP_DATA.history.paragraphs.forEach((pText, index) => {
-                    const p = UI.createElement('p', { class: 'fade-in', style: `transition-delay: ${index * 0.2}s;` }, pText);
-                    historyDiv.appendChild(p);
-                });
-                parent.appendChild(historyDiv);
-            },
-
-            renderBlog: (parent) => {
-                const blogContainer = UI.createElement('div');
-                APP_DATA.blogPosts.forEach((post, index) => {
-                    const postDiv = UI.createElement('div', { class: 'card blog-post fade-in', style: `transition-delay: ${index * 0.2}s;` });
-                    postDiv.innerHTML = `
-                        <h3>${post.title}</h3>
-                        <p style="font-size: 0.9em; opacity: 0.7;">Publié le ${post.date}</p>
-                        <p>${post.content}</p>
-                    `;
-                    blogContainer.appendChild(postDiv);
-                });
-                parent.appendChild(blogContainer);
-            },
-
-            renderMemories: (parent) => {
-                const memoriesContainer = UI.createElement('div');
-                APP_DATA.memories.forEach((memory, index) => {
-                    const memoryDiv = UI.createElement('div', { class: 'memory-entry' });
-                    const heading = UI.createElement('h3', {}, `🗓 ${memory.date} - ${memory.event}`);
-                    const description = UI.createElement('p', {}, memory.description);
-                    memoryDiv.appendChild(heading);
-                    memoryDiv.appendChild(description);
-                    memoriesContainer.appendChild(memoryDiv);
-                });
-                parent.appendChild(memoriesContainer);
-            },
-
-            renderContactForm: (parent) => {
-                const form = UI.createElement('form', { class: 'contact-form' });
-                form.innerHTML = `
-                    <label for="name">Votre nom :</label>
-                    <input type="text" id="name" required>
-                    <label for="email">Votre email :</label>
-                    <input type="email" id="email" required>
-                    <label for="message">Votre message :</label>
-                    <textarea id="message" rows="5" required></textarea>
-                `;
-                const button = UI.createElement('button', { type: 'submit', class: 'button' }, 'Envoyer');
-                form.appendChild(button);
-                parent.appendChild(form);
-            },
-        };
-
-        /**
-         * Couche 3 : LA LOGIQUE DE L'APPLICATION
-         * Initialisation et événements.
-         */
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // Remplissage dynamique des sections avec les données
-            UI.renderGallery(document.getElementById('image-gallery-container'));
-            UI.renderRecipes(document.getElementById('recipes-container'));
-            UI.renderQuiz(document.getElementById('quiz-container'));
-            UI.renderHistory(document.getElementById('history-container'));
-            UI.renderBlog(document.getElementById('blog-container'));
-            UI.renderMemories(document.getElementById('memories-container'));
-            UI.renderContactForm(document.getElementById('contact-container'));
-
-            // Intersection Observer pour les animations au scroll
-            const observerOptions = {
-                root: null,
-                threshold: 0.2,
-            };
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-            document.querySelectorAll('.memory-entry, .blog-post, .fade-in').forEach(el => observer.observe(el));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobileToggle');
+            const navLinks = document.getElementById('navLinks');
             
-            // Gestion du mode sombre
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                themeToggleBtn.innerHTML = '☀️';
+            mobileToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Close mobile menu if open
+                        navLinks.classList.remove('active');
+                        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        
+                        // Scroll to element
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Form submission
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Here you would normally send the form data to a server
+                    alert('Merci pour votre message ! Nous vous répondrons très rapidement.');
+                    contactForm.reset();
+                });
             }
-
-            themeToggleBtn.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                themeToggleBtn.innerHTML = isDarkMode ? '☀️' : '🌙';
-            });
             
-            // Gestion du formulaire de contact
-            const contactForm = document.querySelector('#contact-container form');
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert('Merci pour votre message ! Il est bien arrivé au cœur de notre cocon familial.');
-                contactForm.reset();
-            });
+            // Animation on scroll
+            const animatedElements = document.querySelectorAll('.fade-in');
+            
+            function checkScroll() {
+                animatedElements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight * 0.85;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initial check
+            checkScroll();
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkScroll);
         });
     </script>
 </body>
