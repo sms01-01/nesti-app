@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ==================== VARIABLES ==================== */
         :root {
             --primary: #7E57C2;
             --primary-light: #B39DDB;
@@ -25,623 +26,120 @@
             --transition: all 0.3s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text);
-            background-color: var(--background);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header & Navigation */
-        header {
-            background-color: var(--surface);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo i {
-            font-size: 1.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: var(--transition);
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background-color: var(--primary);
-            transition: var(--transition);
-            border-radius: 10px;
-        }
-
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text);
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border-radius: 0 0 var(--border-radius) var(--border-radius);
-            margin-bottom: 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            max-width: 650px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .hero-decoration {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 40%;
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.875rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background-color: white;
-            color: var(--primary-dark);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: white;
-        }
-
-        /* Cards */
-        .card {
-            background-color: var(--surface);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            height: 100%;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card h3 .icon {
-            font-size: 1.8rem;
-        }
-
-        .card p {
-            color: var(--text-light);
-            margin-bottom: 1rem;
-        }
-
-        .card ul {
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        .card li {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .card li:before {
-            content: '✓';
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        /* Sections */
-        section {
-            padding: 5rem 0;
-            scroll-margin-top: 80px;
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 4rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-        }
-
-        /* Grid Layout */
-        .grid {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        /* Mockups */
-        .mockup-container {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            margin: 3rem 0;
-        }
-
-        .mockup-content {
-            flex: 1;
-        }
-
-        .phone-mockup {
-            flex-shrink: 0;
-            width: 280px;
-            height: 560px;
-            background: #222;
-            border-radius: 40px;
-            padding: 15px;
-            position: relative;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .phone-mockup:before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 6px;
-            background: #333;
-            border-radius: 5px;
-        }
-
-        .screen {
-            background: white;
-            height: 100%;
-            border-radius: 30px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Chat bubbles */
-        .chat-container {
-            padding: 1rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            overflow-y: auto;
-        }
-
-        .chat-bubble {
-            max-width: 80%;
-            padding: 0.75rem 1rem;
-            border-radius: 18px;
-            font-size: 0.9rem;
-        }
-
-        .chat-bubble.ai {
-            background-color: #F5F5F5;
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-        }
-
-        .chat-bubble.user {
-            background-color: var(--primary-light);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 5px;
-        }
-
-        /* Map screen */
-        .map-screen {
-            position: relative;
-        }
-
-        .map-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--success);
-            font-size: 1.5rem;
-        }
-
-        .map-card {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            right: 15px;
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .map-card h4 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .map-card p {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #FFA000;
-            font-size: 0.9rem;
-        }
-
-        /* Photo grid */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            padding: 1rem;
-        }
-
-        .photo-cell {
-            background: #F5F5F5;
-            border-radius: 8px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-light);
-        }
-
-        .diary-entry {
-            padding: 0 1rem 1rem;
-        }
-
-        .diary-entry h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .diary-entry p {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid #E0E0E0;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(126, 87, 194, 0.1);
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: white;
-            padding: 4rem 0 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .footer-about {
-            max-width: 300px;
-        }
-
-        .footer-links h4 {
-            font-size: 1.2rem;
-            margin-bottom: 1.2rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .footer-links h4:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: white;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .mockup-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .phone-mockup {
-                margin: 0 auto;
-            }
-            
-            .mockup-content {
-                order: 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: var(--shadow-md);
-                gap: 0;
-            }
-            
-            .nav-links.active {
-                display: flex;
-            }
-            
-            .nav-link {
-                padding: 1rem;
-                border-bottom: 1px solid #EEEEEE;
-            }
-            
-            .mobile-toggle {
-                display: block;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero {
-                padding: 3rem 0;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 0.75rem 1.5rem;
-            }
-            
-            section {
-                padding: 3rem 0;
-            }
-            
-            .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .phone-mockup {
-                width: 250px;
-                height: 500px;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Poppins', sans-serif; color:var(--text); background:var(--background); line-height:1.6; overflow-x:hidden; }
+
+        .container { max-width: 1200px; margin:0 auto; padding:0 20px; }
+
+        /* ==================== HEADER & NAVBAR ==================== */
+        header { background:var(--surface); box-shadow:var(--shadow-sm); position:sticky; top:0; z-index:100; }
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; }
+        .logo { font-size:1.8rem; font-weight:700; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:8px; }
+        .logo i { font-size:1.5rem; }
+        .nav-links { display:flex; list-style:none; gap:2rem; }
+        .nav-link { text-decoration:none; color:var(--text); font-weight:500; position:relative; padding:0.5rem 0; transition:var(--transition); }
+        .nav-link:hover, .nav-link.active { color:var(--primary); }
+        .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background-color:var(--primary); transition:var(--transition); border-radius:10px; }
+        .nav-link:hover::after, .nav-link.active::after { width:100%; }
+        .mobile-toggle { display:none; background:none; border:none; font-size:1.5rem; color:var(--text); cursor:pointer; }
+
+        /* ==================== HERO ==================== */
+        .hero { padding:5rem 0; background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color:white; border-radius:0 0 var(--border-radius) var(--border-radius); margin-bottom:4rem; position:relative; overflow:hidden; }
+        .hero-content { max-width:650px; position:relative; z-index:2; }
+        .hero h1 { font-size:3rem; font-weight:700; margin-bottom:1.5rem; line-height:1.2; }
+        .hero p { font-size:1.2rem; margin-bottom:2rem; opacity:0.9; }
+        .hero-buttons { display:flex; gap:1rem; flex-wrap:wrap; }
+        .hero-decoration { position:absolute; right:0; bottom:0; width:40%; opacity:0.15; pointer-events:none; }
+
+        /* ==================== BUTTONS ==================== */
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:0.875rem 2rem; border-radius:50px; font-weight:600; text-decoration:none; transition:var(--transition); cursor:pointer; border:none; font-family:inherit; }
+        .btn-primary { background:white; color:var(--primary-dark); box-shadow:var(--shadow-md); }
+        .btn-primary:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+        .btn-outline { background:transparent; color:white; border:2px solid rgba(255,255,255,0.3); }
+        .btn-outline:hover { background:rgba(255,255,255,0.1); border-color:white; }
+
+        /* ==================== CARDS ==================== */
+        .card { background:var(--surface); border-radius:var(--border-radius); padding:2rem; box-shadow:var(--shadow-sm); transition:var(--transition); height:100%; }
+        .card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); }
+        .card h3 { font-size:1.5rem; color:var(--primary); margin-bottom:1rem; display:flex; align-items:center; gap:10px; }
+        .card h3 .icon { font-size:1.8rem; }
+        .card p { color:var(--text-light); margin-bottom:1rem; }
+        .card ul { list-style:none; margin-top:1rem; }
+        .card li { margin-bottom:0.5rem; display:flex; align-items:flex-start; gap:8px; }
+        .card li:before { content:'✓'; color:var(--success); font-weight:bold; }
+
+        /* ==================== SECTIONS ==================== */
+        section { padding:5rem 0; scroll-margin-top:80px; }
+        .section-header { text-align:center; max-width:700px; margin:0 auto 4rem; }
+        .section-title { font-size:2.5rem; color:var(--primary); margin-bottom:1rem; font-weight:700; }
+        .section-subtitle { font-size:1.2rem; color:var(--text-light); }
+
+        /* ==================== GRID ==================== */
+        .grid { display:grid; gap:2rem; }
+        .grid-3 { grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); }
+
+        /* ==================== MOCKUPS ==================== */
+        .mockup-container { display:flex; align-items:center; gap:3rem; margin:3rem 0; flex-wrap:wrap; }
+        .mockup-content { flex:1; }
+        .phone-mockup { flex-shrink:0; width:280px; height:560px; background:#222; border-radius:40px; padding:15px; position:relative; box-shadow:var(--shadow-lg); }
+        .phone-mockup:before { content:''; position:absolute; top:15px; left:50%; transform:translateX(-50%); width:50px; height:6px; background:#333; border-radius:5px; }
+        .screen { background:white; height:100%; border-radius:30px; overflow:hidden; display:flex; flex-direction:column; }
+
+        /* ==================== CHAT BUBBLES ==================== */
+        .chat-container { padding:1rem; flex:1; display:flex; flex-direction:column; gap:1rem; overflow-y:auto; }
+        .chat-bubble { max-width:80%; padding:0.75rem 1rem; border-radius:18px; font-size:0.9rem; }
+        .chat-bubble.ai { background:#F5F5F5; align-self:flex-start; border-bottom-left-radius:5px; }
+        .chat-bubble.user { background:var(--primary-light); color:white; align-self:flex-end; border-bottom-right-radius:5px; }
+
+        /* ==================== PHOTO GRID ==================== */
+        .photo-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; padding:1rem; }
+        .photo-cell { background:#F5F5F5; border-radius:8px; height:80px; display:flex; align-items:center; justify-content:center; color:var(--text-light); }
+
+        /* ==================== DIARY ENTRY ==================== */
+        .diary-entry { padding:0 1rem 1rem; }
+        .diary-entry h4 { font-size:0.9rem; margin-bottom:0.5rem; }
+        .diary-entry p { font-size:0.8rem; color:var(--text-light); }
+
+        /* ==================== FORM ==================== */
+        .form-group { margin-bottom:1.5rem; }
+        .form-group label { display:block; margin-bottom:0.5rem; font-weight:500; }
+        .form-control { width:100%; padding:0.875rem 1rem; border:1px solid #E0E0E0; border-radius:8px; font-family:inherit; font-size:1rem; transition:var(--transition); }
+        .form-control:focus { outline:none; border-color:var(--primary-light); box-shadow:0 0 0 3px rgba(126,87,194,0.1); }
+        textarea.form-control { min-height:150px; resize:vertical; }
+
+        /* ==================== FOOTER ==================== */
+        footer { background:var(--primary-dark); color:white; padding:4rem 0 2rem; margin-top:4rem; }
+        .footer-content { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:2rem; margin-bottom:3rem; }
+        .footer-logo { font-size:1.8rem; font-weight:700; margin-bottom:1rem; display:block; }
+        .footer-about { max-width:300px; }
+        .footer-links h4 { font-size:1.2rem; margin-bottom:1.2rem; position:relative; padding-bottom:0.5rem; }
+        .footer-links h4:after { content:''; position:absolute; bottom:0; left:0; width:40px; height:2px; background:white; }
+        .footer-links ul { list-style:none; }
+        .footer-links li { margin-bottom:0.8rem; }
+        .footer-links a { color:rgba(255,255,255,0.8); text-decoration:none; transition:var(--transition); }
+        .footer-links a:hover { color:white; }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1); }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media(max-width:992px){ .hero h1{ font-size:2.5rem; } .mockup-container{ flex-direction:column; text-align:center; } .phone-mockup{ margin:0 auto; } .mockup-content{ order:2; } }
+        @media(max-width:768px){ .nav-links{ display:none; position:fixed; top:70px; left:0; width:100%; background:white; flex-direction:column; padding:1rem; box-shadow:var(--shadow-md); gap:0; } .nav-links.active{ display:flex; } .nav-link{ padding:1rem; border-bottom:1px solid #EEEEEE; } .mobile-toggle{ display:block; } .hero h1{ font-size:2rem; } .section-title{ font-size:2rem; } }
+        @media(max-width:576px){ .hero{ padding:3rem 0; } .hero h1{ font-size:1.8rem; } .hero p{ font-size:1rem; } .btn{ padding:0.75rem 1.5rem; } section{ padding:3rem 0; } .section-title{ font-size:1.8rem; } .phone-mockup{ width:250px; height:500px; } }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+        .fade-in{ animation:fadeIn 0.8s ease forwards; opacity:0; }
+        .delay-1{ animation-delay:0.2s; }
+        .delay-2{ animation-delay:0.4s; }
+        .delay-3{ animation-delay:0.6s; }
     </style>
 </head>
 <body>
-    <!-- Header -->
+
+    <!-- ==================== HEADER ==================== -->
     <header>
         <div class="container">
             <nav class="navbar">
-                <a href="#" class="logo">
-                    <i class="fas fa-hands-helping"></i> Nesti
-                </a>
-                
+                <a href="#" class="logo"><i class="fas fa-hands-helping"></i> Nesti</a>
                 <ul class="nav-links" id="navLinks">
                     <li><a href="#home" class="nav-link active">Accueil</a></li>
                     <li><a href="#discover" class="nav-link">Découvrir</a></li>
@@ -649,36 +147,27 @@
                     <li><a href="#about" class="nav-link">À Propos</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
-                
-                <button class="mobile-toggle" id="mobileToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- ==================== HERO ==================== -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content fade-in">
                 <h1>L'Assistant Familial qui Démocratise l'Inclusion</h1>
                 <p>Faire de chaque famille un acteur d'inclusion grâce à l'IA et aux données locales.</p>
                 <div class="hero-buttons">
-                    <a href="#discover" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i> Commencez l'aventure
-                    </a>
-                    <a href="#about" class="btn btn-outline">
-                        <i class="fas fa-info-circle"></i> En savoir plus
-                    </a>
+                    <a href="#discover" class="btn btn-primary"><i class="fas fa-rocket"></i> Commencez l'aventure</a>
+                    <a href="#about" class="btn btn-outline"><i class="fas fa-info-circle"></i> En savoir plus</a>
                 </div>
             </div>
         </div>
-        <div class="hero-decoration">
-            <i class="fas fa-heart" style="font-size: 20rem;"></i>
-        </div>
+        <div class="hero-decoration"><i class="fas fa-heart" style="font-size: 20rem;"></i></div>
     </section>
 
-    <!-- Problem/Solution Section -->
+    <!-- ==================== PROBLEM/SOLUTION ==================== -->
     <section>
         <div class="container">
             <div class="grid grid-3">
@@ -686,12 +175,10 @@
                     <h3><span class="icon">🤔</span> Le Problème</h3>
                     <p>86% des parents veulent sensibiliser leurs enfants à la diversité, mais moins de 30% trouvent facilement des activités inclusives.</p>
                 </div>
-                
                 <div class="card fade-in delay-1">
                     <h3><span class="icon">💡</span> Notre Solution</h3>
                     <p>Une IA qui trouve, adapte et explique les activités inclusives pour toute la famille, de manière ludique et bienveillante.</p>
                 </div>
-                
                 <div class="card fade-in delay-2">
                     <h3><span class="icon">🌟</span> Votre Impact</h3>
                     <p>Chaque sortie devient une leçon de vie. Transformez votre famille en ambassadrice de l'inclusion.</p>
@@ -700,35 +187,28 @@
         </div>
     </section>
 
-    <!-- Discover Section -->
+    <!-- ==================== DISCOVER ==================== -->
     <section id="discover">
         <div class="container">
             <div class="section-header fade-in">
                 <h2 class="section-title">Découvrez un Monde d'Inclusion</h2>
                 <p class="section-subtitle">Notre technologie rend l'accessibilité simple et intuitive pour toutes les familles</p>
             </div>
-            
             <div class="mockup-container">
                 <div class="phone-mockup fade-in">
                     <div class="screen map-screen">
-                        <div class="map-placeholder">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
+                        <div class="map-placeholder"><i class="fas fa-map-marked-alt"></i></div>
                         <div class="map-card">
                             <h4>Parc Aventure La Forêt Enchantée</h4>
                             <p>Un parcours sensoriel adapté à tous les âges. Accès fauteuil OK.</p>
                             <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                                 <span>5km - PMR, visuel</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="mockup-content fade-in delay-1">
                     <div class="card">
                         <h3><span class="icon">1️⃣</span> Cartographie Inclusive Intelligente</h3>
@@ -744,149 +224,184 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
+    <!-- ==================== EXPERIENCE ==================== -->
     <section id="experience">
         <div class="container">
             <div class="section-header fade-in">
                 <h2 class="section-title">Vivez l'Inclusion, Partagez l'Expérience</h2>
-                <p class="section-subtitle">Notre assistant pédagogique rend l'inclusion simple à comprendre et à expliquer</p>
+                <p class="section-subtitle">Notre assistant pédagogique rend l'inclusion simple et ludique</p>
             </div>
-            
+
             <div class="mockup-container">
+                <div class="phone-mockup fade-in delay-1">
+                    <div class="screen chat-screen">
+                        <div class="chat-container">
+                            <div class="chat-bubble ai">Bonjour ! Souhaitez-vous découvrir une activité pour toute la famille ?</div>
+                            <div class="chat-bubble user">Oui, pour ce week-end !</div>
+                            <div class="chat-bubble ai">Voici le Parc Aventure La Forêt Enchantée, accessible et ludique.</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mockup-content fade-in">
                     <div class="card">
-                        <h3><span class="icon">2️⃣</span> L'Assistant Pédagogique</h3>
-                        <p>Notre "BienVeillance Engine" rend l'inclusion simple à comprendre et à expliquer. Des conversations adaptées pour chaque enfant.</p>
-                        <ul>
-                            <li><strong>"Mode Explain" :</strong> L'IA explique l'importance de l'activité.</li>
-                            <li><strong>Simulations :</strong> Des scénarios pour préparer les enfants à la diversité.</li>
-                            <li><strong>Adaptation :</strong> Des explications personnalisées selon l'âge et les besoins.</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="phone-mockup fade-in delay-1">
-                    <div class="screen">
-                        <div class="chat-container">
-                            <div class="chat-bubble ai">
-                                C'est super que tu ailles visiter la ferme de l'Arche ! On y apprend à s'occuper des animaux en fauteuil roulant. Ça s'appelle l'inclusion ! 🌍
-                            </div>
-                            <div class="chat-bubble user">
-                                Et si mon ami en fauteuil veut donner à manger aux lapins ?
-                            </div>
-                            <div class="chat-bubble ai">
-                                C'est une super question ! On pourrait l'aider en tenant le seau de carottes à sa hauteur. On fait équipe ! 💪
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mockup-container">
-                <div class="phone-mockup fade-in">
-                    <div class="screen">
+                        <h3><span class="icon">2️⃣</span> Expérience Interactive & Pédagogique</h3>
+                        <p>Nos conseils et dialogues interactifs permettent à vos enfants de comprendre la diversité et de participer activement.</p>
                         <div class="photo-grid">
-                            <div class="photo-cell"><i class="fas fa-image"></i></div>
-                            <div class="photo-cell"><i class="fas fa-image"></i></div>
-                            <div class="photo-cell"><i class="fas fa-image"></i></div>
-                            <div class="photo-cell"><i class="fas fa-image"></i></div>
+                            <div class="photo-cell">Photo 1</div>
+                            <div class="photo-cell">Photo 2</div>
+                            <div class="photo-cell">Photo 3</div>
+                            <div class="photo-cell">Photo 4</div>
+                        </div>
+
+                        <h4>Journal de vos sorties</h4>
+                        <div class="diary-entry">
+                            <h4>🗓 12 Septembre 2025</h4>
+                            <p>Sortie au musée inclusif : mes enfants ont adoré le parcours tactile et les explications adaptées.</p>
                         </div>
                         <div class="diary-entry">
-                            <h4>Carnet d'Expériences</h4>
-                            <p>Notre première visite au musée en langue des signes. J'ai appris à dire "bonjour" et "merci" ! 🤩</p>
+                            <h4>🗓 14 Septembre 2025</h4>
+                            <p>Parc aventure : tout le monde a pu participer grâce aux modules PMR et sensoriels.</p>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="mockup-content fade-in delay-1">
-                    <div class="card">
-                        <h3><span class="icon">3️⃣</span> Suivi d'Impact Familial</h3>
-                        <p>Nesti vous aide à mesurer votre impact et à partager vos expériences. C'est l'album photo de votre engagement pour l'inclusion !</p>
-                        <ul>
-                            <li><strong>Carnet :</strong> Sauvegardez vos souvenirs et apprentissages.</li>
-                            <li><strong>Défis :</strong> Des challenges ludiques pour explorer de nouvelles activités.</li>
-                            <li><strong>Réseau :</strong> Connectez-vous avec d'autres familles.</li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- ==================== ABOUT ==================== -->
     <section id="about">
         <div class="container">
             <div class="section-header fade-in">
-                <h2 class="section-title">Notre Mission, Notre Équipe</h2>
-                <p class="section-subtitle">Une équipe passionnée au service de l'inclusion pour tous</p>
+                <h2 class="section-title">À Propos de Nesti</h2>
+                <p class="section-subtitle">Notre mission : rendre chaque sortie familiale inclusive et pédagogique</p>
             </div>
-            
+
             <div class="grid grid-3">
                 <div class="card fade-in">
-                    <h3><span class="icon">🎯</span> Vision et Impact</h3>
-                    <p>Nous pensons que l'inclusion se construit jour après jour, en famille. Nesti est l'outil qui rend cette démarche facile et naturelle pour tous.</p>
-                    <p>Nous ne vendons pas une app, nous créons un changement comportemental.</p>
+                    <h3><i class="fas fa-bullseye"></i> Mission</h3>
+                    <p>Permettre à chaque famille, quel que soit son contexte, de vivre des expériences inclusives et enrichissantes.</p>
                 </div>
-                
                 <div class="card fade-in delay-1">
-                    <h3><span class="icon">👥</span> Notre Équipe</h3>
-                    <p>Une équipe complémentaire de passionnés : un <strong>CTO</strong> expert en IA, une <strong>CPO</strong> psychologue et UX designer, et un <strong>CEO</strong> spécialiste du marketing social.</p>
-                    <p>Et surtout, un <strong>Comité d'Éthique</strong> pour garantir nos valeurs.</p>
+                    <h3><i class="fas fa-eye"></i> Vision</h3>
+                    <p>Créer une société où l’inclusion est naturelle et partagée dès le plus jeune âge.</p>
                 </div>
-                
                 <div class="card fade-in delay-2">
-                    <h3><span class="icon">🔧</span> Technologie</h3>
-                    <p>Nous avons créé le <strong>"BienVeillance Engine"</strong>, un modèle IA unique, et l'<strong>"InclusionMap"</strong>, une base de données collaborative.</p>
-                    <p>Tout est conçu avec une architecture robuste et sécurisée, respectant la vie privée.</p>
+                    <h3><i class="fas fa-heart"></i> Valeurs</h3>
+                    <ul>
+                        <li>Bienveillance</li>
+                        <li>Accessibilité</li>
+                        <li>Innovation</li>
+                        <li>Éducation</li>
+                        <li>Partage</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- ==================== TESTIMONIALS ==================== -->
+    <section id="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Témoignages</h2>
+                <p class="section-subtitle">Ce que nos utilisateurs disent de Nesti</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3>Marie L.</h3>
+                    <p>"Grâce à Nesti, mes enfants comprennent mieux la diversité et participent à des activités adaptées. C’est un vrai changement !" </p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3>Paul D.</h3>
+                    <p>"Je trouve enfin des sorties inclusives pour mon fils en fauteuil. L’application est intuitive et très pratique."</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3>Claire M.</h3>
+                    <p>"Les conseils pédagogiques pour expliquer la diversité sont précieux. Nesti rend l’éducation inclusive simple et ludique."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section id="faq">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Questions Fréquentes</h2>
+                <p class="section-subtitle">Nous répondons aux questions les plus courantes sur Nesti</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card fade-in">
+                    <h3>Comment Nesti garantit-il l'accessibilité ?</h3>
+                    <p>Nous vérifions les lieux via des critères précis : accès fauteuil, signalisation sensorielle et retours d’expérience des familles.</p>
+                </div>
+                <div class="card fade-in delay-1">
+                    <h3>L’IA peut-elle s’adapter à tous les âges ?</h3>
+                    <p>Oui, le moteur pédagogique adapte les explications et conseils selon l’âge et le profil de chaque enfant.</p>
+                </div>
+                <div class="card fade-in delay-2">
+                    <h3>Les données sont-elles sécurisées ?</h3>
+                    <p>Toutes les informations personnelles sont chiffrées et ne sont jamais partagées sans consentement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== NEWSLETTER ==================== -->
+    <section id="newsletter" style="background: var(--primary-light); color:white; border-radius: var(--border-radius); margin:4rem 0; padding:3rem 0;">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Abonnez-vous à notre Newsletter</h2>
+                <p class="section-subtitle">Recevez les dernières activités inclusives et conseils pédagogiques directement dans votre boîte mail.</p>
+            </div>
+
+            <form id="newsletterForm" class="fade-in delay-1" style="max-width:600px; margin: 0 auto; display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <input type="email" placeholder="Votre email" class="form-control" required style="flex:1; min-width:200px;">
+                <button type="submit" class="btn btn-primary" style="flex-shrink:0;">S’inscrire</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
     <section id="contact">
         <div class="container">
             <div class="section-header fade-in">
-                <h2 class="section-title">Rejoignez l'Aventure Nesti</h2>
-                <p class="section-subtitle">Nous sommes à votre écoute pour toute question ou suggestion</p>
+                <h2 class="section-title">Contactez-nous</h2>
+                <p class="section-subtitle">Une question, un retour ou une suggestion ? Écrivez-nous !</p>
             </div>
-            
-            <div class="card fade-in" style="max-width: 600px; margin: 0 auto;">
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="name">Votre Nom</label>
-                        <input type="text" id="name" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Votre Email</label>
-                        <input type="email" id="email" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message">Votre Message</label>
-                        <textarea id="message" class="form-control" required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        <i class="fas fa-paper-plane"></i> Envoyer
-                    </button>
-                </form>
-            </div>
+
+            <form id="contactForm" class="fade-in delay-1" style="max-width:700px; margin:0 auto;">
+                <div class="form-group">
+                    <label for="name">Nom</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ==================== FOOTER ==================== -->
     <footer>
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-content fade-in">
                 <div class="footer-about">
-                    <a href="#" class="footer-logo">Nesti</a>
-                    <p>L'application qui transforme chaque famille en acteur de l'inclusion.</p>
+                    <span class="footer-logo">Nesti</span>
+                    <p>L’assistant familial pour un monde inclusif. Trouvez et partagez des expériences adaptées à tous.</p>
                 </div>
-                
+
                 <div class="footer-links">
-                    <h4>Liens Rapides</h4>
+                    <h4>Liens Utiles</h4>
                     <ul>
                         <li><a href="#home">Accueil</a></li>
                         <li><a href="#discover">Découvrir</a></li>
@@ -895,99 +410,59 @@
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-links">
-                    <h4>Légal</h4>
+                    <h4>Suivez-nous</h4>
                     <ul>
-                        <li><a href="#">Politique de Confidentialité</a></li>
-                        <li><a href="#">Conditions d'Utilisation</a></li>
-                        <li><a href="#">Mentions Légales</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-links">
-                    <h4>Contact</h4>
-                    <ul>
-                        <li><a href="mailto:contact@nesti.app">contact@nesti.app</a></li>
-                        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
-                        <li>Paris, France</li>
+                        <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2023 Nesti. Tous droits réservés.</p>
+
+            <div class="footer-bottom fade-in delay-1">
+                <p>&copy; 2025 Nesti. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileToggle = document.getElementById('mobileToggle');
-            const navLinks = document.getElementById('navLinks');
-            
-            mobileToggle.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
-                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
-                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        /* ==================== MOBILE NAV ==================== */
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        /* ==================== FORM HANDLER ==================== */
+        document.getElementById('newsletterForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Merci pour votre inscription !');
+            e.target.reset();
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Merci pour votre message !');
+            e.target.reset();
+        });
+
+        /* ==================== SCROLL ACTIVE LINK ==================== */
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 80;
+                if(pageYOffset >= sectionTop) current = section.getAttribute('id');
             });
-            
-            // Smooth scrolling for navigation links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        // Close mobile menu if open
-                        navLinks.classList.remove('active');
-                        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                        
-                        // Scroll to element
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
+            navItems.forEach(li => {
+                li.classList.remove('active');
+                if(li.getAttribute('href').includes(current)) li.classList.add('active');
             });
-            
-            // Form submission
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Here you would normally send the form data to a server
-                    alert('Merci pour votre message ! Nous vous répondrons très rapidement.');
-                    contactForm.reset();
-                });
-            }
-            
-            // Animation on scroll
-            const animatedElements = document.querySelectorAll('.fade-in');
-            
-            function checkScroll() {
-                animatedElements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const screenPosition = window.innerHeight * 0.85;
-                    
-                    if (elementPosition < screenPosition) {
-                        element.style.opacity = 1;
-                        element.style.transform = 'translateY(0)';
-                    }
-                });
-            }
-            
-            // Initial check
-            checkScroll();
-            
-            // Check on scroll
-            window.addEventListener('scroll', checkScroll);
         });
     </script>
 </body>
