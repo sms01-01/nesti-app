@@ -1,17 +1,20 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(express.json());
 
-// Example API endpoint
+// Servir les fichiers statiques du build React
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Routes API
 app.get('/api/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -21,7 +24,11 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Route pour toutes les autres requêtes (React Router)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
