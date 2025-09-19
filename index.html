@@ -60,6 +60,7 @@
             color: white;
             display: flex;
             align-items: center;
+            text-decoration: none;
         }
         
         .logo-icon {
@@ -131,6 +132,18 @@
         .btn-secondary {
             background-color: var(--family-purple);
             color: white;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            padding: 80px 0;
+            min-height: 70vh;
+        }
+        
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
         
         /* Hero Section */
@@ -429,6 +442,206 @@
             background: linear-gradient(135deg, var(--family-blue) 0%, var(--family-purple) 100%);
         }
         
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card.popular:before {
+            content: 'Populaire';
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .pricing-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--family-blue);
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: #777;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .pricing-features li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Blog Section */
+        .blog {
+            padding: 100px 0;
+        }
+        
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .blog-post {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-10px);
+        }
+        
+        .blog-img {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .blog-content {
+            padding: 25px;
+        }
+        
+        .blog-date {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Resources Section */
+        .resources {
+            padding: 100px 0;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .resource-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--family-blue);
+        }
+        
+        /* Demo Section */
+        .demo {
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .demo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .demo-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .demo-steps:before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #eee;
+            z-index: 1;
+        }
+        
+        .demo-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100px;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--family-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
         /* Newsletter */
         .newsletter {
             padding: 80px 0;
@@ -627,6 +840,92 @@
             color: var(--dark);
         }
         
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--family-blue);
+            box-shadow: 0 0 0 3px rgba(92, 122, 234, 0.2);
+        }
+        
+        /* Dashboard */
+        .dashboard {
+            padding: 40px 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .welcome-message h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--family-blue);
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .content-card h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -659,6 +958,20 @@
                 border-radius: 50px;
                 padding: 15px;
             }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-steps {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+            
+            .demo-steps:before {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -666,16 +979,17 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">
+                <a href="#" class="logo" data-page="home">
                     <span class="logo-icon">🏠</span>
                     <span>Nesti</span>
-                </div>
+                </a>
                 <ul class="nav-links">
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="#">Fonctionnalités</a></li>
-                    <li><a href="#">Activités</a></li>
-                    <li><a href="#">Témoignages</a></li>
-                    <li><a href="#">À propos</a></li>
+                    <li><a href="#" data-page="home">Accueil</a></li>
+                    <li><a href="#" data-page="features">Fonctionnalités</a></li>
+                    <li><a href="#" data-page="pricing">Tarifs</a></li>
+                    <li><a href="#" data-page="testimonials">Témoignages</a></li>
+                    <li><a href="#" data-page="blog">Blog</a></li>
+                    <li><a href="#" data-page="resources">Ressources</a></li>
                 </ul>
                 <a href="#" class="btn" id="signup-btn">Essayer gratuitement</a>
             </nav>
@@ -683,140 +997,214 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="floating-elements" id="floating-elements"></div>
-            <div class="container hero-content">
-                <h1>L'inclusion se construit en famille</h1>
-                <p>Rejoignez l'écosystème qui transforme le temps familial en expériences inclusives mémorables</p>
-                <div class="hero-buttons">
-                    <a href="#" class="btn" id="start-btn">Commencer l'aventure</a>
-                    <a href="#" class="btn btn-secondary" id="demo-btn">Voir la démo</a>
+        <!-- Home Page -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <div class="floating-elements" id="floating-elements"></div>
+                <div class="container hero-content">
+                    <h1>L'inclusion se construit en famille</h1>
+                    <p>Rejoignez l'écosystème qui transforme le temps familial en expériences inclusives mémorables</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn" id="start-btn">Commencer l'aventure</a>
+                        <a href="#" class="btn btn-secondary" id="demo-btn">Voir la démo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="container">
+                    <h2 class="section-title">Les 5 piliers de Nesti</h2>
+                    <div class="features-grid">
+                        <div class="feature-card animated">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Famille Élargie</h3>
+                            <p>Connectez tous les membres de la famille avec des rôles adaptés à chacun</p>
+                        </div>
+                        <div class="feature-card animated">
+                            <div class="feature-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3>Planification Collaborative</h3>
+                            <p>Organisez facilement des activités inclusives avec tous vos proches</p>
+                        </div>
+                        <div class="feature-card animated">
+                            <div class="feature-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <h3>Découverte & Expérience</h3>
+                            <p>Découvrez des lieux et activités adaptés à tous près de chez vous</p>
+                        </div>
+                        <div class="feature-card animated">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3>Éducation Continue</h3>
+                            <p>Apprenez ensemble grâce à des contenus adaptés à chaque âge</p>
+                        </div>
+                        <div class="feature-card animated">
+                            <div class="feature-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3>Assistant IA Bienveillant</h3>
+                            <p>Notre IA vous aide à communiquer et à apprendre en douceur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="family-section">
+                <div class="container">
+                    <h2 class="section-title">Pour toute la famille</h2>
+                    <p>Nesti s'adapte à chaque membre de votre cercle familial élargi</p>
+                    <div class="family-members">
+                        <div class="family-member parent" data-member="parent">
+                            <i class="fas fa-user-friends fa-2x"></i>
+                            <span>Parents</span>
+                        </div>
+                        <div class="family-member child" data-member="child">
+                            <i class="fas fa-child fa-2x"></i>
+                            <span>Enfants</span>
+                        </div>
+                        <div class="family-member grandparent" data-member="grandparent">
+                            <i class="fas fa-user-alt fa-2x"></i>
+                            <span>Grands-parents</span>
+                        </div>
+                        <div class="family-member friend" data-member="friend">
+                            <i class="fas fa-heart fa-2x"></i>
+                            <span>Amis</span>
+                        </div>
+                        <div class="family-member educator" data-member="educator">
+                            <i class="fas fa-book-reader fa-2x"></i>
+                            <span>Éducateurs</span>
+                        </div>
+                    </div>
+                    <div id="member-info" style="margin-top: 40px; min-height: 100px;"></div>
+                </div>
+            </div>
+
+            <div class="newsletter">
+                <div class="container">
+                    <h2>Restez informé</h2>
+                    <p>Recevez nos conseils, idées d'activités et actualités sur l'inclusion en famille</p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Votre email" required>
+                        <button type="submit" class="newsletter-btn">S'inscrire</button>
+                    </form>
                 </div>
             </div>
         </section>
 
-        <section class="features">
+        <!-- Features Page -->
+        <section id="features" class="page-section">
             <div class="container">
-                <h2 class="section-title">Les 5 piliers de Nesti</h2>
+                <h2 class="section-title">Fonctionnalités</h2>
                 <div class="features-grid">
-                    <div class="feature-card animated">
+                    <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-users"></i>
                         </div>
                         <h3>Famille Élargie</h3>
-                        <p>Connectez tous les membres de la famille avec des rôles adaptés à chacun</p>
+                        <p>Créez des cercles familiaux avec des permissions adaptées à chaque membre. Grands-parents, parents, enfants, amis et éducateurs - chacun a sa place dans Nesti.</p>
                     </div>
-                    <div class="feature-card animated">
+                    <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
                         <h3>Planification Collaborative</h3>
-                        <p>Organisez facilement des activités inclusives avec tous vos proches</p>
+                        <p>Planifiez des activités inclusives avec tous les membres de votre famille. Synchronisez les agendas, gérez les disponibilités et organisez des événements multi-familles.</p>
                     </div>
-                    <div class="feature-card animated">
+                    <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-map-marked-alt"></i>
                         </div>
                         <h3>Découverte & Expérience</h3>
-                        <p>Découvrez des lieux et activités adaptés à tous près de chez vous</p>
+                        <p>Découvrez des centaines d'activités et lieux inclusifs autour de vous. Filtrez par accessibilité, âge recommandé, budget et centres d'intérêt.</p>
                     </div>
-                    <div class="feature-card animated">
+                    <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-graduation-cap"></i>
                         </div>
                         <h3>Éducation Continue</h3>
-                        <p>Apprenez ensemble grâce à des contenus adaptés à chaque âge</p>
+                        <p>Accédez à des contenus éducatifs adaptés à chaque âge pour parler de diversité, d'inclusion et de vivre-ensemble de façon ludique et positive.</p>
                     </div>
-                    <div class="feature-card animated">
+                    <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-robot"></i>
                         </div>
                         <h3>Assistant IA Bienveillant</h3>
-                        <p>Notre IA vous aide à communiquer et à apprendre en douceur</p>
+                        <p>Notre IA vous aide à répondre aux questions difficiles des enfants, à trouver les mots justes et à préparer des activités adaptées à votre famille.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Système de Récompenses</h3>
+                        <p>Motivez toute la famille avec des badges et récompenses pour les activités réalisées. Célébrez les progrès en matière d'ouverture et d'inclusion.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="family-section">
+        <!-- Pricing Page -->
+        <section id="pricing" class="page-section">
             <div class="container">
-                <h2 class="section-title">Pour toute la famille</h2>
-                <p>Nesti s'adapte à chaque membre de votre cercle familial élargi</p>
-                <div class="family-members">
-                    <div class="family-member parent" data-member="parent">
-                        <i class="fas fa-user-friends fa-2x"></i>
-                        <span>Parents</span>
+                <h2 class="section-title">Nos Tarifs</h2>
+                <p class="text-center" style="max-width: 700px; margin: 0 auto 50px;">Choisissez l'offre qui correspond le mieux à votre famille. Tous nos abonnements incluent un essai gratuit de 14 jours sans engagement.</p>
+                
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Découverte</h3>
+                        <div class="price">Gratuit</div>
+                        <ul class="pricing-features">
+                            <li>3 membres maximum</li>
+                            <li>5 activités par mois</li>
+                            <li>Accès basique au contenu éducatif</li>
+                            <li>Support communautaire</li>
+                            <li>-</li>
+                            <li>-</li>
+                        </ul>
+                        <a href="#" class="btn" style="width: 100%;">Commencer gratuitement</a>
                     </div>
-                    <div class="family-member child" data-member="child">
-                        <i class="fas fa-child fa-2x"></i>
-                        <span>Enfants</span>
+                    
+                    <div class="pricing-card popular">
+                        <h3>Famille</h3>
+                        <div class="price">14,99€ <span>/mois</span></div>
+                        <ul class="pricing-features">
+                            <li>8 membres maximum</li>
+                            <li>Activités illimitées</li>
+                            <li>Accès complet au contenu éducatif</li>
+                            <li>Assistant IA inclus</li>
+                            <li>Statistiques et rapports</li>
+                            <li>Support prioritaire</li>
+                        </ul>
+                        <a href="#" class="btn" style="width: 100%;">Essayer gratuitement</a>
                     </div>
-                    <div class="family-member grandparent" data-member="grandparent">
-                        <i class="fas fa-user-alt fa-2x"></i>
-                        <span>Grands-parents</span>
-                    </div>
-                    <div class="family-member friend" data-member="friend">
-                        <i class="fas fa-heart fa-2x"></i>
-                        <span>Amis</span>
-                    </div>
-                    <div class="family-member educator" data-member="educator">
-                        <i class="fas fa-book-reader fa-2x"></i>
-                        <span>Éducateurs</span>
-                    </div>
-                </div>
-                <div id="member-info" style="margin-top: 40px; min-height: 100px;"></div>
-            </div>
-        </section>
-
-        <section class="activities">
-            <div class="container">
-                <h2 class="section-title">Activités populaires</h2>
-                <div class="activity-cards">
-                    <div class="activity-card animated">
-                        <div class="activity-img" style="background-image: url('https://placeholder.com/400x200');"></div>
-                        <div class="activity-content">
-                            <div class="activity-tags">
-                                <span class="tag">Accessible</span>
-                                <span class="tag">Éducatif</span>
-                            </div>
-                            <h3>Musée des sciences interactif</h3>
-                            <p>Découverte scientifique adaptée à tous les âges et capacités</p>
-                            <a href="#" class="btn" style="margin-top: 15px;">Voir détails</a>
-                        </div>
-                    </div>
-                    <div class="activity-card animated">
-                        <div class="activity-img" style="background-image: url('https://placeholder.com/400x200');"></div>
-                        <div class="activity-content">
-                            <div class="activity-tags">
-                                <span class="tag">Plein air</span>
-                                <span class="tag">Multi-âges</span>
-                            </div>
-                            <h3>Parc naturel accessible</h3>
-                            <p>Sentiers adaptés aux poussettes et fauteuils roulants</p>
-                            <a href="#" class="btn" style="margin-top: 15px;">Voir détails</a>
-                        </div>
-                    </div>
-                    <div class="activity-card animated">
-                        <div class="activity-img" style="background-image: url('https://placeholder.com/400x200');"></div>
-                        <div class="activity-content">
-                            <div class="activity-tags">
-                                <span class="tag">Atelier</span>
-                                <span class="tag">Créatif</span>
-                            </div>
-                            <h3>Atelier cuisine des signes</h3>
-                            <p>Apprenez la langue des signes en cuisinant ensemble</p>
-                            <a href="#" class="btn" style="margin-top: 15px;">Voir détails</a>
-                        </div>
+                    
+                    <div class="pricing-card">
+                        <h3>Élargie</h3>
+                        <div class="price">24,99€ <span>/mois</span></div>
+                        <ul class="pricing-features">
+                            <li>15 membres maximum</li>
+                            <li>Activités illimitées</li>
+                            <li>Contenu éducatif premium</li>
+                            <li>Assistant IA avancé</li>
+                            <li>Analyses détaillées</li>
+                            <li>Support premium 24/7</li>
+                        </ul>
+                        <a href="#" class="btn" style="width: 100%;">Essayer gratuitement</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="testimonials">
+        <!-- Testimonials Page -->
+        <section id="testimonials" class="page-section">
             <div class="container">
-                <h2 class="section-title">Ce que les familles en disent</h2>
+                <h2 class="section-title">Ils parlent de nous</h2>
                 <div class="testimonial-cards">
-                    <div class="testimonial-card animated">
+                    <div class="testimonial-card">
                         <div class="testimonial-text">
                             "Grâce à Nesti, nous avons découvert des activités que nous n'aurions jamais imaginées. Nos enfants adorent et nous passons de vrais moments de qualité en famille."
                         </div>
@@ -828,7 +1216,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-card animated">
+                    <div class="testimonial-card">
                         <div class="testimonial-text">
                             "En tant que grand-mère, Nesti m'aide à rester connectée avec mes petits-enfants et à comprendre leurs centres d'intérêt. Les suggestions sont toujours parfaites !"
                         </div>
@@ -840,7 +1228,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-card animated">
+                    <div class="testimonial-card">
                         <div class="testimonial-text">
                             "L'assistant IA m'a vraiment aidé à expliquer la diversité à mes enfants de manière adaptée à leur âge. Les ressources sont excellentes et faciles à utiliser."
                         </div>
@@ -852,18 +1240,361 @@
                             </div>
                         </div>
                     </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "En tant qu'éducateur spécialisé, je recommande Nesti à toutes les familles que j'accompagne. C'est un outil précieux pour favoriser l'inclusion au quotidien."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">S</div>
+                            <div>
+                                <h4>Sophie</h4>
+                                <p>Éducatrice spécialisée</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "La planification collaborative a révolutionné notre organisation familiale. Plus de conflits d'agenda et des activités qui plaisent à tous !"
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">D</div>
+                            <div>
+                                <h4>La famille Dubois</h4>
+                                <p>Lyon</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            "Le système de récompenses motive toute la famille à participer à des activités inclusives. Mes enfants collectionnent les badges avec fierté !"
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">C</div>
+                            <div>
+                                <h4>Caroline</h4>
+                                <p>Maman de 3 enfants</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="newsletter">
+        <!-- Blog Page -->
+        <section id="blog" class="page-section">
             <div class="container">
-                <h2>Restez informé</h2>
-                <p>Recevez nos conseils, idées d'activités et actualités sur l'inclusion en famille</p>
-                <form class="newsletter-form" id="newsletter-form">
-                    <input type="email" class="newsletter-input" placeholder="Votre email" required>
-                    <button type="submit" class="newsletter-btn">S'inscrire</button>
-                </form>
+                <h2 class="section-title">Notre Blog</h2>
+                <p class="text-center" style="max-width: 700px; margin: 0 auto 50px;">Découvrez nos articles sur l'inclusion familiale, les activités adaptées à tous et les témoignages de notre communauté.</p>
+                
+                <div class="blog-posts">
+                    <div class="blog-post">
+                        <div class="blog-img" style="background-image: url('https://placeholder.com/400x200');"></div>
+                        <div class="blog-content">
+                            <div class="blog-date">12 juin 2023</div>
+                            <h3>10 activités inclusives pour l'été</h3>
+                            <p>Découvrez notre sélection d'activités estivales adaptées à tous les âges et toutes les capacités.</p>
+                            <a href="#" class="btn" style="margin-top: 15px;">Lire l'article</a>
+                        </div>
+                    </div>
+                    <div class="blog-post">
+                        <div class="blog-img" style="background-image: url('https://placeholder.com/400x200');"></div>
+                        <div class="blog-content">
+                            <div class="blog-date">5 juin 2023</div>
+                            <h3>Comment parler de diversité avec les enfants</h3>
+                            <p>Des conseils pratiques et des ressources pour aborder les questions de diversité avec les enfants de tous âges.</p>
+                            <a href="#" class="btn" style="margin-top: 15px;">Lire l'article</a>
+                        </div>
+                    </div>
+                    <div class="blog-post">
+                        <div class="blog-img" style="background-image: url('https://placeholder.com/400x200');"></div>
+                        <div class="blog-content">
+                            <div class="blog-date">28 mai 2023</div>
+                            <h3>Témoignage : la famille Martin nous raconte</h3>
+                            <p>Découvrez comment la famille Martin a transformé son quotidien grâce à Nesti.</p>
+                            <a href="#" class="btn" style="margin-top: 15px;">Lire l'article</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Page -->
+        <section id="resources" class="page-section">
+            <div class="container">
+                <h2 class="section-title">Ressources</h2>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3>Centre d'aide</h3>
+                        <p>Retrouvez toutes les réponses à vos questions sur l'utilisation de Nesti et nos fonctionnalités.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">Accéder au centre d'aide</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Guide des activités</h3>
+                        <p>Notre guide complet pour organiser des activités inclusives adaptées à chaque situation.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">Télécharger le guide</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <h3>Pour les écoles</h3>
+                        <p>Ressources et solutions adaptées aux établissements scolaires pour favoriser l'inclusion.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">Découvrir nos solutions</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Pour les associations</h3>
+                        <p>Comment Nesti peut accompagner les associations dans leurs missions d'inclusion.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">En savoir plus</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <h3>Espace presse</h3>
+                        <p>Communiqués, dossier de presse et contacts pour les journalistes.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">Accéder à l'espace presse</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3>Ressources à télécharger</h3>
+                        <p>Retrouvez tous nos documents, guides et ressources en téléchargement libre.</p>
+                        <a href="#" class="btn" style="margin-top: 15px;">Voir les ressources</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Page -->
+        <section id="demo" class="page-section">
+            <div class="container">
+                <h2 class="section-title">Démonstration de Nesti</h2>
+                
+                <div class="demo-container">
+                    <p>Découvrez comment Nesti peut transformer votre vie familiale en moins de 10 minutes</p>
+                    
+                    <div class="demo-steps">
+                        <div class="demo-step">
+                            <div class="step-number">1</div>
+                            <p>Inscription</p>
+                        </div>
+                        <div class="demo-step">
+                            <div class="step-number">2</div>
+                            <p>Création du profil familial</p>
+                        </div>
+                        <div class="demo-step">
+                            <div class="step-number">3</div>
+                            <p>Découverte des activités</p>
+                        </div>
+                        <div class="demo-step">
+                            <div class="step-number">4</div>
+                            <p>Planification</p>
+                        </div>
+                    </div>
+                    
+                    <div id="demo-content">
+                        <h3>Commencez par créer votre compte</h3>
+                        <p>Inscrivez-vous en moins de 2 minutes et découvrez immédiatement comment Nesti peut vous aider.</p>
+                        
+                        <form id="demo-form" style="max-width: 400px; margin: 30px auto;">
+                            <div class="form-group">
+                                <label for="demo-name">Votre nom</label>
+                                <input type="text" id="demo-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="demo-email">Votre email</label>
+                                <input type="email" id="demo-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="demo-family">Nombre de membres dans votre famille</label>
+                                <select id="demo-family" class="form-control" required>
+                                    <option value="">Sélectionnez...</option>
+                                    <option value="2-3">2-3 personnes</option>
+                                    <option value="4-5">4-5 personnes</option>
+                                    <option value="6+">6 personnes ou plus</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn" style="width: 100%;">Commencer la démo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Page (after signup) -->
+        <section id="dashboard" class="page-section">
+            <div class="container dashboard">
+                <div class="dashboard-header">
+                    <div class="welcome-message">
+                        <h1>Bonjour, <span id="user-name">Famille</span> !</h1>
+                        <p>Bienvenue dans votre espace Nesti</p>
+                    </div>
+                    <a href="#" class="btn" id="disconnect-btn">Se déconnecter</a>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <p>Membres actifs</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <p>Activités prévues</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <p>Badges obtenus</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">86%</div>
+                        <p>Score d'inclusion</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <div>
+                        <div class="content-card">
+                            <h3>Activités à venir</h3>
+                            <div class="activity-list">
+                                <div style="display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f5f5f5;">
+                                    <div style="width: 50px; height: 50px; border-radius: 10px; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <i class="fas fa-museum" style="color: #5C7AEA;"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin-bottom: 5px;">Visite du Musée Inclusif</h4>
+                                        <p style="color: #777; margin: 0;">Dimanche 18 juin - 10h30</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f5f5f5;">
+                                    <div style="width: 50px; height: 50px; border-radius: 10px; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <i class="fas fa-leaf" style="color: #6ECB63;"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin-bottom: 5px;">Randonnée accessible</h4>
+                                        <p style="color: #777; margin: 0;">Samedi 24 juin - 14h00</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; padding: 15px 0;">
+                                    <div style="width: 50px; height: 50px; border-radius: 10px; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                        <i class="fas fa-utensils" style="color: #FF7B54;"></i>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin-bottom: 5px;">Atelier cuisine des signes</h4>
+                                        <p style="color: #777; margin: 0;">Dimanche 2 juillet - 11h00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-card">
+                            <h3>Recommandations personnalisées</h3>
+                            <p>Découvrez des activités adaptées à votre famille</p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                                <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                                    <h4 style="margin-bottom: 10px;">Parc sensoriel</h4>
+                                    <p style="color: #777; font-size: 0.9rem; margin: 0;">À 5km de chez vous</p>
+                                </div>
+                                <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                                    <h4 style="margin-bottom: 10px;">Cinéma adapté</h4>
+                                    <p style="color: #777; font-size: 0.9rem; margin: 0;">Séance dimanche</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="content-card">
+                            <h3>Votre famille</h3>
+                            <div style="margin-top: 20px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #5C7AEA; display: flex; align-items: center; justify-content: center; margin-right: 10px; color: white;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0; font-weight: 600;">Parent</p>
+                                        <p style="margin: 0; font-size: 0.8rem; color: #777;">Vous</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #9D65C9; display: flex; align-items: center; justify-content: center; margin-right: 10px; color: white;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0; font-weight: 600;">Parent</p>
+                                        <p style="margin: 0; font-size: 0.8rem; color: #777;">Membre</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #FFB26B; display: flex; align-items: center; justify-content: center; margin-right: 10px; color: white;">
+                                        <i class="fas fa-child"></i>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0; font-weight: 600;">Enfant</p>
+                                        <p style="margin: 0; font-size: 0.8rem; color: #777;">Membre</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #6ECB63; display: flex; align-items: center; justify-content: center; margin-right: 10px; color: white;">
+                                        <i class="fas fa-user-alt"></i>
+                                    </div>
+                                    <div>
+                                        <p style="margin: 0; font-weight: 600;">Grand-parent</p>
+                                        <p style="margin: 0; font-size: 0.8rem; color: #777;">Membre</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-card">
+                            <h3>Progression</h3>
+                            <div style="margin-top: 20px;">
+                                <div style="background: #f5f5f5; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>Ouverture d'esprit</span>
+                                        <span>75%</span>
+                                    </div>
+                                    <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 75%; background: #5C7AEA;"></div>
+                                    </div>
+                                </div>
+                                <div style="background: #f5f5f5; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>Activités partagées</span>
+                                        <span>60%</span>
+                                    </div>
+                                    <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 60%; background: #6ECB63;"></div>
+                                    </div>
+                                </div>
+                                <div style="background: #f5f5f5; border-radius: 10px; padding: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>Réseau social</span>
+                                        <span>45%</span>
+                                    </div>
+                                    <div style="height: 8px; background: white; border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 45%; background: #9D65C9;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -884,34 +1615,34 @@
                 <div class="footer-column">
                     <h3>Liens rapides</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Accueil</a></li>
-                        <li><a href="#">Fonctionnalités</a></li>
-                        <li><a href="#">Tarifs</a></li>
-                        <li><a href="#">Témoignages</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="#" data-page="home">Accueil</a></li>
+                        <li><a href="#" data-page="features">Fonctionnalités</a></li>
+                        <li><a href="#" data-page="pricing">Tarifs</a></li>
+                        <li><a href="#" data-page="testimonials">Témoignages</a></li>
+                        <li><a href="#" data-page="blog">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Ressources</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Centre d'aide</a></li>
-                        <li><a href="#">Guide des activités</a></li>
-                        <li><a href="#">Pour les écoles</a></li>
-                        <li><a href="#">Pour les associations</a></li>
-                        <li><a href="#">Espace presse</a></li>
+                        <li><a href="#" data-page="resources">Centre d'aide</a></li>
+                        <li><a href="#" data-page="resources">Guide des activités</a></li>
+                        <li><a href="#" data-page="resources">Pour les écoles</a></li>
+                        <li><a href="#" data-page="resources">Pour les associations</a></li>
+                        <li><a href="#" data-page="resources">Espace presse</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Contact</h3>
                     <ul class="footer-links">
-                        <li><a href="mailto:bonjour@nesti.fr">bonjour@nesti.fr</a></li>
-                        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+                        <li><a href="mailto:bonjour@nesti.fr">blacknwhitemanagement@gmail.com</a></li>
+                        <li><a href="tel:+33123456789">+33 6 36 02 60 60</a></li>
                         <li>12 Avenue de l'Inclusion<br>75000 Paris</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Nesti - Tous droits réservés</p>
+                <p>&copy; 2025 Nesti - Tous droits réservés</p>
             </div>
         </div>
     </footer>
@@ -923,14 +1654,26 @@
             <h2>Rejoignez l'aventure Nesti</h2>
             <p>Créez votre compte familial et commencez à planifier des activités inclusives dès aujourd'hui.</p>
             <form id="signup-form" style="margin-top: 20px;">
-                <div style="margin-bottom: 15px;">
-                    <input type="text" placeholder="Votre nom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                <div class="form-group">
+                    <label for="signup-name">Votre nom</label>
+                    <input type="text" id="signup-name" class="form-control" required>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <input type="email" placeholder="Votre email" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                <div class="form-group">
+                    <label for="signup-email">Votre email</label>
+                    <input type="email" id="signup-email" class="form-control" required>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <input type="password" placeholder="Créez un mot de passe" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                <div class="form-group">
+                    <label for="signup-password">Créez un mot de passe</label>
+                    <input type="password" id="signup-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-family">Combien de membres dans votre famille ?</label>
+                    <select id="signup-family" class="form-control" required>
+                        <option value="">Sélectionnez...</option>
+                        <option value="2-3">2-3 personnes</option>
+                        <option value="4-5">4-5 personnes</option>
+                        <option value="6+">6 personnes ou plus</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn" style="width: 100%;">Créer mon compte</button>
             </form>
@@ -938,7 +1681,7 @@
     </div>
 
     <script>
-        // Animation au défilement
+        // Gestion de la navigation entre les pages
         document.addEventListener('DOMContentLoaded', function() {
             // Créer des éléments flottants
             createFloatingElements();
@@ -1003,6 +1746,38 @@
                 });
             });
             
+            // Gestion de la navigation
+            const pageLinks = document.querySelectorAll('[data-page]');
+            const pageSections = document.querySelectorAll('.page-section');
+            
+            function showPage(pageId) {
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById(pageId).classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+                
+                // Update URL
+                history.pushState(null, null, `#${pageId}`);
+            }
+            
+            pageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            // Check URL on load
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showPage(hash);
+            }
+            
             // Gestion de la modal d'inscription
             const signupBtn = document.getElementById('signup-btn');
             const signupModal = document.getElementById('signup-modal');
@@ -1030,7 +1805,7 @@
             
             demoBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Fonctionnalité de démo bientôt disponible!');
+                showPage('demo');
             });
             
             closeSignup.addEventListener('click', closeModal);
@@ -1063,13 +1838,64 @@
             
             signupForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                alert('Inscription simulée avec succès! En production, cette fonction enverrait les données à un serveur.');
+                const name = document.getElementById('signup-name').value;
+                
+                // Simuler la création de compte
+                document.getElementById('user-name').textContent = name;
+                showPage('dashboard');
                 closeModal();
             });
+            
+            // Gestion du formulaire de démo
+            const demoForm = document.getElementById('demo-form');
+            
+            if (demoForm) {
+                demoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('demo-name').value;
+                    
+                    // Simuler le début de la démo
+                    document.getElementById('demo-content').innerHTML = `
+                        <h3>Merci ${name} !</h3>
+                        <p>Votre démo personnalisée commence maintenant. Découvrez comment Nesti peut transformer la vie de votre famille.</p>
+                        <div style="text-align: left; margin-top: 30px;">
+                            <h4>Étape 1: Configuration de votre famille</h4>
+                            <p>Ajoutez les membres de votre famille et définissez leurs rôles.</p>
+                            
+                            <h4 style="margin-top: 20px;">Étape 2: Découverte d'activités</h4>
+                            <p>Explorez des activités adaptées à votre famille.</p>
+                            
+                            <h4 style="margin-top: 20px;">Étape 3: Planification</h4>
+                            <p>Organisez votre premier événement inclusif.</p>
+                        </div>
+                        <a href="#" class="btn" style="margin-top: 30px;" id="continue-demo">Continuer la démo</a>
+                    `;
+                    
+                    // Ajouter l'événement pour le bouton continuer
+                    setTimeout(() => {
+                        document.getElementById('continue-demo').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            openModal();
+                        });
+                    }, 100);
+                });
+            }
+            
+            // Gestion de la déconnexion
+            const disconnectBtn = document.getElementById('disconnect-btn');
+            
+            if (disconnectBtn) {
+                disconnectBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showPage('home');
+                });
+            }
             
             // Animation des éléments flottants
             function createFloatingElements() {
                 const container = document.getElementById('floating-elements');
+                if (!container) return;
+                
                 const colors = ['#FFD56B', '#5C7AEA', '#6ECB63', '#9D65C9', '#FF7B54'];
                 
                 for (let i = 0; i < 15; i++) {
@@ -1111,24 +1937,6 @@
                     element.style.opacity = opacity;
                 }, 50);
             }
-            
-            // Changement de couleur aléatoire du header
-            function changeHeaderColor() {
-                const colors = [
-                    'linear-gradient(135deg, #5C7AEA 0%, #9D65C9 100%)',
-                    'linear-gradient(135deg, #6ECB63 0%, #5C7AEA 100%)',
-                    'linear-gradient(135deg, #FF7B54 0%, #9D65C9 100%)',
-                    'linear-gradient(135deg, #FFD56B 0%, #FF7B54 100%)'
-                ];
-                
-                const header = document.querySelector('header');
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                header.style.background = randomColor;
-            }
-            
-            // Changer la couleur toutes les 10 secondes (juste pour la démo)
-            // setInterval(changeHeaderColor, 10000);
         });
     </script>
 </body>
