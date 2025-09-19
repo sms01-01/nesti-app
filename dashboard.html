@@ -1515,6 +1515,99 @@
         });
       }
     }
+    // Fonctions pour interagir avec la base de données
+    async function saveFamilyMember(memberData) {
+      try {
+        const response = await fetch('/api/save-family', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(memberData)
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erreur lors de la sauvegarde');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Erreur:', error);
+        alert('Impossible de sauvegarder le membre de la famille');
+      }
+    }
+  
+    async function loadFamilyMembers() {
+      try {
+        const response = await fetch('/api/get-family');
+        
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Erreur:', error);
+        return [];
+      }
+    }
+  
+    // Modifier la fonction d'ajout de membre
+    async function addMember() {
+      const form = document.getElementById('modalForm');
+      const formData = new FormData(form);
+      
+      const memberData = {
+        prenom: formData.get("prenom"),
+        nom: formData.get("nom"),
+        role: formData.get("role"),
+        mineur: !!formData.get("mineur"),
+        avatar: formData.get("avatar"),
+        gps: formData.get("gps") || null
+      };
+      
+      // Sauvegarder dans la base de données
+      const savedMember = await saveFamilyMember(memberData);
+      
+      // Ajouter à l'interface utilisateur
+      user.famille.push({
+        ...memberData,
+        id: savedMember.id
+      });
+      
+      closeModal();
+      renderFamily();
+      initMap();
+    }
+  
+    // Charger les membres au démarrage
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Charger les membres depuis la base de données
+      const savedMembers = await loadFamilyMembers();
+      if (savedMembers.length > 0) {
+        user.famille = savedMembers;
+      }
+      
+      document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
+      renderFamily();
+      renderAgenda();
+      initMap();
+      
+      // Navigation
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    });
 
     // Accessibilité
     document.addEventListener('keydown', function(e) {
