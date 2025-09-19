@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="Dashboard" href="https://nesti-app-1.onrender.com" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         :root {
             --primary: #FF7B54;
@@ -1064,6 +1065,9 @@
                     <li><a href="#" data-page="blog">Blog</a></li>
                     <li><a href="#" data-page="resources">Ressources</a></li>
                 </ul>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="VOTRE_CLE_DE_SITE"></div>
+                </div>
                 <a href="dashboard.html" class="btn" id="signup-btn">Espace membre</a>
             </nav>
         </div>
@@ -1418,7 +1422,9 @@
                         </select>
                     </div>
                         <form id="signup-form">
-                            <!-- Vos champs de formulaire ici -->
+                            <div class="form-group">
+                                <div class="g-recaptcha" data-sitekey="6LcVE88rAAAAAF5U-mHUIjOWsOheyAQmG45ovK0P"></div>
+                            </div>
                             <button type="submit" class="btn" id="signup-btn" style="width: 100%;">
                                 Créer mon compte
                             </button>
@@ -1440,6 +1446,9 @@
                     <div class="form-group">
                         <label for="login-password">Mot de passe</label>
                         <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="6LcVE88rAAAAAF5U-mHUIjOWsOheyAQmG45ovK0P"></div>
                     </div>
                     <button type="submit" class="btn" style="width: 100%;">Se connecter</button>
                 </form>
@@ -1682,7 +1691,59 @@
             closeModal();
         });
 
-
+        // Fonction de vérification du CAPTCHA
+        function verifyCaptcha(callback) {
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert("Veuillez compléter le CAPTCHA");
+                return false;
+            }
+            
+            // Envoyer la réponse à votre serveur pour vérification
+            fetch('/verify-captcha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ captcha: response })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    callback();
+                } else {
+                    alert("Échec de la vérification CAPTCHA");
+                    grecaptcha.reset();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Erreur de vérification CAPTCHA");
+                grecaptcha.reset();
+            });
+        }
+        
+        // Modifier la soumission du formulaire d'inscription
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            verifyCaptcha(function() {
+                // Ici le code d'inscription existant
+                alert('Inscription réussie! Bienvenue dans la famille Nesti.');
+                signupModal.style.display = 'none';
+            });
+        });
+        
+        // Modifier la soumission du formulaire de connexion
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            verifyCaptcha(function() {
+                // Ici le code de connexion existant
+                alert('Connexion réussie! Redirection vers votre espace...');
+                loginModal.style.display = 'none';
+            });
+        });
         // Initialisation de la carte (exemple)
         function initMap() {
             // Cette fonction serait utilisée pour initialiser une carte Leaflet
