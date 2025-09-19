@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +7,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
+    :root {
+      --yellow: #FFD56B;
+      --green: #6ECB63;
+      --blue: #5C7AEA;
+      --purple: #9D65C9;
+      --orange: #FFB26B;
+      --red: #FF7B54;
+      --light: #FFF8EE;
+      --dark: #2D4059;
+      --shadow: 0 4px 30px rgba(0,0,0,0.07);
+      --transition: all 0.25s cubic-bezier(.4,0,.2,1);
+      --radius: 24px;
+    }
+    html {scroll-behavior: smooth;}
     body {
       margin: 0;
       font-family: 'Nunito', Arial, sans-serif;
-      background: #FFF8EE;
-      color: #2D4059;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
-      background: linear-gradient(90deg, #FFD56B 30%, #6ECB63 100%);
+      background: linear-gradient(90deg, var(--yellow) 20%, var(--green) 100%);
       padding: 2rem 0 1rem 0;
       text-align: center;
-      border-bottom-left-radius: 24px;
-      border-bottom-right-radius: 24px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.07);
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
     }
     .logo {
       font-size: 2.3rem;
       font-weight: 800;
       letter-spacing: 2px;
-      color: #2D4059;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+    }
+    nav {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2.2rem;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.09rem;
+      padding: .6rem 1.3rem;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.2);
+      transition: background .2s, color .2s;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: var(--blue);
+      color: #fff;
     }
     .welcome {
       margin: 1.5rem 0 0.5rem 0;
@@ -38,13 +84,15 @@
       margin-bottom: 1.5rem;
     }
     .dashboard-container {
-      max-width: 840px;
-      margin: 2.5rem auto;
+      max-width: 950px;
+      margin: 2.5rem auto 0 auto;
       background: #fff;
       border-radius: 32px;
-      padding: 2.5rem 2rem;
+      padding: 2.5rem 2rem 1rem 2rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      flex: 1 0 auto;
     }
+    /* FAMILLE */
     .family-section {
       margin-bottom: 2.5rem;
     }
@@ -57,22 +105,29 @@
       display: flex;
       gap: 1.2rem;
       flex-wrap: wrap;
+      margin-bottom: .8rem;
     }
     .family-member {
       background: #F0F6FF;
       border-radius: 18px;
-      padding: 1rem 1.5rem;
+      padding: 1rem 1.2rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-width: 110px;
+      position: relative;
+      transition: box-shadow .2s;
+      cursor: pointer;
+    }
+    .family-member:hover {
+      box-shadow: 0 4px 30px rgba(92,122,234,0.13);
     }
     .family-avatar {
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: #FFD56B;
+      background: var(--yellow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -80,16 +135,42 @@
       font-weight: bold;
       color: #fff;
       margin-bottom: .5rem;
+      border: 3px solid var(--green);
     }
     .member-name {
       font-weight: 700;
       font-size: 1.12rem;
-      margin-bottom: .2rem;
+      margin-bottom: .15rem;
     }
     .member-role {
       font-size: .98rem;
       color: #888;
     }
+    .member-location {
+      margin-top: .3rem;
+      font-size: .92rem;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .loc-marker {
+      font-size: 1rem;
+      color: var(--green);
+    }
+    .edit-member-btn {
+      position: absolute;
+      top: 6px; right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--blue);
+      font-size: 1.1rem;
+      opacity: .8;
+      transition: opacity .15s;
+    }
+    .edit-member-btn:hover {opacity: 1;}
+    /* ACTIONS */
     .actions-section {
       margin-top: 2.5rem;
     }
@@ -101,46 +182,97 @@
     .dashboard-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1.2rem;
       justify-content: flex-start;
+      margin-bottom: 1.2rem;
     }
     .dashboard-card {
       background: #EAF4FA;
       border-radius: 18px;
-      padding: 1.3rem 1.3rem;
-      width: 175px;
+      padding: 1.2rem 1.3rem;
+      width: 165px;
       text-align: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.045);
       text-decoration: none;
-      color: #2D4059;
-      font-size: 1.15rem;
+      color: var(--dark);
+      font-size: 1.08rem;
       font-weight: 600;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform .15s, background .15s;
-    }
-    .dashboard-card:hover {
-      transform: scale(1.05) translateY(-4px);
-      background: #D8EBF6;
+      transition: transform .15s, background .15s, box-shadow .15s;
+      cursor: pointer;
+      position: relative;
     }
     .dashboard-card img {
-      width: 45px;
-      height: 45px;
-      margin-bottom: .7rem;
+      width: 40px;
+      height: 40px;
+      margin-bottom: .5rem;
     }
-    .info-section {
+    .dashboard-card:hover, .dashboard-card:focus {
+      transform: scale(1.06) translateY(-2px);
+      background: #D8EBF6;
+      box-shadow: 0 4px 16px rgba(92,122,234,0.12);
+      color: var(--blue);
+    }
+    /* AGENDA */
+    .agenda-section {
+      margin: 2.3rem 0;
       background: #FEF3C7;
-      border-radius: 18px;
-      padding: 1.2rem 1rem;
-      margin: 2.5rem 0 0 0;
-      font-size: 1.02rem;
-      color: #7a5e00;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
+      border-radius: 22px;
+      padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
-    /* Section MAP */
+    .agenda-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      margin-bottom: .8rem;
+      color: #966100;
+    }
+    .agenda-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .agenda-item {
+      background: #fffbe6;
+      border-radius: 12px;
+      padding: .9rem 1.2rem;
+      box-shadow: 0 1px 4px rgba(255,213,107,0.07);
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      position: relative;
+    }
+    .agenda-date {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--blue);
+      min-width: 70px;
+      text-align: center;
+    }
+    .agenda-info {
+      flex: 1;
+    }
+    .agenda-persons {
+      color: #888;
+      font-size: .95rem;
+      margin-top: .18rem;
+    }
+    .agenda-edit-btn {
+      border: none;
+      background: none;
+      font-size: 1.1rem;
+      color: var(--green);
+      cursor: pointer;
+      opacity: .8;
+      transition: opacity .13s;
+    }
+    .agenda-edit-btn:hover {opacity: 1;}
+    /* MAP */
     .map-section {
       margin: 2.5rem 0;
       background: #F0F6FF;
@@ -156,7 +288,7 @@
     }
     #map {
       width: 100%;
-      height: 260px;
+      height: 250px;
       border-radius: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       margin-bottom: 1.2rem;
@@ -175,122 +307,299 @@
       gap: .7rem;
     }
     .place-list li {
-      background: #FFD56B;
-      color: #2D4059;
+      background: var(--yellow);
+      color: var(--dark);
       font-weight: 600;
       padding: .5rem 1rem;
       border-radius: 12px;
-      font-size: .96rem;
+      font-size: .95rem;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
+    /* MODAL */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.25);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active {display: flex;}
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 2.1rem 1.5rem 1.5rem 1.5rem;
+      min-width: 300px;
+      max-width: 96vw;
+      position: relative;
+      animation: modalIn .28s;
+    }
+    @keyframes modalIn {from{transform:scale(.91); opacity:0;} to{transform:scale(1);opacity:1;}}
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      font-size: 1.25rem;
+      color: var(--red);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      opacity: .8;
+      transition: opacity .1s;
+    }
+    .modal-close:hover {opacity: 1;}
+    .modal label {font-weight: bold; margin-top: .8rem; display: block;}
+    .modal input, .modal select {
+      width: 100%;
+      margin-top: .2rem;
+      margin-bottom: 1rem;
+      padding: .6rem;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      font-size: 1rem;
+    }
+    .modal-btn {
+      padding: .7rem 1.2rem;
+      border-radius: 24px;
+      background: var(--green);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      font-size: 1.05rem;
+      cursor: pointer;
+      margin-top: .7rem;
+      transition: background .15s;
+    }
+    .modal-btn:hover {background: var(--blue);}
+    /* INFOS */
+    .info-section {
+      background: #FEF3C7;
+      border-radius: 18px;
+      padding: 1.2rem 1rem;
+      margin: 2.5rem 0 0 0;
+      font-size: 1.02rem;
+      color: #7a5e00;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    /* FOOTER */
+    footer {
+      background: linear-gradient(90deg, var(--dark) 0%, #1a2a40 100%);
+      color: #fff;
+      padding: 2.5rem 0 1rem 0;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      margin-top: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .footer-grid {
+      max-width: 950px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .footer-links, .footer-contact, .footer-social {
+      margin-top: 1.2rem;
+    }
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-links a {
+      color: #ffd56b;
+      text-decoration: none;
+      font-size: 1.03rem;
+      transition: color .15s;
+    }
+    .footer-links a:hover {color: var(--green);}
+    .footer-social a {
+      display: inline-block;
+      margin-right: .7rem;
+      color: #ffd56b;
+      font-size: 1.5rem;
+      transition: color .15s;
+    }
+    .footer-social a:hover {color: var(--orange);}
+    .copyright {
+      text-align: center;
+      font-size: .97rem;
+      color: #ffe7ae;
+      margin-top: 1.5rem;
+      opacity: .8;
+    }
+    /* Responsive */
+    @media (max-width: 900px) {.dashboard-container, .footer-grid {padding: 1.1rem;}}
     @media (max-width: 700px) {
-      .dashboard-container { padding: 1.2rem 0.5rem;}
-      .dashboard-actions { gap: .9rem;}
+      .dashboard-container { padding: .7rem .1rem;}
+      .dashboard-actions { gap: .7rem;}
       .dashboard-card { width: 100%; }
       .family-list { gap: .5rem; }
       #map { height: 180px;}
+      .agenda-item {flex-direction: column; gap: .3rem;}
+      .footer-grid {gap: 1.2rem;}
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">Nesti</div>
+    <div class="logo">
+      <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti" style="width:2.2rem;vertical-align:middle;">
+      Nesti
+    </div>
+    <nav>
+      <a href="#famille" class="nav-link active" id="navFamille"><span>👨‍👩‍👧‍👦</span> Famille</a>
+      <a href="#agenda" class="nav-link" id="navAgenda"><span>📅</span> Agenda</a>
+      <a href="#map" class="nav-link" id="navMap"><span>🗺️</span> Carte</a>
+      <a href="#profil" class="nav-link" id="navProfil"><span>👤</span> Profil</a>
+    </nav>
     <div class="welcome" id="welcomeMsg">Bonjour 👋</div>
     <div class="subtitle">Bienvenue dans votre espace famille, tout doux et simple !</div>
   </header>
-
   <main class="dashboard-container">
     <!-- Bloc famille -->
-    <section class="family-section">
-      <div class="family-title">👨‍👩‍👧‍👦 Ma famille</div>
-      <div class="family-list" id="familyList">
-        <!-- Membres générés par JS -->
-      </div>
+    <section class="family-section" id="famille">
+      <div class="family-title">👨‍👩‍👧‍👦 Ma famille <button class="edit-member-btn" title="Ajouter un membre" onclick="openEditModal('add')">＋</button></div>
+      <div class="family-list" id="familyList"></div>
+      <small style="color:#999;">Cliquez sur un membre pour voir ou modifier ses infos.</small>
     </section>
     <!-- Bloc actions principales -->
     <section class="actions-section">
-      <div class="actions-title">🌈 Que souhaitez-vous faire aujourd'hui ?</div>
+      <div class="actions-title">🌈 Que souhaitez-vous faire aujourd'hui ?</div>
       <div class="dashboard-actions">
-        <a href="#" class="dashboard-card">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4da.svg" alt="Activités" />
-          Mes activités
-        </a>
-        <a href="#" class="dashboard-card">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4e8.svg" alt="Messages" />
-          Messages famille
-        </a>
-        <a href="#" class="dashboard-card">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4d6.svg" alt="Ressources" />
-          Conseils & Ressources
-        </a>
-        <a href="#" class="dashboard-card">
+        <div class="dashboard-card" tabindex="0" onclick="scrollToSection('agenda')" title="Voir l'agenda">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4c5.svg" alt="Agenda" />
+          Agenda partagé
+        </div>
+        <div class="dashboard-card" tabindex="0" onclick="scrollToSection('map')" title="Voir la carte">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f30d.svg" alt="Carte" />
+          Découvrir autour
+        </div>
+        <div class="dashboard-card" tabindex="0" onclick="openEditModal('profile')" title="Mon profil">
           <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f464.svg" alt="Profil" />
           Mon profil
-        </a>
+        </div>
+        <div class="dashboard-card" tabindex="0" onclick="alert('Fonctionnalité à venir !')" title="Messagerie famille">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4e8.svg" alt="Messages" />
+          Messages famille
+        </div>
+        <div class="dashboard-card" tabindex="0" onclick="alert('Fonctionnalité à venir !')" title="Conseils et ressources">
+          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4d6.svg" alt="Ressources" />
+          Conseils & Ressources
+        </div>
       </div>
     </section>
+    <!-- Agenda partagé -->
+    <section class="agenda-section" id="agenda">
+      <div class="agenda-title">📅 Prochaines activités familiales</div>
+      <ul class="agenda-list" id="agendaList"></ul>
+      <button class="modal-btn" onclick="openEditModal('agenda')">+ Ajouter une activité</button>
+    </section>
     <!-- Section MAP interactive -->
-    <section class="map-section">
-      <div class="map-title">🗺️ Découvrir autour de moi</div>
+    <section class="map-section" id="mapSection">
+      <div class="map-title">🗺️ Découvrir autour de moi (et localiser la famille)</div>
       <div id="map"></div>
-      <div class="map-info" id="mapInfo">Localisez les parcs, écoles, centres familiaux près de chez vous !</div>
-      <ul class="place-list" id="placeList">
-        <!-- Lieux générés dynamiquement -->
-      </ul>
+      <div class="map-info" id="mapInfo">Localisez la maison, les enfants, et des lieux familiaux autour de vous !</div>
+      <ul class="place-list" id="placeList"></ul>
     </section>
     <!-- Bloc info -->
     <div class="info-section">
       <span>ℹ️</span>
       <span>
-        Pour modifier les informations de votre famille, cliquez sur “Mon profil”.<br>
-        Besoin d’aide ? Contactez-nous via le bouton “Messages famille”.
+        Pour modifier vos informations, cliquez sur “Mon profil” ou sur un membre.<br>
+        Besoin d’aide ? Contactez-nous via la messagerie famille.
       </span>
     </div>
   </main>
 
+  <!-- MODAL -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal" id="modal">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Nesti</div>
+        <div style="color:#ffd56b; font-size:1.08rem; margin-top:.8rem;">L'écosystème familial de l'inclusion</div>
+        <div class="footer-social">
+          <a href="#" title="Instagram"><span aria-label="Instagram">📸</span></a>
+          <a href="#" title="Facebook"><span aria-label="Facebook">📘</span></a>
+          <a href="#" title="X / Twitter"><span aria-label="Twitter">🐦</span></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div style="font-weight:600;">Navigation</div>
+        <ul>
+          <li><a href="#famille">Ma famille</a></li>
+          <li><a href="#agenda">Agenda</a></li>
+          <li><a href="#mapSection">Carte</a></li>
+          <li><a href="#profil">Profil</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <div style="font-weight:600;">Contact</div>
+        <div>Email: <a href="mailto:contact@nesti.fr">contact@nesti.fr</a></div>
+        <div>Téléphone: <a href="tel:+33123456789">01 23 45 67 89</a></div>
+        <div>Adresse: 42 rue de la Famille, 75000 Paris</div>
+      </div>
+      <div>
+        <div style="font-weight:600;">Ressources</div>
+        <div class="footer-links">
+          <ul>
+            <li><a href="#">CGU</a></li>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Accessibilité</a></li>
+            <li><a href="#">Aide</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2025 Nesti. Tous droits réservés. | Conçu avec ❤️ pour les familles.
+    </div>
+  </footer>
+
+  <!-- LEAFLET MAP JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Simulation des infos récupérées lors de l'inscription
-    const user = {
+    // --- DONNÉES SIMULÉES ---
+    let user = {
       prenom: "Sarah",
       nom: "Martin",
+      email: "sarah.martin@email.fr",
+      tel: "06 12 34 56 78",
+      adresse: "12 rue des Lilas, Paris",
       famille: [
-        { prenom: "Sarah", nom: "Martin", role: "Parent", avatar: "👩" },
-        { prenom: "Lucas", nom: "Martin", role: "Parent", avatar: "👨" },
-        { prenom: "Emma", nom: "Martin", role: "Enfant", avatar: "👧" },
-        { prenom: "Noah", nom: "Martin", role: "Enfant", avatar: "🧒" }
-      ]
+        { prenom: "Sarah", nom: "Martin", role: "Parent", avatar: "👩", mineur: false, gps: [48.8568,2.3520] },
+        { prenom: "Lucas", nom: "Martin", role: "Parent", avatar: "👨", mineur: false, gps: [48.8566,2.3522] },
+        { prenom: "Emma", nom: "Martin", role: "Enfant", avatar: "👧", mineur: true, gps: [48.8575,2.3600] },
+        { prenom: "Noah", nom: "Martin", role: "Enfant", avatar: "🧒", mineur: true, gps: [48.8582,2.3572] }
+      ],
+      maison: [48.8566,2.3522]
     };
 
-    // Affichage du prénom dans le message d'accueil
-    document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
+    let agenda = [
+      { date: "2025-09-20 15:00", titre: "Atelier peinture", lieu: "Maison", personnes: ["Emma", "Noah"], notes: "Prévoir tablier" },
+      { date: "2025-09-22 09:00", titre: "Rendez-vous école", lieu: "École Jean Jaurès", personnes: ["Emma"], notes: "" },
+      { date: "2025-09-23 18:00", titre: "Soirée jeux de société", lieu: "Maison", personnes: ["Toute la famille"], notes: "Chacun choisit un jeu" }
+    ];
 
-    // Affichage de la famille
-    const familyList = document.getElementById("familyList");
-    user.famille.forEach(m => {
-      const el = document.createElement('div');
-      el.className = 'family-member';
-      el.innerHTML = `
-        <div class="family-avatar">${m.avatar}</div>
-        <div class="member-name">${m.prenom}</div>
-        <div class="member-role">${m.role}</div>
-      `;
-      familyList.appendChild(el);
-    });
-
-    // MAP: coordonnées par défaut (Paris)
-    const defaultCoords = [48.8566, 2.3522];
-    const map = L.map('map').setView(defaultCoords, 13);
-
-    // Fond de carte
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      minZoom: 2,
-      maxZoom: 18
-    }).addTo(map);
-
-    // Simule des lieux familiaux autour
-    const places = [
+    let lieux = [
       { name: "Parc de la Villette", type: "Parc", coords: [48.8897, 2.3930] },
       { name: "École Jean Jaurès", type: "École", coords: [48.8572, 2.3530] },
       { name: "Centre Famille Soleil", type: "Centre familial", coords: [48.8500, 2.3700] },
@@ -298,28 +607,299 @@
       { name: "Maison des Parents", type: "Centre familial", coords: [48.8650, 2.3320] }
     ];
 
-    // Marqueurs et liste
-    const placeList = document.getElementById("placeList");
-    places.forEach(place => {
-      L.marker(place.coords)
-        .addTo(map)
-        .bindPopup(`<b>${place.name}</b><br>${place.type}`);
-      // Ajoute à la liste
-      const li = document.createElement("li");
-      li.innerText = `${place.name} (${place.type})`;
-      placeList.appendChild(li);
+    // --- NAVIGATION SCROLL ---
+    function scrollToSection(id) {
+      let target = (id === "agenda") ? document.getElementById("agenda") :
+                   (id === "map") ? document.getElementById("mapSection") :
+                   (id === "famille") ? document.getElementById("famille") :
+                   null;
+      if(target) target.scrollIntoView({behavior:"smooth"});
+    }
+    // --- NAV ACTIVE (visuel) ---
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e){
+        document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+        this.classList.add('active');
+      });
     });
+    // --- MESSAGE ACCUEIL ---
+    document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
 
-    // Geoloc utilisateur
+    // --- AFFICHAGE FAMILLE ---
+    function renderFamily() {
+      const familyList = document.getElementById("familyList");
+      familyList.innerHTML = "";
+      user.famille.forEach((m, i) => {
+        const el = document.createElement('div');
+        el.className = 'family-member';
+        el.innerHTML = `
+          <button class="edit-member-btn" onclick="openEditModal('edit', ${i});event.stopPropagation();" title="Modifier"><span aria-label="Edit">✏️</span></button>
+          <div class="family-avatar">${m.avatar}</div>
+          <div class="member-name">${m.prenom}</div>
+          <div class="member-role">${m.role}${m.mineur ? " <span title='Mineur' style='color:#ff7b54;font-size:.93em;'>(-18)</span>" : ""}</div>
+          ${m.mineur && m.gps ? `<div class="member-location"><span class="loc-marker">📍</span>Localisé</div>` : ""}
+        `;
+        el.tabIndex = 0;
+        el.title = "Voir/modifier";
+        el.onclick = () => openEditModal('edit', i);
+        familyList.appendChild(el);
+      });
+    }
+    renderFamily();
+
+    // --- MODAL GESTION ---
+    function openEditModal(type, idx=0) {
+      const modalBg = document.getElementById('modalBg');
+      const modalContent = document.getElementById('modalContent');
+      modalBg.classList.add('active');
+      if(type === 'edit') {
+        const member = user.famille[idx];
+        modalContent.innerHTML = `
+          <h2>Modifier membre</h2>
+          <form id="editMemberForm">
+            <label>Prénom <input type="text" name="prenom" value="${member.prenom}" required></label>
+            <label>Nom <input type="text" name="nom" value="${member.nom}" required></label>
+            <label>Rôle
+              <select name="role"><option ${member.role=="Parent"?"selected":""}>Parent</option>
+              <option ${member.role=="Enfant"?"selected":""}>Enfant</option></select>
+            </label>
+            <label>Mineur <input type="checkbox" name="mineur" ${member.mineur?"checked":""}></label>
+            <label>Avatar <input type="text" name="avatar" maxlength="2" value="${member.avatar}" required></label>
+            ${member.mineur ? `<label>Géolocalisation <input type="text" name="gps" value="${member.gps?member.gps.join(','):""}" placeholder="lat,lon"></label>` : ""}
+            <button class="modal-btn" type="submit">Enregistrer</button>
+          </form>
+        `;
+        document.getElementById('editMemberForm').onsubmit = function(e){
+          e.preventDefault();
+          let f = new FormData(e.target);
+          user.famille[idx] = {
+            prenom: f.get("prenom"),
+            nom: f.get("nom"),
+            role: f.get("role"),
+            mineur: !!f.get("mineur"),
+            avatar: f.get("avatar"),
+            gps: f.get("gps") ? f.get("gps").split(",").map(Number) : undefined
+          };
+          closeModal();
+          renderFamily();
+          renderMap();
+        }
+      } else if(type === 'add') {
+        modalContent.innerHTML = `
+          <h2>Ajouter un membre</h2>
+          <form id="addMemberForm">
+            <label>Prénom <input type="text" name="prenom" required></label>
+            <label>Nom <input type="text" name="nom" required></label>
+            <label>Rôle
+              <select name="role"><option>Parent</option><option>Enfant</option></select>
+            </label>
+            <label>Mineur <input type="checkbox" name="mineur"></label>
+            <label>Avatar <input type="text" name="avatar" maxlength="2" required placeholder="Emoji"></label>
+            <label>Géolocalisation <input type="text" name="gps" placeholder="lat,lon"></label>
+            <button class="modal-btn" type="submit">Ajouter</button>
+          </form>
+        `;
+        document.getElementById('addMemberForm').onsubmit = function(e){
+          e.preventDefault();
+          let f = new FormData(e.target);
+          user.famille.push({
+            prenom: f.get("prenom"),
+            nom: f.get("nom"),
+            role: f.get("role"),
+            mineur: !!f.get("mineur"),
+            avatar: f.get("avatar"),
+            gps: f.get("gps") ? f.get("gps").split(",").map(Number) : undefined
+          });
+          closeModal();
+          renderFamily();
+          renderMap();
+        }
+      } else if(type === 'profile') {
+        modalContent.innerHTML = `
+          <h2>Mon profil</h2>
+          <form id="profileForm">
+            <label>Prénom <input type="text" name="prenom" value="${user.prenom}" required></label>
+            <label>Nom <input type="text" name="nom" value="${user.nom}" required></label>
+            <label>Email <input type="email" name="email" value="${user.email}" required></label>
+            <label>Téléphone <input type="tel" name="tel" value="${user.tel}" required></label>
+            <label>Adresse <input type="text" name="adresse" value="${user.adresse}" required></label>
+            <button class="modal-btn" type="submit">Enregistrer</button>
+          </form>
+        `;
+        document.getElementById('profileForm').onsubmit = function(e){
+          e.preventDefault();
+          let f = new FormData(e.target);
+          user.prenom = f.get("prenom");
+          user.nom = f.get("nom");
+          user.email = f.get("email");
+          user.tel = f.get("tel");
+          user.adresse = f.get("adresse");
+          document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
+          closeModal();
+        }
+      } else if(type === 'agenda') {
+        modalContent.innerHTML = `
+          <h2>Ajouter une activité</h2>
+          <form id="addAgendaForm">
+            <label>Date et heure <input type="datetime-local" name="date" required></label>
+            <label>Intitulé de l'activité <input type="text" name="titre" required></label>
+            <label>Lieu <input type="text" name="lieu"></label>
+            <label>Participants <input type="text" name="personnes" placeholder="Prénoms séparés par une virgule"></label>
+            <label>Notes <input type="text" name="notes"></label>
+            <button class="modal-btn" type="submit">Ajouter</button>
+          </form>
+        `;
+        document.getElementById('addAgendaForm').onsubmit = function(e){
+          e.preventDefault();
+          let f = new FormData(e.target);
+          agenda.push({
+            date: f.get("date"),
+            titre: f.get("titre"),
+            lieu: f.get("lieu"),
+            personnes: f.get("personnes") ? f.get("personnes").split(",").map(s=>s.trim()) : [],
+            notes: f.get("notes")
+          });
+          closeModal();
+          renderAgenda();
+        }
+      }
+    }
+    function closeModal() {
+      document.getElementById('modalBg').classList.remove('active');
+    }
+    // Fermer modal si clic dehors
+    document.getElementById('modalBg').onclick = function(e){
+      if(e.target === this) closeModal();
+    }
+
+    // --- AGENDA ---
+    function renderAgenda() {
+      const agendaList = document.getElementById("agendaList");
+      agendaList.innerHTML = "";
+      agenda
+        .sort((a,b)=>new Date(a.date)-new Date(b.date))
+        .forEach((item, i) => {
+        const dateObj = new Date(item.date);
+        const dateStr = dateObj.toLocaleDateString("fr-FR", {weekday:"short", day:"2-digit", month:"2-digit"}) + "<br>" + dateObj.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+        const persons = item.personnes && item.personnes.length ? item.personnes.join(", ") : "Toute la famille";
+        const li = document.createElement("li");
+        li.className = "agenda-item";
+        li.innerHTML = `
+          <div class="agenda-date">${dateStr}</div>
+          <div class="agenda-info">
+            <div style="font-weight:600;">${item.titre}</div>
+            <div style="color:#888;">${item.lieu?("📍 "+item.lieu):""}</div>
+            <div class="agenda-persons">👥 ${persons}</div>
+            ${item.notes?('<div style="font-size:.95em;color:#a47b00;">📝 '+item.notes+'</div>'):""}
+          </div>
+          <button class="agenda-edit-btn" onclick="editAgenda(${i})" title="Modifier">&#9998;</button>
+        `;
+        agendaList.appendChild(li);
+      });
+    }
+    function editAgenda(i) {
+      const item = agenda[i];
+      openEditModal('agenda'); // réutilise le modal ajout, mais tu peux créer un modal spécifique pour édition si tu veux.
+      setTimeout(()=>{ // remplit le form après ouverture
+        const f = document.getElementById('addAgendaForm');
+        if(f){
+          f.date.value = item.date;
+          f.titre.value = item.titre;
+          f.lieu.value = item.lieu;
+          f.personnes.value = item.personnes ? item.personnes.join(", ") : "";
+          f.notes.value = item.notes;
+          f.onsubmit = function(e){
+            e.preventDefault();
+            let d = new FormData(f);
+            agenda[i] = {
+              date: d.get("date"),
+              titre: d.get("titre"),
+              lieu: d.get("lieu"),
+              personnes: d.get("personnes") ? d.get("personnes").split(",").map(s=>s.trim()) : [],
+              notes: d.get("notes")
+            }
+            closeModal();
+            renderAgenda();
+          }
+        }
+      },100);
+    }
+    renderAgenda();
+
+    // --- MAP LEAFLET ---
+    let map, maisonMarker, familleMarkers = [];
+    function renderMap() {
+      if(!map){
+        map = L.map('map').setView(user.maison, 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          minZoom: 2,
+          maxZoom: 18
+        }).addTo(map);
+      } else {
+        map.eachLayer(function (layer) {
+          if(layer instanceof L.Marker || layer instanceof L.CircleMarker) map.removeLayer(layer);
+        });
+      }
+      // Maison
+      maisonMarker = L.marker(user.maison, {icon: L.icon({iconUrl:"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3e0.svg",iconSize:[36,36]})}).addTo(map).bindPopup("<b>🏡 Maison</b>");
+      // Parents et enfants
+      familleMarkers.forEach(m=>map.removeLayer(m));
+      familleMarkers = [];
+      user.famille.forEach((m,i) => {
+        if(m.gps){
+          const marker = L.marker(m.gps, {
+            icon: L.divIcon({
+              className: '',
+              html: `<span style="font-size:1.7rem;">${m.avatar}</span>`,
+              iconSize: [32,32]
+            })
+          }).addTo(map).bindPopup(`<b>${m.avatar} ${m.prenom} (${m.role})</b>${m.mineur ? "<br><span style='color:#ff7b54;'>Mineur</span>" : ""}`);
+          familleMarkers.push(marker);
+        }
+      });
+      // Lieux d'intérêt
+      lieux.forEach(place => {
+        L.marker(place.coords, {
+          icon: L.icon({
+            iconUrl: place.type === "Parc" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f333.svg" :
+                     place.type === "École" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3eb.svg" :
+                     "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg",
+            iconSize: [32,32]
+          })
+        }).addTo(map).bindPopup(`<b>${place.name}</b><br>${place.type}`);
+      });
+    }
+    renderMap();
+
+    // Liste des lieux
+    function renderPlaces() {
+      const placeList = document.getElementById("placeList");
+      placeList.innerHTML = "";
+      lieux.forEach(place => {
+        const li = document.createElement("li");
+        li.innerHTML = `${place.name} (${place.type})`;
+        placeList.appendChild(li);
+      });
+    }
+    renderPlaces();
+
+    // Géolocalisation de l'utilisateur (simule pour Paris)
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         const userLatLng = [pos.coords.latitude, pos.coords.longitude];
         map.setView(userLatLng, 13);
-        L.marker(userLatLng).addTo(map)
-          .bindPopup("Vous êtes ici !").openPopup();
-        document.getElementById("mapInfo").innerText = "Voici votre localisation et des lieux familiaux proches.";
+        L.marker(userLatLng, {
+          icon: L.icon({iconUrl:"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4cd.svg",iconSize:[32,32]})
+        }).addTo(map).bindPopup("Vous êtes ici !").openPopup();
+        document.getElementById("mapInfo").innerText = "Voici votre localisation, la maison, la famille et des lieux familiaux proches.";
       });
     }
+
+    // --- ACCESSIBILITÉ (navigation rapide au clavier) ---
+    document.addEventListener('keydown', function(e){
+      if(e.key === "Escape") closeModal();
+    });
   </script>
 </body>
 </html>
