@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Cocon Familial (Pro)</title>
+    <title>Mon Cocon Familial</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        /* Variables de couleur et de thème */
+        /* Variables de thème pour une ambiance cosy */
         :root {
-            --bg-color: #f0f4f8;
-            --text-color: #334e68;
-            --card-bg: #ffffff;
-            --primary-color: #3f51b5; /* Bleu indémodable */
-            --secondary-color: #ff4081; /* Rose éclatant */
-            --border-color: #e3e8ee;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition-speed: 0.3s;
-            --font-family: 'Poppins', sans-serif;
+            --bg-color: #f5f0e1; /* Jaune sable très clair */
+            --text-color: #5d4037; /* Marron foncé pour la chaleur */
+            --card-bg: #fffbf5;
+            --primary-color: #a1887f; /* Taupe doux */
+            --secondary-color: #ffab91; /* Corail pastel */
+            --border-color: #e0d9c4;
+            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            --transition-speed: 0.5s;
+            --font-family-prose: 'Quicksand', sans-serif;
+            --font-family-title: 'Dancing Script', cursive;
         }
 
         body.dark-mode {
-            --bg-color: #2c3e50;
-            --text-color: #ecf0f1;
-            --card-bg: #34495e;
-            --primary-color: #64b5f6;
-            --secondary-color: #f06292;
-            --border-color: #55606d;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --bg-color: #2b2b2b;
+            --text-color: #e0e0e0;
+            --card-bg: #3c3c3c;
+            --primary-color: #d7ccc8; /* Gris clair */
+            --secondary-color: #ffccbc; /* Rose clair */
+            --border-color: #4f4f4f;
+            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Styles de base et mise en page */
+        /* Styles de base */
         body {
-            font-family: var(--font-family);
+            font-family: var(--font-family-prose);
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -41,11 +48,10 @@
             align-items: center;
             min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
-        /* Effet de parallaxe sur le body */
+        /* Animation de fond, comme des motifs de papier peint doux */
         body::before {
             content: '';
             position: fixed;
@@ -53,50 +59,40 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%),
-                        radial-gradient(circle, rgba(var(--secondary-rgb), 0.1) 0%, transparent 70%);
-            background-size: 800px 800px, 600px 600px;
-            background-position: top left, bottom right;
-            animation: moveGradient 20s linear infinite;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 40%),
+                        radial-gradient(circle, var(--secondary-color) 0%, transparent 40%);
+            background-size: 400px 400px, 300px 300px;
+            background-position: top 20% left 30%, bottom 20% right 40%;
+            animation: cozyBreathe 30s infinite ease-in-out alternate;
+            opacity: 0.1;
             z-index: -1;
-            opacity: 0.5;
         }
-        @keyframes moveGradient {
-            0% { background-position: top left, bottom right; }
-            100% { background-position: top right, bottom left; }
-        }
-        body.dark-mode::before {
-            filter: invert(1);
+        @keyframes cozyBreathe {
+            from { background-position: top 20% left 30%, bottom 20% right 40%; }
+            to { background-position: top 25% left 35%, bottom 25% right 45%; }
         }
 
         /* Conteneurs et mise en page */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 24px;
+            background-color: rgba(var(--text-color), 0.02);
+            backdrop-filter: blur(2px);
+            animation: cozy-load 1s ease-out;
+        }
+        @keyframes cozy-load {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         header, footer {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             text-align: center;
             padding: 1.5rem 0;
-            transition: transform 0.3s ease;
-        }
-        header { transform: translateY(-50px) scale(0.9); opacity: 0; animation: header-in 1s forwards; }
-        footer { transform: translateY(50px) scale(0.9); opacity: 0; animation: footer-in 1s forwards; animation-delay: 1s; }
-        @keyframes header-in { to { transform: translateY(0) scale(1); opacity: 1; } }
-        @keyframes footer-in { to { transform: translateY(0) scale(1); opacity: 1; } }
-
-        header h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        main {
-            width: 100%;
-            max-width: 1200px;
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            padding: 2rem 0;
         }
 
         /* Composants de l'interface utilisateur */
@@ -106,17 +102,62 @@
             border-radius: 16px;
             box-shadow: var(--box-shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            opacity: 0;
-            transform: translateY(20px);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            opacity: 0.3;
+            transition: height 0.3s ease;
+        }
+        .card:hover::before { height: 100%; opacity: 0.1; }
+
+        h1 {
+            font-family: var(--font-family-title);
+            font-size: clamp(3rem, 7vw, 5rem);
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0;
+            animation: title-appear 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        @keyframes title-appear {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        h2 {
+            font-family: var(--font-family-title);
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h3 {
+            font-family: var(--font-family-prose);
+            font-weight: 700;
+            color: var(--primary-color);
+            border-bottom: 2px dashed var(--secondary-color);
+            display: inline-block;
+            padding-bottom: 0.3rem;
+            margin-top: 0;
+        }
+        p {
+            font-family: var(--font-family-prose);
+            font-size: 1.1rem;
         }
 
+        /* Boutons */
         .button {
             display: inline-block;
             padding: 12px 28px;
@@ -124,27 +165,23 @@
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: 600;
-            transition: background-color var(--transition-speed), transform 0.2s ease, box-shadow var(--transition-speed);
+            font-weight: 700;
+            transition: background-color var(--transition-speed), transform 0.2s ease;
             text-align: center;
             border: none;
             cursor: pointer;
-            margin-top: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
         }
         .button:hover {
             background-color: var(--secondary-color);
             transform: scale(1.02);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
         }
-        .button:active {
-            transform: scale(0.98);
-        }
-        
-        /* Styles spécifiques des sections */
+
+        /* Galerie d'images */
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
             margin-top: 1.5rem;
         }
@@ -153,378 +190,126 @@
             height: 100%;
             object-fit: cover;
             border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            filter: grayscale(10%);
         }
         .image-gallery img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            filter: grayscale(0%);
         }
 
-        /* Effet de 'nappe' sur les images */
-        .image-gallery img::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+        /* Formulaires */
+        .contact-form label, .quiz-question {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
         }
-        .image-gallery img:hover::after {
-            opacity: 1;
+        .contact-form input, .contact-form textarea, .quiz-options input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
         }
 
-        /* Modal et pop-ups */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
+        /* Styles spécifiques des sections */
+        .story-section {
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 2000;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            backdrop-filter: blur(5px);
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
-        .modal.open { opacity: 1; }
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
+        .story-section img {
+            max-width: 40%;
             border-radius: 16px;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-            transform: scale(0.7);
-            transition: transform 0.4s ease;
+            box-shadow: var(--box-shadow);
         }
-        .modal.open .modal-content { transform: scale(1); }
+        .story-section.reverse {
+            flex-direction: row-reverse;
+        }
 
-        /* Notifications (toasts) */
-        #notification-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 3000;
-            display: flex;
-            flex-direction: column-reverse;
-            gap: 10px;
-        }
-        .notification {
-            background-color: #333;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        .memory-entry {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateX(-20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        .notification.show { opacity: 1; transform: translateY(0); }
+        .memory-entry.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .memory-entry::before {
+            content: '📌';
+            position: absolute;
+            left: -15px;
+            top: -5px;
+            font-size: 1.5rem;
+        }
+        
     </style>
 </head>
 <body>
-    <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2.5rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
+    <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
 
-<body>
-
-    <!-- ==================== HEADER ==================== -->
     <header>
         <div class="container">
-            <nav class="navbar">
-                <a href="#" class="logo"><i class="fas fa-hands-helping"></i> Nesti</a>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#home" class="nav-link active">Accueil</a></li>
-                    <li><a href="#discover" class="nav-link">Découvrir</a></li>
-                    <li><a href="#experience" class="nav-link">Expérience</a></li>
-                    <li><a href="#about" class="nav-link">À Propos</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
-                </ul>
-                <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
-            </nav>
+            <h1>Mon Cocon Familial</h1>
+            <p>Un recueil de nos plus beaux moments et de nos souvenirs précieux.</p>
         </div>
     </header>
 
-    <!-- ==================== HERO ==================== -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content fade-in">
-                <h1>L'Assistant Familial qui Démocratise l'Inclusion</h1>
-                <p>Faire de chaque famille un acteur d'inclusion grâce à l'IA et aux données locales.</p>
-                <div class="hero-buttons">
-                    <a href="#discover" class="btn btn-primary"><i class="fas fa-rocket"></i> Commencez l'aventure</a>
-                    <a href="#about" class="btn btn-outline"><i class="fas fa-info-circle"></i> En savoir plus</a>
-                </div>
-            </div>
-        </div>
-        <div class="hero-decoration"><i class="fas fa-heart" style="font-size: 20rem;"></i></div>
-    </section>
+    <main class="container">
+        <section class="card">
+            <h2>Notre album photo</h2>
+            <div id="image-gallery-container"></div>
+        </section>
 
-    <!-- ==================== PROBLEM/SOLUTION ==================== -->
-    <section>
-        <div class="container">
-            <div class="grid grid-3">
-                <div class="card fade-in">
-                    <h3><span class="icon">🤔</span> Le Problème</h3>
-                    <p>86% des parents veulent sensibiliser leurs enfants à la diversité, mais moins de 30% trouvent facilement des activités inclusives.</p>
-                </div>
-                <div class="card fade-in delay-1">
-                    <h3><span class="icon">💡</span> Notre Solution</h3>
-                    <p>Une IA qui trouve, adapte et explique les activités inclusives pour toute la famille, de manière ludique et bienveillante.</p>
-                </div>
-                <div class="card fade-in delay-2">
-                    <h3><span class="icon">🌟</span> Votre Impact</h3>
-                    <p>Chaque sortie devient une leçon de vie. Transformez votre famille en ambassadrice de l'inclusion.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        <section class="card">
+            <h2>Nos recettes secrètes</h2>
+            <div id="recipes-container"></div>
+        </section>
 
-    <!-- ==================== DISCOVER ==================== -->
-    <section id="discover">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Découvrez un Monde d'Inclusion</h2>
-                <p class="section-subtitle">Notre technologie rend l'accessibilité simple et intuitive pour toutes les familles</p>
-            </div>
-            <div class="mockup-container">
-                <div class="phone-mockup fade-in">
-                    <div class="screen map-screen">
-                        <div class="map-placeholder"><i class="fas fa-map-marked-alt"></i></div>
-                        <div class="map-card">
-                            <h4>Parc Aventure La Forêt Enchantée</h4>
-                            <p>Un parcours sensoriel adapté à tous les âges. Accès fauteuil OK.</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                <span>5km - PMR, visuel</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mockup-content fade-in delay-1">
-                    <div class="card">
-                        <h3><span class="icon">1️⃣</span> Cartographie Inclusive Intelligente</h3>
-                        <p>Grâce à notre <strong>IA géolocalisée</strong>, trouvez en un clin d'œil les lieux et activités adaptés à vos besoins. Fini les recherches fastidieuses !</p>
-                        <ul>
-                            <li><strong>Filtres précis :</strong> PMR, malvoyants, troubles autistiques...</li>
-                            <li><strong>Score d'inclusion :</strong> Une note fiable basée sur l'expérience des autres familles.</li>
-                            <li><strong>Alertes accessibilité :</strong> Recevez des notifications pour les nouveaux lieux adaptés près de chez vous.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <section class="card">
+            <h2>Le quiz de la famille</h2>
+            <div id="quiz-container"></div>
+        </section>
 
-    <!-- ==================== EXPERIENCE ==================== -->
-    <section id="experience">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Vivez l'Inclusion, Partagez l'Expérience</h2>
-                <p class="section-subtitle">Notre assistant pédagogique rend l'inclusion simple et ludique</p>
-            </div>
+        <section class="card">
+            <h2>Notre histoire, nos traditions</h2>
+            <div id="history-container"></div>
+        </section>
 
-            <div class="mockup-container">
-                <div class="phone-mockup fade-in delay-1">
-                    <div class="screen chat-screen">
-                        <div class="chat-container">
-                            <div class="chat-bubble ai">Bonjour ! Souhaitez-vous découvrir une activité pour toute la famille ?</div>
-                            <div class="chat-bubble user">Oui, pour ce week-end !</div>
-                            <div class="chat-bubble ai">Voici le Parc Aventure La Forêt Enchantée, accessible et ludique.</div>
-                        </div>
-                    </div>
-                </div>
+        <section class="card">
+            <h2>Notre journal de bord</h2>
+            <div id="blog-container"></div>
+        </section>
 
-                <div class="mockup-content fade-in">
-                    <div class="card">
-                        <h3><span class="icon">2️⃣</span> Expérience Interactive & Pédagogique</h3>
-                        <p>Nos conseils et dialogues interactifs permettent à vos enfants de comprendre la diversité et de participer activement.</p>
-                        <div class="photo-grid">
-                            <div class="photo-cell">Photo 1</div>
-                            <div class="photo-cell">Photo 2</div>
-                            <div class="photo-cell">Photo 3</div>
-                            <div class="photo-cell">Photo 4</div>
-                        </div>
+        <section class="card">
+            <h2>Nos souvenirs les plus précieux</h2>
+            <div id="memories-container"></div>
+        </section>
 
-                        <h4>Journal de vos sorties</h4>
-                        <div class="diary-entry">
-                            <h4>🗓 12 Septembre 2025</h4>
-                            <p>Sortie au musée inclusif : mes enfants ont adoré le parcours tactile et les explications adaptées.</p>
-                        </div>
-                        <div class="diary-entry">
-                            <h4>🗓 14 Septembre 2025</h4>
-                            <p>Parc aventure : tout le monde a pu participer grâce aux modules PMR et sensoriels.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <section class="card">
+            <h2>Laissez-nous un petit mot</h2>
+            <div id="contact-container"></div>
+        </section>
+    </main>
 
-    <!-- ==================== ABOUT ==================== -->
-    <section id="about">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">À Propos de Nesti</h2>
-                <p class="section-subtitle">Notre mission : rendre chaque sortie familiale inclusive et pédagogique</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="card fade-in">
-                    <h3><i class="fas fa-bullseye"></i> Mission</h3>
-                    <p>Permettre à chaque famille, quel que soit son contexte, de vivre des expériences inclusives et enrichissantes.</p>
-                </div>
-                <div class="card fade-in delay-1">
-                    <h3><i class="fas fa-eye"></i> Vision</h3>
-                    <p>Créer une société où l’inclusion est naturelle et partagée dès le plus jeune âge.</p>
-                </div>
-                <div class="card fade-in delay-2">
-                    <h3><i class="fas fa-heart"></i> Valeurs</h3>
-                    <ul>
-                        <li>Bienveillance</li>
-                        <li>Accessibilité</li>
-                        <li>Innovation</li>
-                        <li>Éducation</li>
-                        <li>Partage</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== TESTIMONIALS ==================== -->
-    <section id="testimonials">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Témoignages</h2>
-                <p class="section-subtitle">Ce que nos utilisateurs disent de Nesti</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="card fade-in">
-                    <h3>Marie L.</h3>
-                    <p>"Grâce à Nesti, mes enfants comprennent mieux la diversité et participent à des activités adaptées. C’est un vrai changement !" </p>
-                </div>
-                <div class="card fade-in delay-1">
-                    <h3>Paul D.</h3>
-                    <p>"Je trouve enfin des sorties inclusives pour mon fils en fauteuil. L’application est intuitive et très pratique."</p>
-                </div>
-                <div class="card fade-in delay-2">
-                    <h3>Claire M.</h3>
-                    <p>"Les conseils pédagogiques pour expliquer la diversité sont précieux. Nesti rend l’éducation inclusive simple et ludique."</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== FAQ ==================== -->
-    <section id="faq">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Questions Fréquentes</h2>
-                <p class="section-subtitle">Nous répondons aux questions les plus courantes sur Nesti</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="card fade-in">
-                    <h3>Comment Nesti garantit-il l'accessibilité ?</h3>
-                    <p>Nous vérifions les lieux via des critères précis : accès fauteuil, signalisation sensorielle et retours d’expérience des familles.</p>
-                </div>
-                <div class="card fade-in delay-1">
-                    <h3>L’IA peut-elle s’adapter à tous les âges ?</h3>
-                    <p>Oui, le moteur pédagogique adapte les explications et conseils selon l’âge et le profil de chaque enfant.</p>
-                </div>
-                <div class="card fade-in delay-2">
-                    <h3>Les données sont-elles sécurisées ?</h3>
-                    <p>Toutes les informations personnelles sont chiffrées et ne sont jamais partagées sans consentement.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== NEWSLETTER ==================== -->
-    <section id="newsletter" style="background: var(--primary-light); color:white; border-radius: var(--border-radius); margin:4rem 0; padding:3rem 0;">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Abonnez-vous à notre Newsletter</h2>
-                <p class="section-subtitle">Recevez les dernières activités inclusives et conseils pédagogiques directement dans votre boîte mail.</p>
-            </div>
-
-            <form id="newsletterForm" class="fade-in delay-1" style="max-width:600px; margin: 0 auto; display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <input type="email" placeholder="Votre email" class="form-control" required style="flex:1; min-width:200px;">
-                <button type="submit" class="btn btn-primary" style="flex-shrink:0;">S’inscrire</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- ==================== CONTACT ==================== -->
-    <section id="contact">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Contactez-nous</h2>
-                <p class="section-subtitle">Une question, un retour ou une suggestion ? Écrivez-nous !</p>
-            </div>
-
-            <form id="contactForm" class="fade-in delay-1" style="max-width:700px; margin:0 auto;">
-                <div class="form-group">
-                    <label for="name">Nom</label>
-                    <input type="text" id="name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" class="form-control" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Envoyer</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- ==================== FOOTER ==================== -->
     <footer>
         <div class="container">
-            <div class="footer-content fade-in">
-                <div class="footer-about">
-                    <span class="footer-logo">Nesti</span>
-                    <p>L’assistant familial pour un monde inclusif. Trouvez et partagez des expériences adaptées à tous.</p>
-                </div>
-
-                <div class="footer-links">
-                    <h4>Liens Utiles</h4>
-                    <ul>
-                        <li><a href="#home">Accueil</a></li>
-                        <li><a href="#discover">Découvrir</a></li>
-                        <li><a href="#experience">Expérience</a></li>
-                        <li><a href="#about">À Propos</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h4>Suivez-nous</h4>
-                    <ul>
-                        <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
-                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                        <li><a href="#"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom fade-in delay-1">
-                <p>&copy; 2025 Nesti. Tous droits réservés.</p>
-            </div>
+            <p>Merci de faire partie de notre histoire. © 2025</p>
         </div>
     </footer>
 
@@ -545,30 +330,31 @@
                 { src: 'https://images.unsplash.com/photo-1582239474944-ec85317796d1?q=80&w=1470&auto=format&fit=crop', alt: 'Anniversaire' },
             ],
             recipes: [
-                { title: "Lasagnes à la bolognaise", author: "Maman", description: "Un classique indémodable.", prepTime: "1h30" },
-                { title: "Gâteau au chocolat fondant", author: "Papa", description: "Un dessert irrésistible.", prepTime: "45min" },
-                { title: "Gratin dauphinois", author: "Grand-Mère", description: "Une recette traditionnelle.", prepTime: "1h" },
+                { title: "Lasagnes à la bolognaise", author: "Maman", description: "Un classique indémodable qui rassemble tout le monde autour de la table. La recette secrète de Maman avec une touche d'amour !", prepTime: "1h30" },
+                { title: "Gâteau au chocolat fondant", author: "Papa", description: "Un dessert irrésistible pour les gourmands, toujours réussi et parfait pour les moments de fête.", prepTime: "45min" },
+                { title: "Gratin dauphinois", author: "Grand-Mère", description: "La recette traditionnelle qui nous rappelle les dimanches en famille. Un régal simple et réconfortant.", prepTime: "1h" },
             ],
             quizQuestions: [
-                { question: "Quel est notre plat préféré ?", options: ["Lasagnes", "Pizza", "Riz Cantonais", "Pâtes au pesto"], answer: "Lasagnes" },
+                { question: "Quel est notre plat préféré du dimanche ?", options: ["Lasagnes", "Pizza", "Riz Cantonais", "Pâtes au pesto"], answer: "Lasagnes" },
                 { question: "Quelle est notre destination de vacances préférée ?", options: ["La mer", "La montagne", "La campagne", "La ville"], answer: "La montagne" },
-                { question: "Quel est le prénom du plus jeune membre de la famille ?", options: ["Léa", "Thomas", "Sophie", "Lucas"], answer: "Lucas" },
+                { question: "Qui est le roi du barbecue l'été ?", options: ["Papa", "Maman", "Thomas", "Léa"], answer: "Papa" },
             ],
             history: {
                 title: "De nos origines à nos traditions",
                 paragraphs: [
-                    "L'histoire de notre famille commence il y a plusieurs générations, dans un petit village au cœur des montagnes.",
-                    "Au fil du temps, notre famille s'est agrandie et dispersée. Pourtant, nous avons toujours gardé un lien fort.",
-                    "Aujourd'hui, nous sommes une famille moderne, connectée, mais nous n'oublions jamais d'où nous venons. Ce site web est notre manière de préserver notre histoire, de la partager et de célébrer l'amour qui nous unit."
+                    "L'histoire de notre famille commence il y a plusieurs générations, dans un petit village au cœur des montagnes. C'est de là que nous tenons notre amour pour les grands espaces et les repas partagés.",
+                    "Au fil du temps, notre famille s'est agrandie et dispersée, mais le lien qui nous unit est resté indéfectible. Les fêtes de Noël, les anniversaires d'été et les longs appels du dimanche sont devenus nos rituels sacrés.",
+                    "Aujourd'hui, ce site web est notre manière de préserver notre histoire, de la raconter aux générations futures et de célébrer chaque moment qui fait de nous une famille."
                 ]
             },
             blogPosts: [
-                { title: "Un week-end inoubliable", date: "24/10/2024", content: "Nous avons passé un week-end magnifique à la campagne, loin du tumulte de la ville. Le soleil était au rendez-vous et nous avons pu faire de longues balades en forêt." },
-                { title: "Premiers pas de Léa", date: "12/09/2024", content: "Quelle joie ! Notre petite Léa a fait ses tout premiers pas. Un moment rempli d'émotion que nous n'oublierons jamais." }
+                { title: "Un week-end inoubliable à la campagne", date: "24/10/2024", content: "Nous avons passé un week-end magnifique à la campagne, loin du tumulte de la ville. Le soleil était au rendez-vous et nous avons pu faire de longues balades en forêt, jouer au ballon et se raconter des histoires autour d'un feu de camp. Un vrai moment de bonheur pur." },
+                { title: "Les premiers pas de notre petite Léa", date: "12/09/2024", content: "Quelle joie ! Notre petite Léa a fait ses tout premiers pas. Un moment rempli d'émotion que nous n'oublierons jamais. C'est fou comme le temps passe vite, et nous sommes si fiers de la voir grandir chaque jour." }
             ],
             memories: [
-                { date: "15/07/2023", event: "Mariage de Thomas et Sophie", description: "Un jour magique, rempli de rires et d'amour. On s'est tous retrouvés pour célébrer cette union." },
-                { date: "03/01/2022", event: "Voyage en Italie", description: "Notre grand voyage en famille. Les pizzas, les glaces, les monuments... des souvenirs gravés dans nos mémoires." }
+                { date: "15/07/2023", event: "Mariage de Thomas et Sophie", description: "Un jour magique, rempli de rires et d'amour. On s'est tous retrouvés pour célébrer cette union sous les oliviers. Le soleil, la musique, et les larmes de joie... un souvenir gravé à jamais." },
+                { date: "03/01/2022", event: "Notre grand voyage en Italie", description: "Notre premier grand voyage en famille. Les pizzas, les glaces, les monuments... des souvenirs qui nous font encore sourire. On se promet de recommencer dès que possible !" },
+                { date: "24/12/2021", event: "Noël à la maison de Grand-Père", description: "Le Noël le plus mémorable. Toute la famille réunie, les cadeaux sous le sapin, l'odeur du pain d'épices et les histoires de Grand-Père au coin du feu." }
             ]
         };
 
@@ -592,26 +378,13 @@
                 return element;
             },
 
-            createCard: (id, title, description, contentGenerator) => {
-                const card = UI.createElement('section', { class: 'card', id: `${id}-card` });
-                const heading = UI.createElement('h2', {}, title);
-                const desc = UI.createElement('p', {}, description);
-                card.appendChild(heading);
-                card.appendChild(desc);
-                if (contentGenerator) {
-                    contentGenerator(card);
-                }
-                return card;
-            },
-
             renderGallery: (parent) => {
                 const gallery = UI.createElement('div', { class: 'image-gallery' });
                 APP_DATA.images.forEach(image => {
-                    const img = UI.createElement('img', { src: image.src, alt: image.alt });
+                    const img = UI.createElement('img', { src: image.src, alt: image.alt, loading: 'lazy' });
                     gallery.appendChild(img);
                 });
                 parent.appendChild(gallery);
-                return gallery;
             },
 
             renderRecipes: (parent) => {
@@ -623,11 +396,111 @@
                         <p><strong>Par :</strong> ${recipe.author}</p>
                         <p>${recipe.description}</p>
                         <p><small>Préparation : ${recipe.prepTime}</small></p>
-                        <hr>
+                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
                     `;
                     list.appendChild(item);
                 });
                 parent.appendChild(list);
+            },
+
+            renderQuiz: (parent) => {
+                let score = 0;
+                let currentQuestionIndex = 0;
+                const container = UI.createElement('div', { class: 'quiz-container' });
+                const questionDiv = UI.createElement('div', { id: 'quiz-questions' });
+                const resultDiv = UI.createElement('div', { id: 'quiz-result' });
+                const button = UI.createElement('button', { class: 'button', id: 'quiz-button' }, 'Lancer le quiz !');
+
+                const renderQuestion = () => {
+                    questionDiv.innerHTML = '';
+                    if (currentQuestionIndex >= APP_DATA.quizQuestions.length) {
+                        resultDiv.textContent = `Quiz terminé ! Votre score est de ${score} sur ${APP_DATA.quizQuestions.length}.`;
+                        button.textContent = 'Recommencer';
+                        currentQuestionIndex = 0;
+                        score = 0;
+                        return;
+                    }
+                    const q = APP_DATA.quizQuestions[currentQuestionIndex];
+                    const questionElement = UI.createElement('div', { class: 'quiz-question' }, q.question);
+                    const optionsContainer = UI.createElement('div', { class: 'quiz-options' });
+                    q.options.forEach(option => {
+                        const label = UI.createElement('label');
+                        const input = UI.createElement('input', { type: 'radio', name: `question-${currentQuestionIndex}`, value: option });
+                        label.appendChild(input);
+                        label.appendChild(document.createTextNode(option));
+                        optionsContainer.appendChild(label);
+                    });
+                    questionDiv.appendChild(questionElement);
+                    questionDiv.appendChild(optionsContainer);
+                    button.textContent = 'Répondre';
+                };
+
+                button.addEventListener('click', () => {
+                    if (button.textContent === 'Lancer le quiz !') {
+                        renderQuestion();
+                    } else if (button.textContent === 'Répondre') {
+                        const selectedOption = document.querySelector(`input[name="question-${currentQuestionIndex}"]:checked`);
+                        if (selectedOption) {
+                            if (selectedOption.value === APP_DATA.quizQuestions[currentQuestionIndex].answer) {
+                                score++;
+                                resultDiv.textContent = 'Bonne réponse ! 🎉';
+                            } else {
+                                resultDiv.textContent = `Mauvaise réponse. La bonne réponse était "${APP_DATA.quizQuestions[currentQuestionIndex].answer}".`;
+                            }
+                            currentQuestionIndex++;
+                            setTimeout(() => {
+                                renderQuestion();
+                                resultDiv.textContent = '';
+                            }, 1500);
+                        } else {
+                            alert('Veuillez sélectionner une option !');
+                        }
+                    } else if (button.textContent === 'Recommencer') {
+                        renderQuestion();
+                        resultDiv.textContent = '';
+                    }
+                });
+
+                container.appendChild(questionDiv);
+                container.appendChild(resultDiv);
+                container.appendChild(button);
+                parent.appendChild(container);
+            },
+
+            renderHistory: (parent) => {
+                const historyDiv = UI.createElement('div');
+                APP_DATA.history.paragraphs.forEach((pText, index) => {
+                    const p = UI.createElement('p', { class: 'fade-in', style: `transition-delay: ${index * 0.2}s;` }, pText);
+                    historyDiv.appendChild(p);
+                });
+                parent.appendChild(historyDiv);
+            },
+
+            renderBlog: (parent) => {
+                const blogContainer = UI.createElement('div');
+                APP_DATA.blogPosts.forEach((post, index) => {
+                    const postDiv = UI.createElement('div', { class: 'card blog-post fade-in', style: `transition-delay: ${index * 0.2}s;` });
+                    postDiv.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p style="font-size: 0.9em; opacity: 0.7;">Publié le ${post.date}</p>
+                        <p>${post.content}</p>
+                    `;
+                    blogContainer.appendChild(postDiv);
+                });
+                parent.appendChild(blogContainer);
+            },
+
+            renderMemories: (parent) => {
+                const memoriesContainer = UI.createElement('div');
+                APP_DATA.memories.forEach((memory, index) => {
+                    const memoryDiv = UI.createElement('div', { class: 'memory-entry' });
+                    const heading = UI.createElement('h3', {}, `🗓 ${memory.date} - ${memory.event}`);
+                    const description = UI.createElement('p', {}, memory.description);
+                    memoryDiv.appendChild(heading);
+                    memoryDiv.appendChild(description);
+                    memoriesContainer.appendChild(memoryDiv);
+                });
+                parent.appendChild(memoriesContainer);
             },
 
             renderContactForm: (parent) => {
@@ -643,249 +516,62 @@
                 const button = UI.createElement('button', { type: 'submit', class: 'button' }, 'Envoyer');
                 form.appendChild(button);
                 parent.appendChild(form);
-                return form;
             },
-
-            renderQuiz: (parent) => {
-                const container = UI.createElement('div', { class: 'quiz-container' });
-                const questionDiv = UI.createElement('div', { id: 'quiz-questions' });
-                const resultDiv = UI.createElement('div', { id: 'quiz-result', class: 'result' });
-                const button = UI.createElement('button', { class: 'button', id: 'quiz-button' }, 'Lancer le quiz !');
-                container.appendChild(questionDiv);
-                container.appendChild(resultDiv);
-                container.appendChild(button);
-                parent.appendChild(container);
-                return { container, questionDiv, resultDiv, button };
-            },
-
-            renderHistory: (parent) => {
-                const historyDiv = UI.createElement('div');
-                const title = UI.createElement('h3', {}, APP_DATA.history.title);
-                historyDiv.appendChild(title);
-                APP_DATA.history.paragraphs.forEach(pText => {
-                    const p = UI.createElement('p', {}, pText);
-                    historyDiv.appendChild(p);
-                });
-                parent.appendChild(historyDiv);
-            },
-
-            renderBlog: (parent) => {
-                const blogContainer = UI.createElement('div');
-                APP_DATA.blogPosts.forEach(post => {
-                    const postDiv = UI.createElement('div', { class: 'blog-post' });
-                    const title = UI.createElement('h3', {}, post.title);
-                    const meta = UI.createElement('p', { class: 'meta' }, `Publié le ${post.date}`);
-                    const content = UI.createElement('p', {}, post.content);
-                    postDiv.appendChild(title);
-                    postDiv.appendChild(meta);
-                    postDiv.appendChild(content);
-                    blogContainer.appendChild(postDiv);
-                });
-                parent.appendChild(blogContainer);
-            },
-
-            renderMemories: (parent) => {
-                const memoriesContainer = UI.createElement('div');
-                APP_DATA.memories.forEach(memory => {
-                    const memoryDiv = UI.createElement('div', { class: 'memory-item' });
-                    const eventTitle = UI.createElement('h3', {}, memory.event);
-                    const date = UI.createElement('p', { class: 'meta' }, `Date : ${memory.date}`);
-                    const description = UI.createElement('p', {}, memory.description);
-                    memoryDiv.appendChild(eventTitle);
-                    memoryDiv.appendChild(date);
-                    memoryDiv.appendChild(description);
-                    memoriesContainer.appendChild(memoryDiv);
-                });
-                parent.appendChild(memoriesContainer);
-            },
-
-            showNotification: (message, type = 'info') => {
-                const container = document.getElementById('notification-container');
-                const notification = UI.createElement('div', { class: `notification ${type}` }, message);
-                container.appendChild(notification);
-                
-                setTimeout(() => notification.classList.add('show'), 100);
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                    setTimeout(() => container.removeChild(notification), 500);
-                }, 3000);
-            },
-
-            animateCards: () => {
-                const cards = document.querySelectorAll('.card');
-                cards.forEach((card, index) => {
-                    card.style.animationDelay = `${0.2 + index * 0.1}s`;
-                    card.style.animationName = 'fadeInCard';
-                });
-            }
         };
 
         /**
          * Couche 3 : LA LOGIQUE DE L'APPLICATION
-         * Gère les événements, l'état et l'initialisation de la page.
+         * Initialisation et événements.
          */
-        const App = {
-            state: {
-                theme: localStorage.getItem('theme') || 'light',
-                userName: localStorage.getItem('userName') || null,
-                quiz: { active: false, score: 0 }
-            },
-            elements: {
-                themeToggle: document.getElementById('theme-toggle'),
-                welcomeMessage: document.getElementById('welcome-message'),
-                appContainer: document.getElementById('app-container'),
-            },
+        document.addEventListener('DOMContentLoaded', () => {
 
-            init: () => {
-                App.renderAllSections();
-                App.setupEventListeners();
-                App.applyInitialTheme();
-                App.animateWelcomeMessage();
-            },
+            // Remplissage dynamique des sections avec les données
+            UI.renderGallery(document.getElementById('image-gallery-container'));
+            UI.renderRecipes(document.getElementById('recipes-container'));
+            UI.renderQuiz(document.getElementById('quiz-container'));
+            UI.renderHistory(document.getElementById('history-container'));
+            UI.renderBlog(document.getElementById('blog-container'));
+            UI.renderMemories(document.getElementById('memories-container'));
+            UI.renderContactForm(document.getElementById('contact-container'));
 
-            renderAllSections: () => {
-                const appContainer = App.elements.appContainer;
-                appContainer.appendChild(UI.createCard('gallery', 'Nos moments préférés', 'Cliquez sur les photos pour les agrandir et les explorer.', UI.renderGallery));
-                appContainer.appendChild(UI.createCard('recipes', 'Les recettes de maman', 'Découvrez notre collection de recettes qui réchauffent le cœur.', UI.renderRecipes));
-                appContainer.appendChild(UI.createCard('contact', 'Laissez-nous un message', 'Nous adorons recevoir de vos nouvelles !', UI.renderContactForm));
-                appContainer.appendChild(UI.createCard('quiz', 'Petit quiz familial', 'Testez vos connaissances sur la famille !', UI.renderQuiz));
-                appContainer.appendChild(UI.createCard('history', 'L\'histoire de notre famille', 'De nos origines à nos traditions les plus chères, explorez notre histoire.', UI.renderHistory));
-                appContainer.appendChild(UI.createCard('blog', 'Blog familial', 'Les dernières nouvelles et anecdotes de la famille.', UI.renderBlog));
-                appContainer.appendChild(UI.createCard('memories', 'Album de souvenirs', 'Les moments qui ont marqué notre histoire.', UI.renderMemories));
-            },
-
-            setupEventListeners: () => {
-                App.elements.themeToggle.addEventListener('click', App.toggleTheme);
-                const galleryElement = document.getElementById('gallery-card').querySelector('.image-gallery');
-                galleryElement.addEventListener('click', App.handleImageClick);
-                const contactForm = document.getElementById('contact-card').querySelector('.contact-form');
-                contactForm.addEventListener('submit', App.handleContactSubmit);
-                const quizContainer = document.getElementById('quiz-card').querySelector('.quiz-container');
-                const quizButton = quizContainer.querySelector('#quiz-button');
-                quizButton.addEventListener('click', () => App.toggleQuiz(quizContainer));
-            },
-
-            applyInitialTheme: () => {
-                if (App.state.theme === 'dark') {
-                    document.body.classList.add('dark-mode');
-                    App.elements.themeToggle.textContent = '☀️';
-                }
-            },
-            toggleTheme: () => {
-                document.body.classList.toggle('dark-mode');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                App.state.theme = isDarkMode ? 'dark' : 'light';
-                localStorage.setItem('theme', App.state.theme);
-                App.elements.themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-            },
-            animateWelcomeMessage: async () => {
-                const message = App.state.userName ? `Bienvenue, ${App.state.userName} !` : 'Bienvenue !';
-                App.elements.welcomeMessage.style.opacity = 1;
-                for (const char of message) {
-                    App.elements.welcomeMessage.textContent += char;
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                }
-                setTimeout(() => App.askForName(), 1500);
-            },
-            askForName: () => {
-                if (!App.state.userName) {
-                    const newName = prompt('Nous aimons connaître nos visiteurs ! Quel est votre prénom ?');
-                    if (newName && newName.trim() !== '') {
-                        App.state.userName = newName.trim();
-                        localStorage.setItem('userName', App.state.userName);
-                        App.elements.welcomeMessage.textContent = '';
-                        App.animateWelcomeMessage();
-                        UI.showNotification(`Heureux de vous rencontrer, ${App.state.userName} !`, 'success');
-                    }
-                }
-                UI.animateCards();
-            },
-            handleImageClick: (event) => {
-                if (event.target.tagName === 'IMG') {
-                    const modal = UI.createElement('div', { class: 'modal' });
-                    const modalImg = UI.createElement('img', { class: 'modal-content', src: event.target.src, alt: event.target.alt });
-                    modal.appendChild(modalImg);
-                    document.body.appendChild(modal);
-
-                    setTimeout(() => modal.classList.add('open'), 50);
-                    modal.addEventListener('click', () => {
-                        modal.classList.remove('open');
-                        setTimeout(() => document.body.removeChild(modal), 400);
-                    });
-                }
-            },
-            handleContactSubmit: (event) => {
-                event.preventDefault();
-                UI.showNotification('Merci pour votre message !', 'success');
-                event.target.reset();
-            },
-            toggleQuiz: (quizContainer) => {
-                const quizQuestionsDiv = quizContainer.querySelector('#quiz-questions');
-                const quizResultDiv = quizContainer.querySelector('#quiz-result');
-                const quizButton = quizContainer.querySelector('#quiz-button');
-                
-                if (App.state.quiz.active) {
-                    quizQuestionsDiv.innerHTML = '';
-                    quizResultDiv.textContent = '';
-                    App.state.quiz.active = false;
-                    quizButton.textContent = "Lancer le quiz !";
-                } else {
-                    App.state.quiz.active = true;
-                    App.state.quiz.score = 0;
-                    quizResultDiv.textContent = '';
-                    UI.showNotification('Le quiz commence ! Bonne chance !');
-                    APP_DATA.quizQuestions.forEach((q, index) => {
-                        const questionItem = UI.createElement('div', { class: 'question-item' });
-                        questionItem.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
-                        q.options.forEach(option => {
-                            const optionElement = UI.createElement('div', { class: 'option' }, option);
-                            optionElement.addEventListener('click', () => App.checkQuizAnswer(option, q.answer, optionElement, quizResultDiv));
-                            questionItem.appendChild(optionElement);
-                        });
-                        quizQuestionsDiv.appendChild(questionItem);
-                    });
-                    quizButton.textContent = "Recommencer le quiz";
-                }
-            },
-            checkQuizAnswer: (selectedOption, correctAnswer, element, quizResultDiv) => {
-                if (!App.state.quiz.active) return;
-                const questionItem = element.parentElement;
-                questionItem.querySelectorAll('.option').forEach(opt => {
-                    opt.style.pointerEvents = 'none';
-                    if (opt.textContent === correctAnswer) {
-                        opt.classList.add('correct');
+            // Intersection Observer pour les animations au scroll
+            const observerOptions = {
+                root: null,
+                threshold: 0.2,
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
                     }
                 });
-                if (selectedOption === correctAnswer) {
-                    App.state.quiz.score++;
-                    element.classList.add('correct');
-                    UI.showNotification('Bonne réponse ! 🎉', 'success');
-                } else {
-                    element.classList.add('wrong');
-                    UI.showNotification('Mauvaise réponse...', 'error');
-                }
-                const allAnswered = Array.from(document.querySelectorAll('.quiz-container .question-item')).every(item => item.querySelector('.correct, .wrong'));
-                if (allAnswered) {
-                    App.displayFinalQuizResult(quizResultDiv);
-                }
-            },
-            displayFinalQuizResult: (quizResultDiv) => {
-                const scorePercentage = (App.state.quiz.score / APP_DATA.quizQuestions.length) * 100;
-                let message = `Votre score : ${App.state.quiz.score} / ${APP_DATA.quizQuestions.length}. `;
-                if (scorePercentage >= 80) {
-                    message += "Fantastique, vous êtes un vrai membre de la famille ! 💖";
-                    quizResultDiv.classList.add('correct');
-                } else {
-                    message += "Oups, il y a encore beaucoup de choses à apprendre ! 😉";
-                    quizResultDiv.classList.add('wrong');
-                }
-                quizResultDiv.textContent = message;
-                App.state.quiz.active = false;
+            }, observerOptions);
+            document.querySelectorAll('.memory-entry, .blog-post, .fade-in').forEach(el => observer.observe(el));
+            
+            // Gestion du mode sombre
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggleBtn.innerHTML = '☀️';
             }
-        };
 
-        // Lancement de l'application
-        document.addEventListener('DOMContentLoaded', App.init);
+            themeToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                themeToggleBtn.innerHTML = isDarkMode ? '☀️' : '🌙';
+            });
+            
+            // Gestion du formulaire de contact
+            const contactForm = document.querySelector('#contact-container form');
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Merci pour votre message ! Il est bien arrivé au cœur de notre cocon familial.');
+                contactForm.reset();
+            });
+        });
     </script>
 </body>
 </html>
