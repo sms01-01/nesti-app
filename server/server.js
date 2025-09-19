@@ -2,6 +2,13 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
+import cors from 'cors';
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://nesti-app-1.onrender.com' 
+    : 'http://localhost:3000'
+}));
 
 dotenv.config();
 
