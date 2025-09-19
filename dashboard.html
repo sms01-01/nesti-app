@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon Espace Famille | Nesti</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --yellow: #FFD56B;
@@ -16,561 +18,1086 @@
       --red: #FF7B54;
       --light: #FFF8EE;
       --dark: #2D4059;
+      --dark-blue: #1a2a40;
       --shadow: 0 4px 30px rgba(0,0,0,0.07);
+      --shadow-hover: 0 8px 40px rgba(0,0,0,0.12);
       --transition: all 0.25s cubic-bezier(.4,0,.2,1);
       --radius: 24px;
+      --radius-sm: 16px;
     }
+    
     html {scroll-behavior: smooth;}
-    body {
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    
+    body {
       font-family: 'Nunito', Arial, sans-serif;
       background: var(--light);
       color: var(--dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      line-height: 1.6;
     }
+    
+    /* HEADER IMPROVED */
     header {
-      background: linear-gradient(90deg, var(--yellow) 20%, var(--green) 100%);
-      padding: 2rem 0 1rem 0;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--purple) 100%);
+      padding: 1.5rem 0 1rem 0;
       text-align: center;
-      border-bottom-left-radius: var(--radius);
-      border-bottom-right-radius: var(--radius);
       box-shadow: var(--shadow);
       position: relative;
+      overflow: hidden;
     }
+    
+    header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      transform: rotate(30deg);
+    }
+    
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    
     .logo {
-      font-size: 2.3rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--dark);
+      letter-spacing: 1px;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: .6rem;
+      gap: .8rem;
+      margin-bottom: 1rem;
     }
+    
+    .logo img {
+      width: 2.5rem;
+      height: 2.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    
     nav {
-      margin-top: 1rem;
       display: flex;
       justify-content: center;
-      gap: 2.2rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
+      margin-bottom: 1rem;
     }
+    
     .nav-link {
-      color: var(--dark);
+      color: white;
       text-decoration: none;
       font-weight: 700;
-      font-size: 1.09rem;
-      padding: .6rem 1.3rem;
+      font-size: 1.1rem;
+      padding: .7rem 1.5rem;
       border-radius: 32px;
-      background: rgba(255,255,255,0.2);
-      transition: background .2s, color .2s;
+      background: rgba(255,255,255,0.15);
+      transition: var(--transition);
       display: flex;
       align-items: center;
       gap: .6rem;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
     }
+    
     .nav-link:hover, .nav-link.active {
-      background: var(--blue);
-      color: #fff;
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+    
+    .welcome-container {
+      background: rgba(255,255,255,0.1);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.5rem;
+      margin: 1rem auto;
+      max-width: 600px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
     .welcome {
-      margin: 1.5rem 0 0.5rem 0;
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 0.3rem;
     }
+    
     .subtitle {
       font-size: 1.1rem;
-      color: #444;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+    }
+    
+    /* MAIN CONTENT */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* MAIN CONTENT AREA */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    /* SIDEBAR */
+    .sidebar {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 1.5rem;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .sidebar-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* FAMILLE SECTION IMPROVED */
+    .family-section {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1.5rem;
     }
-    .dashboard-container {
-      max-width: 950px;
-      margin: 2.5rem auto 0 auto;
-      background: #fff;
-      border-radius: 32px;
-      padding: 2.5rem 2rem 1rem 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      flex: 1 0 auto;
+    
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    /* FAMILLE */
-    .family-section {
-      margin-bottom: 2.5rem;
+    
+    .btn {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.7rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .family-title {
-      font-size: 1.35rem;
-      font-weight: bold;
+    
+    .btn:hover {
+      background: var(--purple);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    
+    .btn-secondary {
+      background: var(--green);
+    }
+    
+    .btn-secondary:hover {
+      background: #5bbd52;
+    }
+    
+    .family-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
       margin-bottom: 1rem;
     }
-    .family-list {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      margin-bottom: .8rem;
-    }
+    
     .family-member {
-      background: #F0F6FF;
-      border-radius: 18px;
-      padding: 1rem 1.2rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: linear-gradient(135deg, #f7f9ff 0%, #f0f4ff 100%);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 110px;
-      position: relative;
-      transition: box-shadow .2s;
+      transition: var(--transition);
       cursor: pointer;
+      position: relative;
+      border: 1px solid rgba(92, 122, 234, 0.1);
     }
+    
     .family-member:hover {
-      box-shadow: 0 4px 30px rgba(92,122,234,0.13);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(92, 122, 234, 0.3);
     }
+    
     .family-avatar {
-      width: 54px;
-      height: 54px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: var(--yellow);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: bold;
-      color: #fff;
-      margin-bottom: .5rem;
-      border: 3px solid var(--green);
+      color: white;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 4px 10px rgba(92, 122, 234, 0.3);
     }
+    
     .member-name {
       font-weight: 700;
-      font-size: 1.12rem;
-      margin-bottom: .15rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+      text-align: center;
     }
+    
     .member-role {
-      font-size: .98rem;
-      color: #888;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
     }
+    
     .member-location {
-      margin-top: .3rem;
-      font-size: .92rem;
+      font-size: 0.85rem;
       color: var(--blue);
       display: flex;
       align-items: center;
-      gap: .3rem;
+      gap: 0.3rem;
+      font-weight: 600;
     }
-    .loc-marker {
-      font-size: 1rem;
-      color: var(--green);
-    }
+    
     .edit-member-btn {
       position: absolute;
-      top: 6px; right: 10px;
-      background: none;
+      top: 0.7rem;
+      right: 0.7rem;
+      background: rgba(255,255,255,0.9);
       border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
       cursor: pointer;
       color: var(--blue);
-      font-size: 1.1rem;
-      opacity: .8;
-      transition: opacity .15s;
-    }
-    .edit-member-btn:hover {opacity: 1;}
-    /* ACTIONS */
-    .actions-section {
-      margin-top: 2.5rem;
-    }
-    .actions-title {
-      font-size: 1.23rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-    .dashboard-actions {
+      font-size: 0.9rem;
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem;
-      justify-content: flex-start;
-      margin-bottom: 1.2rem;
-    }
-    .dashboard-card {
-      background: #EAF4FA;
-      border-radius: 18px;
-      padding: 1.2rem 1.3rem;
-      width: 165px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.045);
-      text-decoration: none;
-      color: var(--dark);
-      font-size: 1.08rem;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      transition: transform .15s, background .15s, box-shadow .15s;
-      cursor: pointer;
-      position: relative;
+      justify-content: center;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .dashboard-card img {
-      width: 40px;
-      height: 40px;
-      margin-bottom: .5rem;
+    
+    .edit-member-btn:hover {
+      background: var(--blue);
+      color: white;
+      transform: scale(1.1);
     }
-    .dashboard-card:hover, .dashboard-card:focus {
-      transform: scale(1.06) translateY(-2px);
-      background: #D8EBF6;
-      box-shadow: 0 4px 16px rgba(92,122,234,0.12);
-      color: var(--blue);
-    }
-    /* AGENDA */
-    .agenda-section {
-      margin: 2.3rem 0;
-      background: #FEF3C7;
-      border-radius: 22px;
-      padding: 1.5rem 1.2rem 1.5rem 1.2rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    }
-    .agenda-title {
-      font-size: 1.15rem;
-      font-weight: bold;
-      margin-bottom: .8rem;
-      color: #966100;
-    }
-    .agenda-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
+    
+    /* STATS CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
+      margin-bottom: 1.5rem;
     }
-    .agenda-item {
-      background: #fffbe6;
-      border-radius: 12px;
-      padding: .9rem 1.2rem;
-      box-shadow: 0 1px 4px rgba(255,213,107,0.07);
+    
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
       display: flex;
       align-items: center;
-      gap: 1.1rem;
-      position: relative;
+      transition: var(--transition);
     }
-    .agenda-date {
-      font-size: 1.05rem;
-      font-weight: bold;
-      color: var(--blue);
-      min-width: 70px;
-      text-align: center;
+    
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
     }
-    .agenda-info {
+    
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      color: white;
+    }
+    
+    .stat-content {
       flex: 1;
     }
-    .agenda-persons {
-      color: #888;
-      font-size: .95rem;
-      margin-top: .18rem;
+    
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: 0.3rem;
     }
-    .agenda-edit-btn {
-      border: none;
-      background: none;
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    /* ACTIVITIES SECTION */
+    .activities-section {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    
+    .activities-list {
+      list-style: none;
+    }
+    
+    .activity-item {
+      display: flex;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      align-items: center;
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-date {
+      min-width: 70px;
+      text-align: center;
+      margin-right: 1rem;
+    }
+    
+    .activity-day {
       font-size: 1.1rem;
-      color: var(--green);
-      cursor: pointer;
-      opacity: .8;
-      transition: opacity .13s;
+      font-weight: 700;
+      color: var(--blue);
     }
-    .agenda-edit-btn:hover {opacity: 1;}
-    /* MAP */
+    
+    .activity-time {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    
+    .activity-details {
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .activity-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .activity-actions {
+      margin-left: auto;
+    }
+    
+    /* MAP SECTION */
     .map-section {
-      margin: 2.5rem 0;
-      background: #F0F6FF;
-      border-radius: 22px;
-      padding: 1.7rem 1.2rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
     }
-    .map-title {
-      font-size: 1.18rem;
-      font-weight: bold;
-      margin-bottom: .8rem;
-      color: #305d7a;
-    }
+    
     #map {
       width: 100%;
-      height: 250px;
-      border-radius: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      margin-bottom: 1.2rem;
+      height: 300px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
     }
-    .map-info {
-      color: #488000;
-      font-size: 1rem;
-      margin-bottom: .5rem;
-    }
-    .place-list {
-      margin: 0.6rem 0 0 0;
-      padding: 0;
-      list-style: none;
+    
+    .map-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: .7rem;
+      gap: 1rem;
+      margin-top: 1rem;
     }
-    .place-list li {
-      background: var(--yellow);
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    
+    /* RECENT ACTIVITY */
+    .recent-activity {
+      list-style: none;
+    }
+    
+    .activity-log {
+      display: flex;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .activity-log:last-child {
+      border-bottom: none;
+    }
+    
+    .log-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f0f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.8rem;
+      color: var(--blue);
+    }
+    
+    .log-content {
+      flex: 1;
+    }
+    
+    .log-text {
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .log-time {
+      font-size: 0.8rem;
+      color: #888;
+    }
+    
+    /* QUICK ACTIONS */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+    }
+    
+    .action-btn {
+      background: #f7f9ff;
+      border: 1px solid rgba(92, 122, 234, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+      text-decoration: none;
       color: var(--dark);
-      font-weight: 600;
-      padding: .5rem 1rem;
-      border-radius: 12px;
-      font-size: .95rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
+    
+    .action-btn:hover {
+      background: var(--blue);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .action-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .action-text {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
     /* MODAL */
     .modal-bg {
       display: none;
       position: fixed;
-      z-index: 2000;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.25);
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
-    .modal-bg.active {display: flex;}
+    
+    .modal-bg.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
     .modal {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 2.1rem 1.5rem 1.5rem 1.5rem;
-      min-width: 300px;
-      max-width: 96vw;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
       position: relative;
-      animation: modalIn .28s;
+      animation: slideIn 0.3s ease;
     }
-    @keyframes modalIn {from{transform:scale(.91); opacity:0;} to{transform:scale(1);opacity:1;}}
+    
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-header {
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    
     .modal-close {
-      position: absolute;
-      top: 16px; right: 18px;
-      font-size: 1.25rem;
-      color: var(--red);
       background: none;
       border: none;
+      font-size: 1.5rem;
       cursor: pointer;
-      font-weight: bold;
-      opacity: .8;
-      transition: opacity .1s;
+      color: #999;
+      transition: var(--transition);
     }
-    .modal-close:hover {opacity: 1;}
-    .modal label {font-weight: bold; margin-top: .8rem; display: block;}
-    .modal input, .modal select {
+    
+    .modal-close:hover {
+      color: var(--red);
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .form-control {
       width: 100%;
-      margin-top: .2rem;
-      margin-bottom: 1rem;
-      padding: .6rem;
-      border-radius: 8px;
-      border: 1px solid #eee;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius-sm);
       font-size: 1rem;
+      transition: var(--transition);
     }
-    .modal-btn {
-      padding: .7rem 1.2rem;
-      border-radius: 24px;
-      background: var(--green);
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      font-size: 1.05rem;
-      cursor: pointer;
-      margin-top: .7rem;
-      transition: background .15s;
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(92, 122, 234, 0.1);
     }
-    .modal-btn:hover {background: var(--blue);}
-    /* INFOS */
-    .info-section {
-      background: #FEF3C7;
-      border-radius: 18px;
-      padding: 1.2rem 1rem;
-      margin: 2.5rem 0 0 0;
-      font-size: 1.02rem;
-      color: #7a5e00;
+    
+    .form-actions {
       display: flex;
+      justify-content: flex-end;
       gap: 1rem;
-      align-items: flex-start;
+      margin-top: 1.5rem;
     }
-    /* FOOTER */
+    
+    /* FOOTER IMPROVED */
     footer {
-      background: linear-gradient(90deg, var(--dark) 0%, #1a2a40 100%);
-      color: #fff;
-      padding: 2.5rem 0 1rem 0;
-      border-top-left-radius: var(--radius);
-      border-top-right-radius: var(--radius);
-      margin-top: 2rem;
-      box-shadow: var(--shadow);
+      background: var(--dark-blue);
+      color: white;
+      padding: 3rem 0 1.5rem;
+      margin-top: 3rem;
     }
-    .footer-grid {
-      max-width: 950px;
+    
+    .footer-container {
+      max-width: 1200px;
       margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .footer-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
       margin-bottom: 2rem;
     }
+    
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+    }
+    
     .footer-logo {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .footer-description {
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .footer-heading {
+      font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: 1px;
+      margin-bottom: 1.2rem;
+      color: white;
     }
-    .footer-links, .footer-contact, .footer-social {
-      margin-top: 1.2rem;
-    }
-    .footer-links ul {
+    
+    .footer-links {
       list-style: none;
-      padding: 0;
-      margin: 0;
     }
+    
+    .footer-links li {
+      margin-bottom: 0.7rem;
+    }
+    
     .footer-links a {
-      color: #ffd56b;
+      color: rgba(255,255,255,0.7);
       text-decoration: none;
-      font-size: 1.03rem;
-      transition: color .15s;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .footer-links a:hover {color: var(--green);}
-    .footer-social a {
-      display: inline-block;
-      margin-right: .7rem;
-      color: #ffd56b;
-      font-size: 1.5rem;
-      transition: color .15s;
+    
+    .footer-links a:hover {
+      color: var(--yellow);
     }
-    .footer-social a:hover {color: var(--orange);}
-    .copyright {
+    
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    
+    .social-link:hover {
+      background: var(--blue);
+      transform: translateY(-3px);
+    }
+    
+    .footer-bottom {
       text-align: center;
-      font-size: .97rem;
-      color: #ffe7ae;
-      margin-top: 1.5rem;
-      opacity: .8;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
     }
-    /* Responsive */
-    @media (max-width: 900px) {.dashboard-container, .footer-grid {padding: 1.1rem;}}
-    @media (max-width: 700px) {
-      .dashboard-container { padding: .7rem .1rem;}
-      .dashboard-actions { gap: .7rem;}
-      .dashboard-card { width: 100%; }
-      .family-list { gap: .5rem; }
-      #map { height: 180px;}
-      .agenda-item {flex-direction: column; gap: .3rem;}
-      .footer-grid {gap: 1.2rem;}
+    
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 2rem;
+      }
+      
+      nav {
+        gap: 0.5rem;
+      }
+      
+      .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+      }
+      
+      .family-list {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      
+      .activity-actions {
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+      }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* ANIMATIONS */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--blue);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--purple);
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti" style="width:2.2rem;vertical-align:middle;">
-      Nesti
+    <div class="header-container">
+      <div class="logo">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti">
+        Nesti
+      </div>
+      <nav>
+        <a href="#famille" class="nav-link active"><i class="fas fa-users"></i> Famille</a>
+        <a href="#agenda" class="nav-link"><i class="fas fa-calendar-alt"></i> Agenda</a>
+        <a href="#carte" class="nav-link"><i class="fas fa-map-marked-alt"></i> Carte</a>
+        <a href="#profil" class="nav-link"><i class="fas fa-user-circle"></i> Profil</a>
+      </nav>
+      <div class="welcome-container">
+        <div class="welcome" id="welcomeMsg">Bonjour 👋</div>
+        <div class="subtitle">Bienvenue dans votre espace famille, tout doux et simple !</div>
+      </div>
     </div>
-    <nav>
-      <a href="#famille" class="nav-link active" id="navFamille"><span>👨‍👩‍👧‍👦</span> Famille</a>
-      <a href="#agenda" class="nav-link" id="navAgenda"><span>📅</span> Agenda</a>
-      <a href="#map" class="nav-link" id="navMap"><span>🗺️</span> Carte</a>
-      <a href="#profil" class="nav-link" id="navProfil"><span>👤</span> Profil</a>
-    </nav>
-    <div class="welcome" id="welcomeMsg">Bonjour 👋</div>
-    <div class="subtitle">Bienvenue dans votre espace famille, tout doux et simple !</div>
   </header>
+
   <main class="dashboard-container">
-    <!-- Bloc famille -->
-    <section class="family-section" id="famille">
-      <div class="family-title">👨‍👩‍👧‍👦 Ma famille <button class="edit-member-btn" title="Ajouter un membre" onclick="openEditModal('add')">＋</button></div>
-      <div class="family-list" id="familyList"></div>
-      <small style="color:#999;">Cliquez sur un membre pour voir ou modifier ses infos.</small>
-    </section>
-    <!-- Bloc actions principales -->
-    <section class="actions-section">
-      <div class="actions-title">🌈 Que souhaitez-vous faire aujourd'hui ?</div>
-      <div class="dashboard-actions">
-        <div class="dashboard-card" tabindex="0" onclick="scrollToSection('agenda')" title="Voir l'agenda">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4c5.svg" alt="Agenda" />
-          Agenda partagé
+    <div class="dashboard-grid">
+      <div class="main-content">
+        <!-- Famille Section -->
+        <section class="family-section" id="famille">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-users"></i> Ma famille</h2>
+            <button class="btn" onclick="openEditModal('add')"><i class="fas fa-plus"></i> Ajouter un membre</button>
+          </div>
+          <div class="family-list" id="familyList"></div>
+        </section>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--blue);">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">12</div>
+              <div class="stat-label">Activités ce mois</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--green);">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">4</div>
+              <div class="stat-label">Membres actifs</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--purple);">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">78%</div>
+              <div class="stat-label">Objectif mensuel</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: var(--orange);">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number">24</div>
+              <div class="stat-label">Messages non lus</div>
+            </div>
+          </div>
         </div>
-        <div class="dashboard-card" tabindex="0" onclick="scrollToSection('map')" title="Voir la carte">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f30d.svg" alt="Carte" />
-          Découvrir autour
+
+        <!-- Activities Section -->
+        <section class="activities-section" id="agenda">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Prochaines activités</h2>
+            <button class="btn btn-secondary" onclick="openEditModal('agenda')"><i class="fas fa-plus"></i> Nouvelle activité</button>
+          </div>
+          <ul class="activities-list" id="agendaList"></ul>
+        </section>
+
+        <!-- Map Section -->
+        <section class="map-section" id="carte">
+          <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-map-marked-alt"></i> Carte familiale</h2>
+          </div>
+          <div id="map"></div>
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--blue);"></div>
+              <span>Membres famille</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--green);"></div>
+              <span>Lieux favoris</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--red);"></div>
+              <span>Écoles</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title"><i class="fas fa-bolt"></i> Actions rapides</h3>
+          <div class="quick-actions">
+            <a href="#" class="action-btn" onclick="openEditModal('agenda')">
+              <div class="action-icon"><i class="fas fa-calendar-plus"></i></div>
+              <div class="action-text">Nouvelle activité</div>
+            </a>
+            <a href="#" class="action-btn" onclick="openEditModal('add')">
+              <div class="action-icon"><i class="fas fa-user-plus"></i></div>
+              <div class="action-text">Ajouter membre</div>
+            </a>
+            <a href="#" class="action-btn">
+              <div class="action-icon"><i class="fas fa-comment-medical"></i></div>
+              <div class="action-text">Message groupe</div>
+            </a>
+            <a href="#" class="action-btn">
+              <div class="action-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="action-text">Lieu favori</div>
+            </a>
+          </div>
         </div>
-        <div class="dashboard-card" tabindex="0" onclick="openEditModal('profile')" title="Mon profil">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f464.svg" alt="Profil" />
-          Mon profil
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title"><i class="fas fa-history"></i> Activité récente</h3>
+          <ul class="recent-activity">
+            <li class="activity-log">
+              <div class="log-icon"><i class="fas fa-user-plus"></i></div>
+              <div class="log-content">
+                <div class="log-text">Emma a été ajoutée à l'activité "Parc"</div>
+                <div class="log-time">Il y a 2 heures</div>
+              </div>
+            </li>
+            <li class="activity-log">
+              <div class="log-icon"><i class="fas fa-check-circle"></i></div>
+              <div class="log-content">
+                <div class="log-text">Lucas a confirmé sa présence au musée</div>
+                <div class="log-time">Hier, 15:32</div>
+              </div>
+            </li>
+            <li class="activity-log">
+              <div class="log-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="log-content">
+                <div class="log-text">Nouveau lieu enregistré: Parc Montsouris</div>
+                <div class="log-time">12 oct, 09:15</div>
+              </div>
+            </li>
+          </ul>
         </div>
-        <div class="dashboard-card" tabindex="0" onclick="alert('Fonctionnalité à venir !')" title="Messagerie famille">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4e8.svg" alt="Messages" />
-          Messages famille
-        </div>
-        <div class="dashboard-card" tabindex="0" onclick="alert('Fonctionnalité à venir !')" title="Conseils et ressources">
-          <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4d6.svg" alt="Ressources" />
-          Conseils & Ressources
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title"><i class="fas fa-bell"></i> Notifications</h3>
+          <div class="pulse" style="text-align: center; padding: 1rem; background: #fff4e6; border-radius: var(--radius-sm);">
+            <div><i class="fas fa-exclamation-circle" style="color: var(--orange); font-size: 1.5rem;"></i></div>
+            <div style="font-weight: 600; margin: 0.5rem 0;">Anniversaire dans 3 jours</div>
+            <div style="font-size: 0.9rem;">C'est l'anniversaire de Noah samedi!</div>
+          </div>
         </div>
       </div>
-    </section>
-    <!-- Agenda partagé -->
-    <section class="agenda-section" id="agenda">
-      <div class="agenda-title">📅 Prochaines activités familiales</div>
-      <ul class="agenda-list" id="agendaList"></ul>
-      <button class="modal-btn" onclick="openEditModal('agenda')">+ Ajouter une activité</button>
-    </section>
-    <!-- Section MAP interactive -->
-    <section class="map-section" id="mapSection">
-      <div class="map-title">🗺️ Découvrir autour de moi (et localiser la famille)</div>
-      <div id="map"></div>
-      <div class="map-info" id="mapInfo">Localisez la maison, les enfants, et des lieux familiaux autour de vous !</div>
-      <ul class="place-list" id="placeList"></ul>
-    </section>
-    <!-- Bloc info -->
-    <div class="info-section">
-      <span>ℹ️</span>
-      <span>
-        Pour modifier vos informations, cliquez sur “Mon profil” ou sur un membre.<br>
-        Besoin d’aide ? Contactez-nous via la messagerie famille.
-      </span>
     </div>
   </main>
 
-  <!-- MODAL -->
+  <!-- Modal -->
   <div class="modal-bg" id="modalBg">
-    <div class="modal" id="modal">
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-      <div id="modalContent"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Modal Title</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalContent"></div>
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- Footer -->
   <footer>
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo">Nesti</div>
-        <div style="color:#ffd56b; font-size:1.08rem; margin-top:.8rem;">L'écosystème familial de l'inclusion</div>
-        <div class="footer-social">
-          <a href="#" title="Instagram"><span aria-label="Instagram">📸</span></a>
-          <a href="#" title="Facebook"><span aria-label="Facebook">📘</span></a>
-          <a href="#" title="X / Twitter"><span aria-label="Twitter">🐦</span></a>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti" style="width: 30px;">
+            Nesti
+          </div>
+          <p class="footer-description">
+            L'écosystème familial qui transforme le temps ensemble en expériences inclusives mémorables.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
-      </div>
-      <div class="footer-links">
-        <div style="font-weight:600;">Navigation</div>
-        <ul>
-          <li><a href="#famille">Ma famille</a></li>
-          <li><a href="#agenda">Agenda</a></li>
-          <li><a href="#mapSection">Carte</a></li>
-          <li><a href="#profil">Profil</a></li>
-        </ul>
-      </div>
-      <div class="footer-contact">
-        <div style="font-weight:600;">Contact</div>
-        <div>Email: <a href="mailto:contact@nesti.fr">contact@nesti.fr</a></div>
-        <div>Téléphone: <a href="tel:+33123456789">01 23 45 67 89</a></div>
-        <div>Adresse: 42 rue de la Famille, 75000 Paris</div>
-      </div>
-      <div>
-        <div style="font-weight:600;">Ressources</div>
-        <div class="footer-links">
-          <ul>
-            <li><a href="#">CGU</a></li>
-            <li><a href="#">Mentions légales</a></li>
-            <li><a href="#">Accessibilité</a></li>
-            <li><a href="#">Aide</a></li>
+
+        <div>
+          <h4 class="footer-heading">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#famille"><i class="fas fa-users"></i> Ma famille</a></li>
+            <li><a href="#agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+            <li><a href="#carte"><i class="fas fa-map-marked-alt"></i> Carte</a></li>
+            <li><a href="#profil"><i class="fas fa-user-circle"></i> Profil</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Support</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-question-circle"></i> Centre d'aide</a></li>
+            <li><a href="#"><i class="fas fa-book"></i> Guides</a></li>
+            <li><a href="#"><i class="fas fa-video"></i> Tutoriels</a></li>
+            <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Légal</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-file-contract"></i> Conditions d'utilisation</a></li>
+            <li><a href="#"><i class="fas fa-shield-alt"></i> Politique de confidentialité</a></li>
+            <li><a href="#"><i class="fas fa-cookie"></i> Préférences cookies</a></li>
+            <li><a href="#"><i class="fas fa-gavel"></i> Mentions légales</a></li>
           </ul>
         </div>
       </div>
-    </div>
-    <div class="copyright">
-      &copy; 2025 Nesti. Tous droits réservés. | Conçu avec ❤️ pour les familles.
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Nesti. Tous droits réservés. | Conçu avec ❤️ pour les familles.</p>
+      </div>
     </div>
   </footer>
 
@@ -594,9 +1121,9 @@
     };
 
     let agenda = [
-      { date: "2025-09-20 15:00", titre: "Atelier peinture", lieu: "Maison", personnes: ["Emma", "Noah"], notes: "Prévoir tablier" },
-      { date: "2025-09-22 09:00", titre: "Rendez-vous école", lieu: "École Jean Jaurès", personnes: ["Emma"], notes: "" },
-      { date: "2025-09-23 18:00", titre: "Soirée jeux de société", lieu: "Maison", personnes: ["Toute la famille"], notes: "Chacun choisit un jeu" }
+      { date: "2025-09-20T15:00", titre: "Atelier peinture", lieu: "Maison", personnes: ["Emma", "Noah"], notes: "Prévoir tablier" },
+      { date: "2025-09-22T09:00", titre: "Rendez-vous école", lieu: "École Jean Jaurès", personnes: ["Emma"], notes: "" },
+      { date: "2025-09-23T18:00", titre: "Soirée jeux de société", lieu: "Maison", personnes: ["Toute la famille"], notes: "Chacun choisit un jeu" }
     ];
 
     let lieux = [
@@ -607,257 +1134,359 @@
       { name: "Maison des Parents", type: "Centre familial", coords: [48.8650, 2.3320] }
     ];
 
-    // --- NAVIGATION SCROLL ---
-    function scrollToSection(id) {
-      let target = (id === "agenda") ? document.getElementById("agenda") :
-                   (id === "map") ? document.getElementById("mapSection") :
-                   (id === "famille") ? document.getElementById("famille") :
-                   null;
-      if(target) target.scrollIntoView({behavior:"smooth"});
-    }
-    // --- NAV ACTIVE (visuel) ---
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function(e){
-        document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-        this.classList.add('active');
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
+      renderFamily();
+      renderAgenda();
+      initMap();
+      
+      // Navigation
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
       });
     });
-    // --- MESSAGE ACCUEIL ---
-    document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
 
     // --- AFFICHAGE FAMILLE ---
     function renderFamily() {
       const familyList = document.getElementById("familyList");
       familyList.innerHTML = "";
+      
       user.famille.forEach((m, i) => {
         const el = document.createElement('div');
         el.className = 'family-member';
         el.innerHTML = `
-          <button class="edit-member-btn" onclick="openEditModal('edit', ${i});event.stopPropagation();" title="Modifier"><span aria-label="Edit">✏️</span></button>
+          <button class="edit-member-btn" onclick="openEditModal('edit', ${i}); event.stopPropagation();" title="Modifier">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
           <div class="family-avatar">${m.avatar}</div>
           <div class="member-name">${m.prenom}</div>
           <div class="member-role">${m.role}${m.mineur ? " <span title='Mineur' style='color:#ff7b54;font-size:.93em;'>(-18)</span>" : ""}</div>
-          ${m.mineur && m.gps ? `<div class="member-location"><span class="loc-marker">📍</span>Localisé</div>` : ""}
+          ${m.mineur && m.gps ? `<div class="member-location"><i class="fas fa-map-marker-alt"></i> Localisé</div>` : ""}
         `;
-        el.tabIndex = 0;
-        el.title = "Voir/modifier";
-        el.onclick = () => openEditModal('edit', i);
+        el.addEventListener('click', () => openEditModal('edit', i));
         familyList.appendChild(el);
       });
-    }
-    renderFamily();
-
-    // --- MODAL GESTION ---
-    function openEditModal(type, idx=0) {
-      const modalBg = document.getElementById('modalBg');
-      const modalContent = document.getElementById('modalContent');
-      modalBg.classList.add('active');
-      if(type === 'edit') {
-        const member = user.famille[idx];
-        modalContent.innerHTML = `
-          <h2>Modifier membre</h2>
-          <form id="editMemberForm">
-            <label>Prénom <input type="text" name="prenom" value="${member.prenom}" required></label>
-            <label>Nom <input type="text" name="nom" value="${member.nom}" required></label>
-            <label>Rôle
-              <select name="role"><option ${member.role=="Parent"?"selected":""}>Parent</option>
-              <option ${member.role=="Enfant"?"selected":""}>Enfant</option></select>
-            </label>
-            <label>Mineur <input type="checkbox" name="mineur" ${member.mineur?"checked":""}></label>
-            <label>Avatar <input type="text" name="avatar" maxlength="2" value="${member.avatar}" required></label>
-            ${member.mineur ? `<label>Géolocalisation <input type="text" name="gps" value="${member.gps?member.gps.join(','):""}" placeholder="lat,lon"></label>` : ""}
-            <button class="modal-btn" type="submit">Enregistrer</button>
-          </form>
-        `;
-        document.getElementById('editMemberForm').onsubmit = function(e){
-          e.preventDefault();
-          let f = new FormData(e.target);
-          user.famille[idx] = {
-            prenom: f.get("prenom"),
-            nom: f.get("nom"),
-            role: f.get("role"),
-            mineur: !!f.get("mineur"),
-            avatar: f.get("avatar"),
-            gps: f.get("gps") ? f.get("gps").split(",").map(Number) : undefined
-          };
-          closeModal();
-          renderFamily();
-          renderMap();
-        }
-      } else if(type === 'add') {
-        modalContent.innerHTML = `
-          <h2>Ajouter un membre</h2>
-          <form id="addMemberForm">
-            <label>Prénom <input type="text" name="prenom" required></label>
-            <label>Nom <input type="text" name="nom" required></label>
-            <label>Rôle
-              <select name="role"><option>Parent</option><option>Enfant</option></select>
-            </label>
-            <label>Mineur <input type="checkbox" name="mineur"></label>
-            <label>Avatar <input type="text" name="avatar" maxlength="2" required placeholder="Emoji"></label>
-            <label>Géolocalisation <input type="text" name="gps" placeholder="lat,lon"></label>
-            <button class="modal-btn" type="submit">Ajouter</button>
-          </form>
-        `;
-        document.getElementById('addMemberForm').onsubmit = function(e){
-          e.preventDefault();
-          let f = new FormData(e.target);
-          user.famille.push({
-            prenom: f.get("prenom"),
-            nom: f.get("nom"),
-            role: f.get("role"),
-            mineur: !!f.get("mineur"),
-            avatar: f.get("avatar"),
-            gps: f.get("gps") ? f.get("gps").split(",").map(Number) : undefined
-          });
-          closeModal();
-          renderFamily();
-          renderMap();
-        }
-      } else if(type === 'profile') {
-        modalContent.innerHTML = `
-          <h2>Mon profil</h2>
-          <form id="profileForm">
-            <label>Prénom <input type="text" name="prenom" value="${user.prenom}" required></label>
-            <label>Nom <input type="text" name="nom" value="${user.nom}" required></label>
-            <label>Email <input type="email" name="email" value="${user.email}" required></label>
-            <label>Téléphone <input type="tel" name="tel" value="${user.tel}" required></label>
-            <label>Adresse <input type="text" name="adresse" value="${user.adresse}" required></label>
-            <button class="modal-btn" type="submit">Enregistrer</button>
-          </form>
-        `;
-        document.getElementById('profileForm').onsubmit = function(e){
-          e.preventDefault();
-          let f = new FormData(e.target);
-          user.prenom = f.get("prenom");
-          user.nom = f.get("nom");
-          user.email = f.get("email");
-          user.tel = f.get("tel");
-          user.adresse = f.get("adresse");
-          document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
-          closeModal();
-        }
-      } else if(type === 'agenda') {
-        modalContent.innerHTML = `
-          <h2>Ajouter une activité</h2>
-          <form id="addAgendaForm">
-            <label>Date et heure <input type="datetime-local" name="date" required></label>
-            <label>Intitulé de l'activité <input type="text" name="titre" required></label>
-            <label>Lieu <input type="text" name="lieu"></label>
-            <label>Participants <input type="text" name="personnes" placeholder="Prénoms séparés par une virgule"></label>
-            <label>Notes <input type="text" name="notes"></label>
-            <button class="modal-btn" type="submit">Ajouter</button>
-          </form>
-        `;
-        document.getElementById('addAgendaForm').onsubmit = function(e){
-          e.preventDefault();
-          let f = new FormData(e.target);
-          agenda.push({
-            date: f.get("date"),
-            titre: f.get("titre"),
-            lieu: f.get("lieu"),
-            personnes: f.get("personnes") ? f.get("personnes").split(",").map(s=>s.trim()) : [],
-            notes: f.get("notes")
-          });
-          closeModal();
-          renderAgenda();
-        }
-      }
-    }
-    function closeModal() {
-      document.getElementById('modalBg').classList.remove('active');
-    }
-    // Fermer modal si clic dehors
-    document.getElementById('modalBg').onclick = function(e){
-      if(e.target === this) closeModal();
     }
 
     // --- AGENDA ---
     function renderAgenda() {
       const agendaList = document.getElementById("agendaList");
       agendaList.innerHTML = "";
-      agenda
-        .sort((a,b)=>new Date(a.date)-new Date(b.date))
-        .forEach((item, i) => {
+      
+      // Trier les activités par date
+      agenda.sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      agenda.forEach((item, i) => {
         const dateObj = new Date(item.date);
-        const dateStr = dateObj.toLocaleDateString("fr-FR", {weekday:"short", day:"2-digit", month:"2-digit"}) + "<br>" + dateObj.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+        const options = { weekday: 'short', day: 'numeric', month: 'short' };
+        const dateStr = dateObj.toLocaleDateString('fr-FR', options);
+        const timeStr = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        
         const persons = item.personnes && item.personnes.length ? item.personnes.join(", ") : "Toute la famille";
+        
         const li = document.createElement("li");
-        li.className = "agenda-item";
+        li.className = "activity-item";
         li.innerHTML = `
-          <div class="agenda-date">${dateStr}</div>
-          <div class="agenda-info">
-            <div style="font-weight:600;">${item.titre}</div>
-            <div style="color:#888;">${item.lieu?("📍 "+item.lieu):""}</div>
-            <div class="agenda-persons">👥 ${persons}</div>
-            ${item.notes?('<div style="font-size:.95em;color:#a47b00;">📝 '+item.notes+'</div>'):""}
+          <div class="activity-date">
+            <div class="activity-day">${dateStr}</div>
+            <div class="activity-time">${timeStr}</div>
           </div>
-          <button class="agenda-edit-btn" onclick="editAgenda(${i})" title="Modifier">&#9998;</button>
+          <div class="activity-content">
+            <div class="activity-title">${item.titre}</div>
+            <div class="activity-details">
+              <div class="activity-detail">
+                <i class="fas fa-map-marker-alt"></i> ${item.lieu}
+              </div>
+              <div class="activity-detail">
+                <i class="fas fa-users"></i> ${persons}
+              </div>
+            </div>
+            ${item.notes ? `<div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;"><i class="fas fa-sticky-note"></i> ${item.notes}</div>` : ''}
+          </div>
+          <div class="activity-actions">
+            <button class="btn btn-sm" onclick="editAgenda(${i})"><i class="fas fa-edit"></i></button>
+          </div>
         `;
         agendaList.appendChild(li);
       });
     }
+
     function editAgenda(i) {
       const item = agenda[i];
-      openEditModal('agenda'); // réutilise le modal ajout, mais tu peux créer un modal spécifique pour édition si tu veux.
-      setTimeout(()=>{ // remplit le form après ouverture
-        const f = document.getElementById('addAgendaForm');
-        if(f){
-          f.date.value = item.date;
-          f.titre.value = item.titre;
-          f.lieu.value = item.lieu;
-          f.personnes.value = item.personnes ? item.personnes.join(", ") : "";
-          f.notes.value = item.notes;
-          f.onsubmit = function(e){
+      openEditModal('agenda');
+      
+      setTimeout(() => {
+        const form = document.getElementById('modalForm');
+        if (form) {
+          // Pré-remplir le formulaire
+          const dateTime = item.date.replace(" ", "T");
+          form.date.value = dateTime;
+          form.titre.value = item.titre;
+          form.lieu.value = item.lieu;
+          form.personnes.value = item.personnes.join(", ");
+          form.notes.value = item.notes;
+          
+          // Modifier la soumission pour l'édition
+          form.onsubmit = function(e) {
             e.preventDefault();
-            let d = new FormData(f);
+            const formData = new FormData(form);
+            
             agenda[i] = {
-              date: d.get("date"),
-              titre: d.get("titre"),
-              lieu: d.get("lieu"),
-              personnes: d.get("personnes") ? d.get("personnes").split(",").map(s=>s.trim()) : [],
-              notes: d.get("notes")
-            }
+              date: formData.get("date"),
+              titre: formData.get("titre"),
+              lieu: formData.get("lieu"),
+              personnes: formData.get("personnes").split(",").map(s => s.trim()),
+              notes: formData.get("notes")
+            };
+            
             closeModal();
             renderAgenda();
-          }
+          };
         }
-      },100);
+      }, 100);
     }
-    renderAgenda();
+
+    // --- MODAL GESTION ---
+    function openEditModal(type, index = 0) {
+      const modalBg = document.getElementById('modalBg');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalBg.classList.add('active');
+      
+      if (type === 'edit') {
+        const member = user.famille[index];
+        modalTitle.textContent = 'Modifier un membre';
+        modalContent.innerHTML = `
+          <form id="modalForm" onsubmit="event.preventDefault(); updateMember(${index})">
+            <div class="form-group">
+              <label class="form-label">Prénom</label>
+              <input type="text" class="form-control" name="prenom" value="${member.prenom}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom</label>
+              <input type="text" class="form-control" name="nom" value="${member.nom}" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rôle</label>
+              <select class="form-control" name="role" required>
+                <option value="Parent" ${member.role === "Parent" ? "selected" : ""}>Parent</option>
+                <option value="Enfant" ${member.role === "Enfant" ? "selected" : ""}>Enfant</option>
+                <option value="Grand-parent" ${member.role === "Grand-parent" ? "selected" : ""}>Grand-parent</option>
+                <option value="Ami" ${member.role === "Ami" ? "selected" : ""}>Ami</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <input type="checkbox" name="mineur" ${member.mineur ? "checked" : ""}> Mineur
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Avatar (emoji)</label>
+              <input type="text" class="form-control" name="avatar" value="${member.avatar}" maxlength="2" required>
+            </div>
+            ${member.mineur ? `
+            <div class="form-group">
+              <label class="form-label">Géolocalisation (lat,lon)</label>
+              <input type="text" class="form-control" name="gps" value="${member.gps ? member.gps.join(',') : ''}" placeholder="48.8566,2.3522">
+            </div>
+            ` : ''}
+            <div class="form-actions">
+              <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+              <button type="submit" class="btn">Enregistrer</button>
+            </div>
+          </form>
+        `;
+      } else if (type === 'add') {
+        modalTitle.textContent = 'Ajouter un membre';
+        modalContent.innerHTML = `
+          <form id="modalForm" onsubmit="event.preventDefault(); addMember()">
+            <div class="form-group">
+              <label class="form-label">Prénom</label>
+              <input type="text" class="form-control" name="prenom" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom</label>
+              <input type="text" class="form-control" name="nom" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rôle</label>
+              <select class="form-control" name="role" required>
+                <option value="Parent">Parent</option>
+                <option value="Enfant">Enfant</option>
+                <option value="Grand-parent">Grand-parent</option>
+                <option value="Ami">Ami</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <input type="checkbox" name="mineur"> Mineur
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Avatar (emoji)</label>
+              <input type="text" class="form-control" name="avatar" maxlength="2" required>
+            </div>
+            <div class="form-group" id="gpsField" style="display: none;">
+              <label class="form-label">Géolocalisation (lat,lon)</label>
+              <input type="text" class="form-control" name="gps" placeholder="48.8566,2.3522">
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+              <button type="submit" class="btn">Ajouter</button>
+            </div>
+          </form>
+        `;
+        
+        // Afficher/masquer le champ GPS selon la case mineur
+        const mineurCheckbox = document.querySelector('input[name="mineur"]');
+        const gpsField = document.getElementById('gpsField');
+        
+        mineurCheckbox.addEventListener('change', function() {
+          gpsField.style.display = this.checked ? 'block' : 'none';
+        });
+      } else if (type === 'agenda') {
+        modalTitle.textContent = 'Nouvelle activité';
+        modalContent.innerHTML = `
+          <form id="modalForm" onsubmit="event.preventDefault(); addActivity()">
+            <div class="form-group">
+              <label class="form-label">Date et heure</label>
+              <input type="datetime-local" class="form-control" name="date" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Intitulé de l'activité</label>
+              <input type="text" class="form-control" name="titre" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lieu</label>
+              <input type="text" class="form-control" name="lieu">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Participants (séparés par des virgules)</label>
+              <input type="text" class="form-control" name="personnes" placeholder="Emma, Noah, Lucas">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Notes</label>
+              <textarea class="form-control" name="notes" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+              <button type="submit" class="btn">Ajouter</button>
+            </div>
+          </form>
+        `;
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modalBg').classList.remove('active');
+    }
+
+    // Fermer modal si clic dehors
+    document.getElementById('modalBg').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Gestion des membres
+    function addMember() {
+      const form = document.getElementById('modalForm');
+      const formData = new FormData(form);
+      
+      user.famille.push({
+        prenom: formData.get("prenom"),
+        nom: formData.get("nom"),
+        role: formData.get("role"),
+        mineur: !!formData.get("mineur"),
+        avatar: formData.get("avatar"),
+        gps: formData.get("gps") ? formData.get("gps").split(",").map(Number) : undefined
+      });
+      
+      closeModal();
+      renderFamily();
+      initMap();
+    }
+
+    function updateMember(index) {
+      const form = document.getElementById('modalForm');
+      const formData = new FormData(form);
+      
+      user.famille[index] = {
+        prenom: formData.get("prenom"),
+        nom: formData.get("nom"),
+        role: formData.get("role"),
+        mineur: !!formData.get("mineur"),
+        avatar: formData.get("avatar"),
+        gps: formData.get("gps") ? formData.get("gps").split(",").map(Number) : undefined
+      };
+      
+      closeModal();
+      renderFamily();
+      initMap();
+    }
+
+    function addActivity() {
+      const form = document.getElementById('modalForm');
+      const formData = new FormData(form);
+      
+      agenda.push({
+        date: formData.get("date"),
+        titre: formData.get("titre"),
+        lieu: formData.get("lieu"),
+        personnes: formData.get("personnes") ? formData.get("personnes").split(",").map(s => s.trim()) : [],
+        notes: formData.get("notes")
+      });
+      
+      closeModal();
+      renderAgenda();
+    }
 
     // --- MAP LEAFLET ---
-    let map, maisonMarker, familleMarkers = [];
-    function renderMap() {
-      if(!map){
-        map = L.map('map').setView(user.maison, 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors',
-          minZoom: 2,
-          maxZoom: 18
-        }).addTo(map);
-      } else {
-        map.eachLayer(function (layer) {
-          if(layer instanceof L.Marker || layer instanceof L.CircleMarker) map.removeLayer(layer);
-        });
+    let map;
+    function initMap() {
+      if (map) {
+        map.remove();
       }
+      
+      map = L.map('map').setView(user.maison, 13);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        minZoom: 2,
+        maxZoom: 18
+      }).addTo(map);
+      
       // Maison
-      maisonMarker = L.marker(user.maison, {icon: L.icon({iconUrl:"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3e0.svg",iconSize:[36,36]})}).addTo(map).bindPopup("<b>🏡 Maison</b>");
-      // Parents et enfants
-      familleMarkers.forEach(m=>map.removeLayer(m));
-      familleMarkers = [];
-      user.famille.forEach((m,i) => {
-        if(m.gps){
-          const marker = L.marker(m.gps, {
+      L.marker(user.maison, {
+        icon: L.icon({
+          iconUrl: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3e0.svg',
+          iconSize: [36, 36]
+        })
+      }).addTo(map).bindPopup("<b>🏡 Maison</b>");
+      
+      // Membres de la famille
+      user.famille.forEach(m => {
+        if (m.gps) {
+          L.marker(m.gps, {
             icon: L.divIcon({
               className: '',
-              html: `<span style="font-size:1.7rem;">${m.avatar}</span>`,
-              iconSize: [32,32]
+              html: `<span style="font-size: 1.7rem;">${m.avatar}</span>`,
+              iconSize: [32, 32]
             })
           }).addTo(map).bindPopup(`<b>${m.avatar} ${m.prenom} (${m.role})</b>${m.mineur ? "<br><span style='color:#ff7b54;'>Mineur</span>" : ""}`);
-          familleMarkers.push(marker);
         }
       });
+      
       // Lieux d'intérêt
       lieux.forEach(place => {
         L.marker(place.coords, {
@@ -865,40 +1494,31 @@
             iconUrl: place.type === "Parc" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f333.svg" :
                      place.type === "École" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3eb.svg" :
                      "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg",
-            iconSize: [32,32]
+            iconSize: [28, 28]
           })
         }).addTo(map).bindPopup(`<b>${place.name}</b><br>${place.type}`);
       });
-    }
-    renderMap();
-
-    // Liste des lieux
-    function renderPlaces() {
-      const placeList = document.getElementById("placeList");
-      placeList.innerHTML = "";
-      lieux.forEach(place => {
-        const li = document.createElement("li");
-        li.innerHTML = `${place.name} (${place.type})`;
-        placeList.appendChild(li);
-      });
-    }
-    renderPlaces();
-
-    // Géolocalisation de l'utilisateur (simule pour Paris)
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const userLatLng = [pos.coords.latitude, pos.coords.longitude];
-        map.setView(userLatLng, 13);
-        L.marker(userLatLng, {
-          icon: L.icon({iconUrl:"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4cd.svg",iconSize:[32,32]})
-        }).addTo(map).bindPopup("Vous êtes ici !").openPopup();
-        document.getElementById("mapInfo").innerText = "Voici votre localisation, la maison, la famille et des lieux familiaux proches.";
-      });
+      
+      // Géolocalisation de l'utilisateur
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const userLatLng = [pos.coords.latitude, pos.coords.longitude];
+          L.marker(userLatLng, {
+            icon: L.icon({
+              iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4cd.svg",
+              iconSize: [32, 32]
+            })
+          }).addTo(map).bindPopup("Vous êtes ici !").openPopup();
+        }, () => {
+          // En cas d'erreur de géolocalisation, centrer sur Paris
+          map.setView(user.maison, 13);
+        });
+      }
     }
 
-    // --- ACCESSIBILITÉ (navigation rapide au clavier) ---
-    document.addEventListener('keydown', function(e){
-      if(e.key === "Escape") closeModal();
+    // Accessibilité
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeModal();
     });
   </script>
 </body>
