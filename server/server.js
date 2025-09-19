@@ -1,41 +1,63 @@
 import express from 'express';
+import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import path from 'path';
-import cors from 'cors';
-
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://nesti-app-1.onrender.com' 
-    : 'http://localhost:3000'
-}));
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// Middleware
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://nesti-app-1.onrender.com'
+    : 'http://localhost:5173',
+  credentials: true
+}));
 
-// Servir les fichiers statiques du build React
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // Routes API
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// API Routes
 app.get('/api/users', async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Route pour toutes les autres requêtes (React Router)
+// Catch all route for React Router
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something broke!' });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received. Closing HTTP server and Prisma Client...');
+  await prisma.$disconnect();
+  process.exit(0);
 });
