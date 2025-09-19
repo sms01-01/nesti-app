@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Cocon Familial (v4)</title>
+    <title>Mon Cocon Familial (UX/UI améliorée)</title>
     
     <style>
-        /* Variables de couleur pour le mode clair et sombre */
+        /* Variables de couleur et de thème */
         :root {
-            --bg-color: #f7f3e9;
-            --text-color: #333;
-            --card-bg: #fff;
-            --primary-color: #ff6f61;
-            --secondary-color: #6a0572;
-            --border-color: #ddd;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            --bg-color: #f0f4f8;
+            --text-color: #334e68;
+            --card-bg: #ffffff;
+            --primary-color: #3f51b5; /* Bleu indémodable */
+            --secondary-color: #ff4081; /* Rose éclatant */
+            --border-color: #e3e8ee;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition-speed: 0.3s;
+            --font-family: 'Poppins', sans-serif;
         }
 
         body.dark-mode {
             --bg-color: #2c3e50;
             --text-color: #ecf0f1;
             --card-bg: #34495e;
-            --primary-color: #e74c3c;
-            --secondary-color: #8e44ad;
-            --border-color: #555;
+            --primary-color: #64b5f6;
+            --secondary-color: #f06292;
+            --border-color: #55606d;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        
+
         body {
             font-family: var(--font-family);
             background-color: var(--bg-color);
@@ -41,32 +43,33 @@
             overflow-x: hidden;
             opacity: 0;
             animation: fadeInBody 1s forwards;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
         @keyframes fadeInBody {
             to { opacity: 1; }
         }
 
-        /* En-tête et pied de page */
+        /* Conteneurs et mise en page */
         header, footer {
             width: 100%;
             max-width: 1200px;
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
         }
 
         header h1 {
             font-size: clamp(2rem, 5vw, 3rem);
             color: var(--primary-color);
             margin-bottom: 0.5rem;
-            animation: pulseHeader 2s infinite alternate;
-        }
-        @keyframes pulseHeader {
-            from { transform: scale(1); }
-            to { transform: scale(1.02); }
+            animation: popIn 0.5s ease-out;
         }
 
-        /* Conteneurs principaux */
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
         main {
             width: 100%;
             max-width: 1200px;
@@ -75,138 +78,175 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             padding: 2rem 0;
         }
-
-        /* Styles des cartes (sections) */
+        
+        /* Composants de l'interface utilisateur */
         .card {
             background-color: var(--card-bg);
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 16px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInCard 1s ease-out forwards;
+            animation-delay: 0.2s;
         }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
         @keyframes fadeInCard {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Boutons et formulaires */
         .button {
             display: inline-block;
-            padding: 12px 24px;
+            padding: 12px 28px;
             background-color: var(--primary-color);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
+            font-weight: 600;
+            transition: background-color var(--transition-speed), transform 0.2s ease, box-shadow var(--transition-speed);
             text-align: center;
             border: none;
             cursor: pointer;
             margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         .button:hover {
-            background-color: #e74c3c;
-            transform: scale(1.05);
+            background-color: var(--secondary-color);
+            transform: scale(1.02);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button:active {
+            transform: scale(0.98);
         }
 
-        /* Styles des sections spécifiques */
+        /* Styles spécifiques des sections */
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         .image-gallery img {
             width: 100%;
-            border-radius: 8px;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
+        .image-gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
         .quiz-container .option {
             display: block;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--border-color);
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color var(--transition-speed), transform 0.2s ease;
             text-align: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+        .quiz-container .option:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.01);
         }
         .quiz-container .option.correct {
-            background-color: #27ae60;
+            background-color: #4caf50;
             color: white;
+            animation: flashCorrect 0.5s ease;
         }
         .quiz-container .option.wrong {
-            background-color: #e74c3c;
+            background-color: #f44336;
             color: white;
+            animation: shake 0.5s ease-in-out;
         }
 
-        /* Modal pour l'agrandissement d'image */
+        @keyframes flashCorrect {
+            0% { background-color: #4caf50; }
+            50% { background-color: white; color: #4caf50; }
+            100% { background-color: #4caf50; color: white; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Modal et pop-ups */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 2000;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+        .modal.open {
+            opacity: 1;
         }
         .modal-content {
             max-width: 90%;
             max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s;
-            transform: scale(0.8);
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.4s ease;
+        }
+        .modal.open .modal-content {
+            transform: scale(1);
         }
 
-        /* Bouton de thème */
-        #theme-toggle {
+        /* Notifications (toasts) */
+        #notification-container {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
-            background-color: transparent;
-            border: none;
-            font-size: 2.5rem;
-            cursor: pointer;
-            z-index: 1000;
-            transition: transform 0.2s ease-in-out, color 0.5s;
-            color: var(--text-color);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
         }
-        
-        .blog-post, .memory-item {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
+        .notification {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        .blog-post:last-child, .memory-item:last-child {
-            border-bottom: none;
-        }
-        .blog-post h3, .memory-item h3 {
-            margin-bottom: 0.5rem;
-        }
-        .blog-post .meta, .memory-item .meta {
-            font-size: 0.9rem;
-            color: #999;
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <button id="theme-toggle" aria-label="Bascule mode sombre/clair">🌙</button>
+    <button id="theme-toggle" aria-label="Bascule mode sombre/clair" style="position: fixed; top: 20px; right: 20px; background: none; border: none; font-size: 2.5rem; cursor: pointer; color: var(--text-color); transition: color 0.3s ease;">🌙</button>
 
     <header>
         <h1 id="welcome-message">Bienvenue !</h1>
@@ -219,6 +259,8 @@
     <footer>
         <p>© 2024 Notre Famille. Tous droits réservés.</p>
     </footer>
+
+    <div id="notification-container"></div>
 
     <script>
         /**
@@ -387,6 +429,18 @@
                     memoriesContainer.appendChild(memoryDiv);
                 });
                 parent.appendChild(memoriesContainer);
+            },
+
+            showNotification: (message, type = 'info') => {
+                const container = document.getElementById('notification-container');
+                const notification = UI.createElement('div', { class: `notification ${type}` }, message);
+                container.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => container.removeChild(notification), 500);
+                }, 3000);
             }
         };
 
@@ -458,6 +512,7 @@
                             App.state.userName = newName.trim();
                             localStorage.setItem('userName', App.state.userName);
                             App.elements.welcomeMessage.textContent = `Bienvenue, ${App.state.userName} !`;
+                            UI.showNotification(`Bienvenue, ${App.state.userName}! 😊`);
                         }
                     }, 1000);
                 }
@@ -469,20 +524,16 @@
                     modal.appendChild(modalImg);
                     document.body.appendChild(modal);
 
-                    setTimeout(() => {
-                        modal.style.opacity = '1';
-                        modalImg.style.transform = 'scale(1)';
-                    }, 50);
+                    setTimeout(() => modal.classList.add('open'), 50);
                     modal.addEventListener('click', () => {
-                        modal.style.opacity = '0';
-                        modalImg.style.transform = 'scale(0.8)';
-                        setTimeout(() => document.body.removeChild(modal), 300);
+                        modal.classList.remove('open');
+                        setTimeout(() => document.body.removeChild(modal), 400);
                     });
                 }
             },
             handleContactSubmit: (event) => {
                 event.preventDefault();
-                alert('Merci pour votre message ! Nous vous répondrons bientôt.');
+                UI.showNotification('Merci pour votre message !', 'success');
                 event.target.reset();
             },
             toggleQuiz: (quizContainer) => {
@@ -499,6 +550,7 @@
                     App.state.quiz.active = true;
                     App.state.quiz.score = 0;
                     quizResultDiv.textContent = '';
+                    UI.showNotification('Le quiz commence ! Bonne chance !');
                     APP_DATA.quizQuestions.forEach((q, index) => {
                         const questionItem = UI.createElement('div', { class: 'question-item' });
                         questionItem.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
@@ -525,8 +577,10 @@
                 if (selectedOption === correctAnswer) {
                     App.state.quiz.score++;
                     element.classList.add('correct');
+                    UI.showNotification('Bonne réponse ! 🎉', 'success');
                 } else {
                     element.classList.add('wrong');
+                    UI.showNotification('Mauvaise réponse...', 'error');
                 }
                 const allAnswered = Array.from(document.querySelectorAll('.quiz-container .question-item')).every(item => item.querySelector('.correct, .wrong'));
                 if (allAnswered) {
