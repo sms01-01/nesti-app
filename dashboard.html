@@ -1168,6 +1168,17 @@
     });
     // ===== CONFIGURATION ET DONNÉES =====
     const API_BASE = '/api';
+    
+    // Déclarer la variable user sans initialisation immédiate
+    let user;
+    
+    // Initialiser les autres variables
+    let agenda = [];
+    let lieux = [];
+    let map; // Variable globale pour la carte Leaflet
+    
+    // ===== CONFIGURATION ET DONNÉES =====
+    const API_BASE = '/api';
     let user = {
       prenom: "Invité",
       nom: "Nesti",
@@ -1204,23 +1215,69 @@
 
     async function loadUserData() {
       try {
-        // Charger les données utilisateur
-        const userData = await apiRequest('/user');
-        Object.assign(user, userData);
-
-        // Charger les familles
-        const families = await apiRequest('/families');
-        if (families.length > 0) {
-          const familyId = families[0].id;
-          
-          // Charger les membres de la famille
-          const members = await apiRequest(`/families/${familyId}/members`);
-          user.famille = members;
-          
-          // Charger les activités
-          const activities = await apiRequest(`/families/${familyId}/activities`);
-          agenda = activities;
+        // Récupérer les paramètres d'URL d'abord
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get('name');
+        const userEmail = urlParams.get('email');
+    
+        // Initialiser user avec les valeurs par défaut
+        user = {
+          prenom: userName || "Invité",
+          nom: "Nesti",
+          email: userEmail || "",
+          tel: "",
+          adresse: "",
+          famille: [],
+          maison: [48.8566, 2.3522]
+        };
+    
+        // Essayer de charger depuis l'API
+        try {
+          // Charger les données utilisateur
+          const userData = await apiRequest('/user');
+          Object.assign(user, userData);
+    
+          // Charger les familles
+          const families = await apiRequest('/families');
+          if (families.length > 0) {
+            const familyId = families[0].id;
+            
+            // Charger les membres de la famille
+            const members = await apiRequest(`/families/${familyId}/members`);
+            user.famille = members;
+            
+            // Charger les activités
+            const activities = await apiRequest(`/families/${familyId}/activities`);
+            agenda = activities;
+          }
+    
+          // Charger les lieux
+          const places = await apiRequest('/places');
+          lieux = places;
+    
+        } catch (apiError) {
+          console.warn('API non disponible, utilisation des données de démo:', apiError);
+          // Données de démo en cas d'erreur
+          loadDemoData();
         }
+    
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+        // Assurer que user est toujours défini
+        if (!user) {
+          user = {
+            prenom: "Invité",
+            nom: "Nesti",
+            email: "",
+            tel: "",
+            adresse: "",
+            famille: [],
+            maison: [48.8566, 2.3522]
+          };
+        }
+        loadDemoData();
+      }
+    }
 
         // Charger les lieux
         const places = await apiRequest('/places');
@@ -1240,29 +1297,30 @@
         { date: "2025-09-22T09:00", titre: "Rendez-vous école", lieu: "École Jean Jaurès", personnes: ["Emma"], notes: "" },
         { date: "2025-09-23T18:00", titre: "Soirée jeux de société", lieu: "Maison", personnes: ["Toute la famille"], notes: "Chacun choisit un jeu" }
       ];
-
+    
       lieux = [
         { name: "Parc de la Villette", type: "Parc", coords: [48.8897, 2.3930] },
         { name: "École Jean Jaurès", type: "École", coords: [48.8572, 2.3530] },
         { name: "Centre Famille Soleil", type: "Centre familial", coords: [48.8500, 2.3700] }
       ];
+    
+      // Ajouter des membres de démo si la famille est vide
+      if (user.famille.length === 0) {
+        user.famille = [
+          { id: 1, prenom: "Marie", nom: "Martin", role: "Parent", avatar: "👩", mineur: false },
+          { id: 2, prenom: "Luc", nom: "Martin", role: "Parent", avatar: "👨", mineur: false },
+          { id: 3, prenom: "Emma", nom: "Martin", role: "Enfant", avatar: "👧", mineur: true, gps: [48.8575, 2.3600] }
+        ];
+      }
     }
-
+    
     // ===== INITIALISATION =====
     document.addEventListener('DOMContentLoaded', async function() {
-      // Récupérer les paramètres d'URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const userName = urlParams.get('name');
-      const userEmail = urlParams.get('email');
-
-      if (userName) {
-        user.prenom = userName;
-        user.email = userEmail || '';
-      }
-
-      // Charger les données
+      console.log("Initialisation du dashboard Nesti...");
+      
+      // Charger les données utilisateur d'abord
       await loadUserData();
-
+      
       // Initialiser l'interface
       updateWelcomeMessage();
       renderFamily();
@@ -1270,6 +1328,9 @@
       initMap();
       setupNavigation();
       setupAccessibility();
+      
+      console.log("Dashboard initialisé avec succès");
+      console.log("Utilisateur:", user);
     });
 
     // ===== FONCTIONS D'INTERFACE UTILISATEUR =====
@@ -1550,108 +1611,119 @@
       document.getElementById('modalBg').classList.remove('active');
     }
     
+
+    // ===== GESTION DES MEMBRES =====
     async function addMember() {
+      console.log("Début de l'ajout d'un membre");
+      
+      try {
         const form = document.getElementById('modalForm');
         const formData = new FormData(form);
         
-        try {
-            // Récupérer les valeurs du formulaire
-            const prenom = formData.get("prenom");
-            const nom = formData.get("nom");
-            const role = formData.get("role");
-            const mineur = formData.get("mineur") === "on"; // Les checkboxes retournent "on" si cochées
-            const avatar = formData.get("avatar");
-            const gps = formData.get("gps");
-            
-            // Valider les données requises
-            if (!prenom || !nom || !role || !avatar) {
-                alert("Veuillez remplir tous les champs obligatoires");
-                return;
-            }
-            
-            const memberData = {
-                prenom: prenom,
-                nom: nom,
-                role: role,
-                mineur: mineur,
-                avatar: avatar,
-                gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
-            };
-            
-            console.log("Données du membre à ajouter:", memberData);
-            
-            // En mode démo (sans API), ajouter directement à l'interface
-            if (!window.API_BASE || window.API_BASE === '/api') {
-                // Simulation d'ajout en mode démo
-                const newMember = {
-                    ...memberData,
-                    id: Date.now() // ID unique pour le nouveau membre
-                };
-                
-                user.famille.push(newMember);
-                
-                closeModal();
-                renderFamily();
-                initMap();
-                
-                // Afficher un message de confirmation
-                showNotification(`Membre ${prenom} ajouté avec succès!`, 'success');
-                
-            } else {
-                // Code pour l'API réelle (si configurée)
-                const savedMember = await apiRequest('/family/members', {
-                    method: 'POST',
-                    body: JSON.stringify(memberData)
-                });
-                
-                user.famille.push(savedMember);
-                
-                closeModal();
-                renderFamily();
-                initMap();
-                
-                showNotification(`Membre ${prenom} ajouté avec succès!`, 'success');
-            }
-            
-        } catch (error) {
-            console.error('Erreur détaillée:', error);
-            alert('Erreur lors de l\'ajout du membre: ' + error.message);
-        }
-    }
-    async function updateMember(index) {
-      const form = document.getElementById('modalForm');
-      const formData = new FormData(form);
-      const memberId = user.famille[index].id;
-      
-      const memberData = {
-        prenom: formData.get("prenom"),
-        nom: formData.get("nom"),
-        role: formData.get("role"),
-        mineur: !!formData.get("mineur"),
-        avatar: formData.get("avatar"),
-        gps: formData.get("gps") || null
-      };
-      
-      try {
-        // Mettre à jour dans la base de données
-        const updatedMember = await apiRequest(`/family/members/${memberId}`, {
-          method: 'PUT',
-          body: JSON.stringify(memberData)
-        });
+        // Récupérer les valeurs du formulaire
+        const prenom = formData.get("prenom");
+        const nom = formData.get("nom");
+        const role = formData.get("role");
+        const mineur = formData.get("mineur") === "on";
+        const avatar = document.getElementById('selected-emoji').value;
+        const gps = formData.get("gps");
         
-        // Mettre à jour l'interface utilisateur
-        user.famille[index] = updatedMember;
+        console.log("Données du formulaire:", { prenom, nom, role, mineur, avatar, gps });
+        
+        // Validation
+        if (!prenom) {
+          alert("Le prénom est obligatoire");
+          return;
+        }
+        
+        const memberData = {
+          prenom: prenom,
+          nom: nom || user.nom || "Famille",
+          role: role || "Parent",
+          mineur: mineur,
+          avatar: avatar || "👤",
+          gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
+        };
+        
+        // En mode démo (sans API)
+        const newMember = {
+          ...memberData,
+          id: Date.now() // ID unique
+        };
+        
+        // Ajouter à la famille utilisateur
+        user.famille.push(newMember);
         
         closeModal();
         renderFamily();
-        initMap();
+        
+        // Recréer la carte pour afficher le nouveau membre
+        if (map && newMember.gps) {
+          initMap();
+        }
+        
+        showNotification(`${prenom} a été ajouté à votre famille!`, 'success');
+        console.log("Membre ajouté avec succès:", newMember);
         
       } catch (error) {
-        console.error('Erreur lors de la mise à jour du membre:', error);
-        alert('Erreur lors de la mise à jour du membre');
+        console.error('Erreur lors de l\'ajout du membre:', error);
+        alert('Erreur lors de l\'ajout du membre: ' + error.message);
       }
     }
-
+    
+    async function updateMember(index) {
+      console.log("Début de la modification du membre");
+      
+      try {
+        const form = document.getElementById('modalForm');
+        const formData = new FormData(form);
+        
+        // Récupérer les valeurs du formulaire
+        const prenom = formData.get("prenom");
+        const nom = formData.get("nom");
+        const role = formData.get("role");
+        const mineur = formData.get("mineur") === "on";
+        const avatar = document.getElementById('selected-emoji').value;
+        const gps = formData.get("gps");
+        
+        // Validation
+        if (!prenom) {
+          alert("Le prénom est obligatoire");
+          return;
+        }
+        
+        const memberData = {
+          prenom: prenom,
+          nom: nom || user.nom || "Famille",
+          role: role || "Parent",
+          mineur: mineur,
+          avatar: avatar || "👤",
+          gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
+        };
+        
+        // En mode démo (sans API)
+        user.famille[index] = {
+          ...user.famille[index],
+          ...memberData
+        };
+        
+        closeModal();
+        renderFamily();
+        
+        // Recréer la carte si la localisation a changé
+        if (map) {
+          initMap();
+        }
+        
+        showNotification(`${prenom} a été modifié avec succès!`, 'success');
+        console.log("Membre modifié avec succès:", user.famille[index]);
+        
+      } catch (error) {
+        console.error('Erreur lors de la modification du membre:', error);
+        alert('Erreur lors de la modification du membre: ' + error.message);
+      }
+    }
+    
     // ===== GESTION DES ACTIVITÉS =====
     function editAgenda(index) {
       const activite = agenda[index];
