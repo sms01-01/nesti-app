@@ -2,6 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './api.js';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+
+// Après avoir importé express
+app.use(helmet());
+
+// Limite de taux pour les requêtes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limite chaque IP à 100 requêtes par fenêtre
+});
+app.use(limiter);
 
 dotenv.config();
 
