@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Espace Famille | Nesti</title>
+  <title>Nesti - Mon Espace Famille</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -26,8 +26,6 @@
       --radius-sm: 16px;
     }
     
-    html {scroll-behavior: smooth;}
-    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -44,7 +42,7 @@
       line-height: 1.6;
     }
     
-    /* HEADER IMPROVED */
+    /* Header */
     header {
       background: linear-gradient(90deg, var(--blue) 0%, var(--purple) 100%);
       padding: 1.5rem 0 1rem 0;
@@ -52,17 +50,6 @@
       box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
-    }
-    
-    header::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      transform: rotate(30deg);
     }
     
     .header-container {
@@ -83,12 +70,6 @@
       justify-content: center;
       gap: .8rem;
       margin-bottom: 1rem;
-    }
-    
-    .logo img {
-      width: 2.5rem;
-      height: 2.5rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
     
     nav {
@@ -144,7 +125,7 @@
       font-weight: 500;
     }
     
-    /* MAIN CONTENT */
+    /* Main Content */
     .dashboard-container {
       max-width: 1200px;
       margin: 2.5rem auto;
@@ -164,52 +145,13 @@
       }
     }
     
-    /* MAIN CONTENT AREA */
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    
-    /* SIDEBAR */
-    .sidebar {
+    /* Cards and Sections */
+    .card {
       background: white;
       border-radius: var(--radius);
       padding: 1.5rem;
       box-shadow: var(--shadow);
-      height: fit-content;
-      position: sticky;
-      top: 1.5rem;
-    }
-    
-    .sidebar-section {
       margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .sidebar-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-    
-    .sidebar-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--dark);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    /* FAMILLE SECTION IMPROVED */
-    .family-section {
-      background: white;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
     }
     
     .section-header {
@@ -262,6 +204,11 @@
       background: #5bbd52;
     }
     
+    .btn-danger {
+      background: var(--red);
+    }
+    
+    /* Family Members */
     .family-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -286,7 +233,6 @@
     .family-member:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-hover);
-      border-color: rgba(92, 122, 234, 0.3);
     }
     
     .family-avatar {
@@ -301,7 +247,6 @@
       font-weight: bold;
       color: white;
       margin-bottom: 0.8rem;
-      box-shadow: 0 4px 10px rgba(92, 122, 234, 0.3);
     }
     
     .member-name {
@@ -317,19 +262,15 @@
       margin-bottom: 0.5rem;
     }
     
-    .member-location {
-      font-size: 0.85rem;
-      color: var(--blue);
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-weight: 600;
-    }
-    
-    .edit-member-btn {
+    .member-actions {
       position: absolute;
       top: 0.7rem;
       right: 0.7rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .action-btn {
       background: rgba(255,255,255,0.9);
       border: none;
       border-radius: 50%;
@@ -342,16 +283,15 @@
       align-items: center;
       justify-content: center;
       transition: var(--transition);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     
-    .edit-member-btn:hover {
+    .action-btn:hover {
       background: var(--blue);
       color: white;
       transform: scale(1.1);
     }
     
-    /* STATS CARDS */
+    /* Stats Cards */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -403,14 +343,7 @@
       color: #666;
     }
     
-    /* ACTIVITIES SECTION */
-    .activities-section {
-      background: white;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-    }
-    
+    /* Activities */
     .activities-list {
       list-style: none;
     }
@@ -468,16 +401,11 @@
     
     .activity-actions {
       margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
     }
     
-    /* MAP SECTION */
-    .map-section {
-      background: white;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-    }
-    
+    /* Map */
     #map {
       width: 100%;
       height: 300px;
@@ -507,7 +435,40 @@
       border-radius: 50%;
     }
     
-    /* RECENT ACTIVITY */
+    /* Sidebar */
+    .sidebar {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 1.5rem;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .sidebar-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Recent Activity */
     .recent-activity {
       list-style: none;
     }
@@ -548,14 +509,14 @@
       color: #888;
     }
     
-    /* QUICK ACTIONS */
+    /* Quick Actions */
     .quick-actions {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 0.8rem;
     }
     
-    .action-btn {
+    .action-btn-large {
       background: #f7f9ff;
       border: 1px solid rgba(92, 122, 234, 0.1);
       border-radius: var(--radius-sm);
@@ -571,7 +532,7 @@
       color: var(--dark);
     }
     
-    .action-btn:hover {
+    .action-btn-large:hover {
       background: var(--blue);
       color: white;
       transform: translateY(-3px);
@@ -588,7 +549,7 @@
       font-weight: 600;
     }
     
-    /* MODAL */
+    /* Modal */
     .modal-bg {
       display: none;
       position: fixed;
@@ -693,7 +654,61 @@
       margin-top: 1.5rem;
     }
     
-    /* FOOTER IMPROVED */
+    /* Emoji Selector */
+    .emoji-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .emoji-option {
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      background: #f5f7ff;
+    }
+    
+    .emoji-option:hover {
+      background-color: #e0e7ff;
+      transform: scale(1.1);
+    }
+    
+    .emoji-option.selected {
+      background-color: var(--blue);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease;
+    }
+    
+    .notification.success {
+      background: var(--green);
+    }
+    
+    .notification.error {
+      background: var(--red);
+    }
+    
+    .notification.info {
+      background: var(--blue);
+    }
+    
+    /* Footer */
     footer {
       background: var(--dark-blue);
       color: white;
@@ -794,7 +809,7 @@
       font-size: 0.9rem;
     }
     
-    /* RESPONSIVE */
+    /* Responsive */
     @media (max-width: 768px) {
       .logo {
         font-size: 2rem;
@@ -835,7 +850,7 @@
       }
     }
     
-    /* ANIMATIONS */
+    /* Animations */
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); }
@@ -845,84 +860,14 @@
     .pulse {
       animation: pulse 2s infinite;
     }
-    
-    /* SCROLLBAR */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: var(--blue);
-      border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--purple);
-    }
-    .emoji-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-    }
-    
-    .emoji-option {
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 8px;
-        transition: var(--transition);
-    }
-    
-    .emoji-option:hover {
-        background-color: #f0f5ff;
-        transform: scale(1.1);
-    }
-    
-    .emoji-option.selected {
-        background-color: var(--blue);
-        color: white;
-        transform: scale(1.1);
-    }
-    .emoji-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-    }
-    
-    .emoji-option {
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        background: #f5f7ff;
-    }
-    
-    .emoji-option:hover {
-        background-color: #e0e7ff;
-        transform: scale(1.1);
-    }
-    
-    .emoji-option.selected {
-        background-color: var(--blue);
-        color: white;
-        transform: scale(1.1);
-    }
   </style>
 </head>
 <body>
   <header>
     <div class="header-container">
       <div class="logo">
-        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti">
-        Nesti
+        <span>🏠</span>
+        <span>Nesti</span>
       </div>
       <nav>
         <a href="#famille" class="nav-link active"><i class="fas fa-users"></i> Famille</a>
@@ -941,10 +886,10 @@
     <div class="dashboard-grid">
       <div class="main-content">
         <!-- Famille Section -->
-        <section class="family-section" id="famille">
+        <section class="card" id="famille">
           <div class="section-header">
             <h2 class="section-title"><i class="fas fa-users"></i> Ma famille</h2>
-            <button class="btn" onclick="openEditModal('add')"><i class="fas fa-plus"></i> Ajouter un membre</button>
+            <button class="btn" onclick="openModal('add-member')"><i class="fas fa-plus"></i> Ajouter un membre</button>
           </div>
           <div class="family-list" id="familyList"></div>
         </section>
@@ -956,7 +901,7 @@
               <i class="fas fa-calendar-check"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-number">12</div>
+              <div class="stat-number" id="activities-count">0</div>
               <div class="stat-label">Activités ce mois</div>
             </div>
           </div>
@@ -965,7 +910,7 @@
               <i class="fas fa-users"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-number">4</div>
+              <div class="stat-number" id="members-count">0</div>
               <div class="stat-label">Membres actifs</div>
             </div>
           </div>
@@ -974,7 +919,7 @@
               <i class="fas fa-tasks"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-number">78%</div>
+              <div class="stat-number" id="completion-rate">0%</div>
               <div class="stat-label">Objectif mensuel</div>
             </div>
           </div>
@@ -983,25 +928,26 @@
               <i class="fas fa-comments"></i>
             </div>
             <div class="stat-content">
-              <div class="stat-number">24</div>
+              <div class="stat-number" id="messages-count">0</div>
               <div class="stat-label">Messages non lus</div>
             </div>
           </div>
         </div>
 
         <!-- Activities Section -->
-        <section class="activities-section" id="agenda">
+        <section class="card" id="agenda">
           <div class="section-header">
             <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Prochaines activités</h2>
-            <button class="btn btn-secondary" onclick="openEditModal('agenda')"><i class="fas fa-plus"></i> Nouvelle activité</button>
+            <button class="btn btn-secondary" onclick="openModal('add-activity')"><i class="fas fa-plus"></i> Nouvelle activité</button>
           </div>
           <ul class="activities-list" id="agendaList"></ul>
         </section>
 
         <!-- Map Section -->
-        <section class="map-section" id="carte">
+        <section class="card" id="carte">
           <div class="section-header">
             <h2 class="section-title"><i class="fas fa-map-marked-alt"></i> Carte familiale</h2>
+            <button class="btn btn-sm" onclick="refreshMap()"><i class="fas fa-sync-alt"></i> Actualiser</button>
           </div>
           <div id="map"></div>
           <div class="map-legend">
@@ -1026,19 +972,19 @@
         <div class="sidebar-section">
           <h3 class="sidebar-title"><i class="fas fa-bolt"></i> Actions rapides</h3>
           <div class="quick-actions">
-            <a href="#" class="action-btn" onclick="openEditModal('agenda')">
+            <a href="#" class="action-btn-large" onclick="openModal('add-activity')">
               <div class="action-icon"><i class="fas fa-calendar-plus"></i></div>
               <div class="action-text">Nouvelle activité</div>
             </a>
-            <a href="#" class="action-btn" onclick="openEditModal('add')">
+            <a href="#" class="action-btn-large" onclick="openModal('add-member')">
               <div class="action-icon"><i class="fas fa-user-plus"></i></div>
               <div class="action-text">Ajouter membre</div>
             </a>
-            <a href="#" class="action-btn">
+            <a href="#" class="action-btn-large" onclick="openModal('send-message')">
               <div class="action-icon"><i class="fas fa-comment-medical"></i></div>
               <div class="action-text">Message groupe</div>
             </a>
-            <a href="#" class="action-btn">
+            <a href="#" class="action-btn-large" onclick="openModal('add-location')">
               <div class="action-icon"><i class="fas fa-map-marker-alt"></i></div>
               <div class="action-text">Lieu favori</div>
             </a>
@@ -1047,44 +993,18 @@
 
         <div class="sidebar-section">
           <h3 class="sidebar-title"><i class="fas fa-history"></i> Activité récente</h3>
-          <ul class="recent-activity">
-            <li class="activity-log">
-              <div class="log-icon"><i class="fas fa-user-plus"></i></div>
-              <div class="log-content">
-                <div class="log-text">Emma a été ajoutée à l'activité "Parc"</div>
-                <div class="log-time">Il y a 2 heures</div>
-              </div>
-            </li>
-            <li class="activity-log">
-              <div class="log-icon"><i class="fas fa-check-circle"></i></div>
-              <div class="log-content">
-                <div class="log-text">Lucas a confirmé sa présence au musée</div>
-                <div class="log-time">Hier, 15:32</div>
-              </div>
-            </li>
-            <li class="activity-log">
-              <div class="log-icon"><i class="fas fa-map-marker-alt"></i></div>
-              <div class="log-content">
-                <div class="log-text">Nouveau lieu enregistré: Parc Montsouris</div>
-                <div class="log-time">12 oct, 09:15</div>
-              </div>
-            </li>
-          </ul>
+          <ul class="recent-activity" id="recentActivity"></ul>
         </div>
 
         <div class="sidebar-section">
           <h3 class="sidebar-title"><i class="fas fa-bell"></i> Notifications</h3>
-          <div class="pulse" style="text-align: center; padding: 1rem; background: #fff4e6; border-radius: var(--radius-sm);">
-            <div><i class="fas fa-exclamation-circle" style="color: var(--orange); font-size: 1.5rem;"></i></div>
-            <div style="font-weight: 600; margin: 0.5rem 0;">Anniversaire dans 3 jours</div>
-            <div style="font-size: 0.9rem;">C'est l'anniversaire de Noah samedi!</div>
-          </div>
+          <div id="notifications-container"></div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Modal -->
+  <!-- Modals -->
   <div class="modal-bg" id="modalBg">
     <div class="modal">
       <div class="modal-header">
@@ -1101,8 +1021,8 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="footer-logo">
-            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg" alt="Nesti" style="width: 30px;">
-            Nesti
+            <span>🏠</span>
+            <span>Nesti</span>
           </div>
           <p class="footer-description">
             L'écosystème familial qui transforme le temps ensemble en expériences inclusives mémorables.
@@ -1151,233 +1071,232 @@
       </div>
     </div>
   </footer>
-  
-  
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Mode debug
-    console.log("Dashboard Nesti initialisé");
-    console.log("Données utilisateur:", user);
-    
-    // Survoler pour voir les données des membres
-    document.addEventListener('mouseover', function(e) {
-        if (e.target.closest('.family-member')) {
-            const index = Array.from(document.querySelectorAll('.family-member')).indexOf(e.target.closest('.family-member'));
-            console.log("Membre survolé:", user.famille[index]);
-        }
-    });
-    // ===== CONFIGURATION ET DONNÉES =====
+    // ===== CONFIGURATION =====
     const API_BASE = '/api';
+    const JWT_TOKEN = localStorage.getItem('nesti_token');
     
-    // Déclarer la variable user sans initialisation immédiate
-    let user;
-    
-    // Initialiser les autres variables
-    let agenda = [];
-    let lieux = [];
-    let map; // Variable globale pour la carte Leaflet
-    
-    // ===== CONFIGURATION ET DONNÉES =====
-    const API_BASE = '/api';
-    let user = {
-      prenom: "Invité",
-      nom: "Nesti",
-      email: "",
-      tel: "",
-      adresse: "",
-      famille: [],
-      maison: [48.8566, 2.3522]
+    // ===== ÉTAT DE L'APPLICATION =====
+    let state = {
+      user: null,
+      family: [],
+      activities: [],
+      locations: [],
+      selectedMember: null,
+      selectedActivity: null,
+      map: null
     };
 
-    let agenda = [];
-    let lieux = [];
-    let map; // Variable globale pour la carte Leaflet
-
-    // ===== FONCTIONS D'API =====
-    async function apiRequest(endpoint, options = {}) {
-      const token = localStorage.getItem('nesti_token');
+    // ===== INITIALISATION =====
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log("🚀 Initialisation de Nesti Dashboard...");
       
-      const response = await fetch(`${API_BASE}${endpoint}`, {
+      try {
+        // Charger les données utilisateur
+        await loadUserData();
+        
+        // Charger les données de la famille
+        await loadFamilyData();
+        
+        // Charger les activités
+        await loadActivities();
+        
+        // Charger les lieux
+        await loadLocations();
+        
+        // Initialiser l'interface
+        initUI();
+        
+        // Initialiser la carte
+        initMap();
+        
+        console.log("✅ Dashboard initialisé avec succès");
+      } catch (error) {
+        console.error("❌ Erreur lors de l'initialisation:", error);
+        showNotification("Erreur de chargement des données", "error");
+      }
+    });
+
+    // ===== FONCTIONS API =====
+    async function apiRequest(endpoint, options = {}) {
+      const url = `${API_BASE}${endpoint}`;
+      const config = {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : '',
+          'Authorization': JWT_TOKEN ? `Bearer ${JWT_TOKEN}` : '',
           ...options.headers
         },
         ...options
-      });
+      };
       
-      if (!response.ok) {
-        throw new Error(`Erreur API: ${response.status}`);
+      try {
+        const response = await fetch(url, config);
+        
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error(`API Error (${endpoint}):`, error);
+        throw error;
       }
-      
-      return response.json();
     }
 
     async function loadUserData() {
       try {
-        // Récupérer les paramètres d'URL d'abord
-        const urlParams = new URLSearchParams(window.location.search);
-        const userName = urlParams.get('name');
-        const userEmail = urlParams.get('email');
-    
-        // Initialiser user avec les valeurs par défaut
-        user = {
-          prenom: userName || "Invité",
+        const userData = await apiRequest('/user/me');
+        state.user = userData;
+        document.getElementById('welcomeMsg').textContent = `Bonjour ${userData.prenom} 👋`;
+      } catch (error) {
+        console.warn('Utilisation des données utilisateur par défaut');
+        state.user = {
+          id: 1,
+          prenom: "Invité",
           nom: "Nesti",
-          email: userEmail || "",
-          tel: "",
-          adresse: "",
-          famille: [],
-          maison: [48.8566, 2.3522]
+          email: "",
+          familleId: 1
         };
-    
-        // Essayer de charger depuis l'API
-        try {
-          // Charger les données utilisateur
-          const userData = await apiRequest('/user');
-          Object.assign(user, userData);
-    
-          // Charger les familles
-          const families = await apiRequest('/families');
-          if (families.length > 0) {
-            const familyId = families[0].id;
-            
-            // Charger les membres de la famille
-            const members = await apiRequest(`/families/${familyId}/members`);
-            user.famille = members;
-            
-            // Charger les activités
-            const activities = await apiRequest(`/families/${familyId}/activities`);
-            agenda = activities;
+      }
+    }
+
+    async function loadFamilyData() {
+      try {
+        const familyData = await apiRequest('/families');
+        state.family = familyData.members || [];
+        updateMembersCount();
+        renderFamilyMembers();
+      } catch (error) {
+        console.warn('Utilisation des données famille par défaut');
+        state.family = [
+          {
+            id: 1,
+            prenom: "Marie",
+            nom: "Martin",
+            role: "Parent",
+            avatar: "👩",
+            mineur: false,
+            birthday: "1985-04-12"
+          },
+          {
+            id: 2,
+            prenom: "Luc",
+            nom: "Martin",
+            role: "Parent",
+            avatar: "👨",
+            mineur: false,
+            birthday: "1983-11-05"
           }
-    
-          // Charger les lieux
-          const places = await apiRequest('/places');
-          lieux = places;
-    
-        } catch (apiError) {
-          console.warn('API non disponible, utilisation des données de démo:', apiError);
-          // Données de démo en cas d'erreur
-          loadDemoData();
-        }
-    
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-        // Assurer que user est toujours défini
-        if (!user) {
-          user = {
-            prenom: "Invité",
-            nom: "Nesti",
-            email: "",
-            tel: "",
-            adresse: "",
-            famille: [],
-            maison: [48.8566, 2.3522]
-          };
-        }
-        loadDemoData();
-      }
-    }
-
-        // Charger les lieux
-        const places = await apiRequest('/places');
-        lieux = places;
-
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-        // Données de démo en cas d'erreur
-        loadDemoData();
-      }
-    }
-
-    function loadDemoData() {
-      // Données de démo
-      agenda = [
-        { date: "2025-09-20T15:00", titre: "Atelier peinture", lieu: "Maison", personnes: ["Emma", "Noah"], notes: "Prévoir tablier" },
-        { date: "2025-09-22T09:00", titre: "Rendez-vous école", lieu: "École Jean Jaurès", personnes: ["Emma"], notes: "" },
-        { date: "2025-09-23T18:00", titre: "Soirée jeux de société", lieu: "Maison", personnes: ["Toute la famille"], notes: "Chacun choisit un jeu" }
-      ];
-    
-      lieux = [
-        { name: "Parc de la Villette", type: "Parc", coords: [48.8897, 2.3930] },
-        { name: "École Jean Jaurès", type: "École", coords: [48.8572, 2.3530] },
-        { name: "Centre Famille Soleil", type: "Centre familial", coords: [48.8500, 2.3700] }
-      ];
-    
-      // Ajouter des membres de démo si la famille est vide
-      if (user.famille.length === 0) {
-        user.famille = [
-          { id: 1, prenom: "Marie", nom: "Martin", role: "Parent", avatar: "👩", mineur: false },
-          { id: 2, prenom: "Luc", nom: "Martin", role: "Parent", avatar: "👨", mineur: false },
-          { id: 3, prenom: "Emma", nom: "Martin", role: "Enfant", avatar: "👧", mineur: true, gps: [48.8575, 2.3600] }
         ];
       }
     }
-    
-    // ===== INITIALISATION =====
-    document.addEventListener('DOMContentLoaded', async function() {
-      console.log("Initialisation du dashboard Nesti...");
-      
-      // Charger les données utilisateur d'abord
-      await loadUserData();
-      
-      // Initialiser l'interface
-      updateWelcomeMessage();
-      renderFamily();
-      renderAgenda();
-      initMap();
-      setupNavigation();
-      setupAccessibility();
-      
-      console.log("Dashboard initialisé avec succès");
-      console.log("Utilisateur:", user);
-    });
 
-    // ===== FONCTIONS D'INTERFACE UTILISATEUR =====
-    function updateWelcomeMessage() {
-      document.getElementById("welcomeMsg").innerText = `Bonjour ${user.prenom} 👋`;
+    async function loadActivities() {
+      try {
+        const activitiesData = await apiRequest('/activities');
+        state.activities = activitiesData;
+        updateActivitiesCount();
+        renderActivities();
+      } catch (error) {
+        console.warn('Utilisation des données activités par défaut');
+        state.activities = [
+          {
+            id: 1,
+            title: "Parc naturel",
+            date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+            location: "Parc de la Villette, Paris",
+            participants: [1, 2],
+            notes: "Apporter le pique-nique"
+          },
+          {
+            id: 2,
+            title: "Anniversaire de Emma",
+            date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+            location: "Maison",
+            participants: [1, 2, 3],
+            notes: "Gâteau au chocolat"
+          }
+        ];
+      }
     }
 
-    function renderFamily() {
-      const familyList = document.getElementById("familyList");
-      familyList.innerHTML = "";
-      
-      user.famille.forEach((membre, index) => {
-        const element = document.createElement('div');
-        element.className = 'family-member';
-        element.innerHTML = `
-          <button class="edit-member-btn" onclick="openEditModal('edit', ${index}); event.stopPropagation();" title="Modifier">
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-          <div class="family-avatar">${membre.avatar || '👤'}</div>
-          <div class="member-name">${membre.prenom}</div>
-          <div class="member-role">${membre.role}${membre.mineur ? " <span title='Mineur' style='color:#ff7b54;font-size:.93em;'>(-18)</span>" : ""}</div>
-          ${membre.mineur && membre.gps ? `<div class="member-location"><i class="fas fa-map-marker-alt"></i> Localisé</div>` : ""}
-        `;
-        element.addEventListener('click', () => openEditModal('edit', index));
-        familyList.appendChild(element);
-      });
+    async function loadLocations() {
+      try {
+        const locationsData = await apiRequest('/locations');
+        state.locations = locationsData;
+      } catch (error) {
+        console.warn('Utilisation des données lieux par défaut');
+        state.locations = [
+          {
+            id: 1,
+            name: "Parc de la Villette",
+            type: "park",
+            coordinates: [48.8897, 2.3930],
+            address: "211 Avenue Jean Jaurès, 75019 Paris"
+          },
+          {
+            id: 2,
+            name: "École maternelle",
+            type: "school",
+            coordinates: [48.8572, 2.3530],
+            address: "15 Rue des écoles, 75005 Paris"
+          }
+        ];
+      }
+    }
 
-      // Afficher un message si pas de membres
-      if (user.famille.length === 0) {
-        familyList.innerHTML = `
+    // ===== FONCTIONS D'INTERFACE =====
+    function initUI() {
+      renderFamilyMembers();
+      renderActivities();
+      renderRecentActivity();
+      renderNotifications();
+      updateStats();
+    }
+
+    function renderFamilyMembers() {
+      const container = document.getElementById('familyList');
+      if (!container) return;
+      
+      if (state.family.length === 0) {
+        container.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #666;">
             <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
             <p>Vous n'avez pas encore ajouté de membres à votre famille.</p>
-            <button class="btn" onclick="openEditModal('add')">
+            <button class="btn" onclick="openModal('add-member')">
               <i class="fas fa-plus"></i> Ajouter votre premier membre
             </button>
           </div>
         `;
+        return;
       }
+      
+      container.innerHTML = state.family.map(member => `
+        <div class="family-member" data-member-id="${member.id}">
+          <div class="member-actions">
+            <button class="action-btn" onclick="editMember(${member.id})" title="Modifier">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-btn" onclick="deleteMember(${member.id})" title="Supprimer">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="family-avatar">${member.avatar || '👤'}</div>
+          <div class="member-name">${member.prenom}</div>
+          <div class="member-role">${member.role}${member.mineur ? ' <span style="color:#ff7b54;font-size:.93em;">(-18)</span>' : ''}</div>
+          ${member.birthday ? `<div class="member-location"><i class="fas fa-birthday-cake"></i> ${formatDate(member.birthday)}</div>` : ''}
+        </div>
+      `).join('');
     }
 
-    function renderAgenda() {
-      const agendaList = document.getElementById("agendaList");
-      agendaList.innerHTML = "";
+    function renderActivities() {
+      const container = document.getElementById('agendaList');
+      if (!container) return;
       
-      if (agenda.length === 0) {
-        agendaList.innerHTML = `
+      if (state.activities.length === 0) {
+        container.innerHTML = `
           <li style="text-align: center; padding: 2rem; color: #666;">
             <i class="fas fa-calendar" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
             <p>Aucune activité planifiée pour le moment.</p>
@@ -1385,499 +1304,655 @@
         `;
         return;
       }
-
-      // Trier les activités par date
-      agenda.sort((a, b) => new Date(a.date) - new Date(b.date));
       
-      agenda.forEach((activite, index) => {
-        const dateObj = new Date(activite.date);
-        const options = { weekday: 'short', day: 'numeric', month: 'short' };
-        const dateStr = dateObj.toLocaleDateString('fr-FR', options);
-        const timeStr = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      // Trier les activités par date
+      const sortedActivities = [...state.activities].sort((a, b) => 
+        new Date(a.date) - new Date(b.date)
+      );
+      
+      container.innerHTML = sortedActivities.map(activity => {
+        const date = new Date(activity.date);
+        const participants = activity.participants || [];
+        const participantNames = participants.map(id => {
+          const member = state.family.find(m => m.id === id);
+          return member ? member.prenom : 'Inconnu';
+        }).join(', ');
         
-        const personnes = activite.personnes && activite.personnes.length ? 
-          activite.personnes.join(", ") : "Toute la famille";
-        
-        const li = document.createElement("li");
-        li.className = "activity-item";
-        li.innerHTML = `
-          <div class="activity-date">
-            <div class="activity-day">${dateStr}</div>
-            <div class="activity-time">${timeStr}</div>
-          </div>
-          <div class="activity-content">
-            <div class="activity-title">${activite.titre}</div>
-            <div class="activity-details">
-              <div class="activity-detail">
-                <i class="fas fa-map-marker-alt"></i> ${activite.lieu}
-              </div>
-              <div class="activity-detail">
-                <i class="fas fa-users"></i> ${personnes}
-              </div>
+        return `
+          <li class="activity-item" data-activity-id="${activity.id}">
+            <div class="activity-date">
+              <div class="activity-day">${formatDay(date)}</div>
+              <div class="activity-time">${formatTime(date)}</div>
             </div>
-            ${activite.notes ? `<div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;"><i class="fas fa-sticky-note"></i> ${activite.notes}</div>` : ''}
-          </div>
-          <div class="activity-actions">
-            <button class="btn btn-sm" onclick="editAgenda(${index})"><i class="fas fa-edit"></i></button>
-          </div>
+            <div class="activity-content">
+              <div class="activity-title">${activity.title}</div>
+              <div class="activity-details">
+                <div class="activity-detail">
+                  <i class="fas fa-map-marker-alt"></i> ${activity.location}
+                </div>
+                <div class="activity-detail">
+                  <i class="fas fa-users"></i> ${participantNames || 'Tous'}
+                </div>
+              </div>
+              ${activity.notes ? `<div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;"><i class="fas fa-sticky-note"></i> ${activity.notes}</div>` : ''}
+            </div>
+            <div class="activity-actions">
+              <button class="btn btn-sm" onclick="editActivity(${activity.id})"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger" onclick="deleteActivity(${activity.id})"><i class="fas fa-trash"></i></button>
+            </div>
+          </li>
         `;
-        agendaList.appendChild(li);
-      });
+      }).join('');
     }
 
-    // ===== CARTE LEAFLET =====
+    function renderRecentActivity() {
+      const container = document.getElementById('recentActivity');
+      if (!container) return;
+      
+      // Simuler des activités récentes
+      const recentActivities = [
+        {
+          icon: 'fa-user-plus',
+          text: 'Nouveau membre ajouté',
+          time: 'Il y a 2 heures'
+        },
+        {
+          icon: 'fa-check-circle',
+          text: 'Activité confirmée',
+          time: 'Hier, 15:32'
+        },
+        {
+          icon: 'fa-map-marker-alt',
+          text: 'Lieu enregistré',
+          time: '12 oct, 09:15'
+        }
+      ];
+      
+      container.innerHTML = recentActivities.map(activity => `
+        <li class="activity-log">
+          <div class="log-icon"><i class="fas ${activity.icon}"></i></div>
+          <div class="log-content">
+            <div class="log-text">${activity.text}</div>
+            <div class="log-time">${activity.time}</div>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    function renderNotifications() {
+      const container = document.getElementById('notifications-container');
+      if (!container) return;
+      
+      // Vérifier les anniversaires à venir
+      const today = new Date();
+      const upcomingBirthdays = state.family.filter(member => {
+        if (!member.birthday) return false;
+        const birthDate = new Date(member.birthday);
+        birthDate.setFullYear(today.getFullYear());
+        
+        // Anniversaire dans les 7 prochains jours
+        const diffTime = birthDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        return diffDays >= 0 && diffDays <= 7;
+      });
+      
+      if (upcomingBirthdays.length > 0) {
+        container.innerHTML = upcomingBirthdays.map(member => {
+          const birthDate = new Date(member.birthday);
+          birthDate.setFullYear(today.getFullYear());
+          const diffTime = birthDate - today;
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          return `
+            <div class="pulse" style="text-align: center; padding: 1rem; background: #fff4e6; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+              <div><i class="fas fa-birthday-cake" style="color: var(--orange); font-size: 1.5rem;"></i></div>
+              <div style="font-weight: 600; margin: 0.5rem 0;">Anniversaire dans ${diffDays} jour(s)</div>
+              <div style="font-size: 0.9rem;">C'est l'anniversaire de ${member.prenom} ${diffDays === 0 ? 'aujourd\'hui' : `dans ${diffDays} jour(s)`}!</div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 1rem; color: #666;">
+            <i class="fas fa-check-circle" style="color: var(--green);"></i>
+            <p>Aucune notification pour le moment</p>
+          </div>
+        `;
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('activities-count').textContent = state.activities.length;
+      document.getElementById('members-count').textContent = state.family.length;
+      
+      // Calculer le taux de completion (exemple)
+      const completionRate = Math.min(Math.floor(state.activities.length / 10 * 100), 100);
+      document.getElementById('completion-rate').textContent = `${completionRate}%`;
+      
+      // Messages non lus (exemple)
+      document.getElementById('messages-count').textContent = '3';
+    }
+
+    // ===== GESTION DE LA CARTE =====
     function initMap() {
-      if (map) {
-        map.remove();
+      if (state.map) {
+        state.map.remove();
       }
       
-      map = L.map('map').setView(user.maison, 13);
+      state.map = L.map('map').setView([48.8566, 2.3522], 13);
       
       L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
         minZoom: 2,
         maxZoom: 18
-      }).addTo(map);
+      }).addTo(state.map);
       
-      // Marqueur pour la maison
-      L.marker(user.maison, {
-        icon: L.icon({
-          iconUrl: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3e0.svg',
-          iconSize: [36, 36]
-        })
-      }).addTo(map).bindPopup("<b>🏡 Maison</b>");
-      
-      // Marqueurs pour les membres de la famille
-      user.famille.forEach(membre => {
-        if (membre.gps) {
-          L.marker(membre.gps, {
+      // Ajouter les marqueurs des membres
+      state.family.forEach(member => {
+        if (member.location) {
+          L.marker(member.location, {
             icon: L.divIcon({
-              className: '',
-              html: `<span style="font-size: 1.7rem;">${membre.avatar || '👤'}</span>`,
-              iconSize: [32, 32]
+              className: 'member-marker',
+              html: `<div style="font-size: 1.5rem;">${member.avatar || '👤'}</div>`,
+              iconSize: [30, 30]
             })
-          }).addTo(map).bindPopup(`<b>${membre.avatar || '👤'} ${membre.prenom} (${membre.role})</b>${membre.mineur ? "<br><span style='color:#ff7b54;'>Mineur</span>" : ""}`);
+          })
+          .addTo(state.map)
+          .bindPopup(`<b>${member.prenom}</b><br>${member.role}`);
         }
       });
       
-      // Marqueurs pour les lieux d'intérêt
-      lieux.forEach(lieu => {
-        L.marker(lieu.coords, {
+      // Ajouter les marqueurs des lieux
+      state.locations.forEach(location => {
+        let iconUrl;
+        switch (location.type) {
+          case 'school':
+            iconUrl = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3eb.svg';
+            break;
+          case 'park':
+            iconUrl = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3de.svg';
+            break;
+          default:
+            iconUrl = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4cd.svg';
+        }
+        
+        L.marker(location.coordinates, {
           icon: L.icon({
-            iconUrl: lieu.type === "Parc" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f333.svg" :
-                     lieu.type === "École" ? "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3eb.svg" :
-                     "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f46a.svg",
-            iconSize: [28, 28]
+            iconUrl: iconUrl,
+            iconSize: [25, 25]
           })
-        }).addTo(map).bindPopup(`<b>${lieu.name}</b><br>${lieu.type}`);
+        })
+        .addTo(state.map)
+        .bindPopup(`<b>${location.name}</b><br>${location.address}`);
       });
-      
-      // Géolocalisation de l'utilisateur
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const userLatLng = [pos.coords.latitude, pos.coords.longitude];
-          L.marker(userLatLng, {
-            icon: L.icon({
-              iconUrl: "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f4cd.svg",
-              iconSize: [32, 32]
-            })
-          }).addTo(map).bindPopup("Vous êtes ici !").openPopup();
-        }, () => {
-          // En cas d'erreur de géolocalisation, centrer sur la maison
-          map.setView(user.maison, 13);
-        });
-      }
+    }
+
+    function refreshMap() {
+      initMap();
+      showNotification('Carte actualisée', 'success');
     }
 
     // ===== GESTION DES MODALS =====
-    function openEditModal(type, index = 0) {
+    function openModal(type, id = null) {
       const modalBg = document.getElementById('modalBg');
       const modalTitle = document.getElementById('modalTitle');
       const modalContent = document.getElementById('modalContent');
       
       modalBg.classList.add('active');
       
-      if (type === 'edit' || type === 'add') {
-        const membre = type === 'edit' ? user.famille[index] : null;
-        modalTitle.textContent = type === 'edit' ? 'Modifier un membre' : 'Ajouter un membre';
-        
-        modalContent.innerHTML = `
-          <form id="modalForm" onsubmit="event.preventDefault(); ${type === 'edit' ? 'updateMember(' + index + ')' : 'addMember()'}">
-            <div class="form-group">
-              <label class="form-label">Prénom</label>
-              <input type="text" class="form-control" name="prenom" value="${membre ? membre.prenom : ''}" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nom</label>
-              <input type="text" class="form-control" name="nom" value="${membre ? membre.nom : ''}" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Rôle</label>
-              <select class="form-control" name="role" required>
-                <option value="Parent" ${membre && membre.role === "Parent" ? "selected" : ""}>Parent</option>
-                <option value="Enfant" ${membre && membre.role === "Enfant" ? "selected" : ""}>Enfant</option>
-                <option value="Grand-parent" ${membre && membre.role === "Grand-parent" ? "selected" : ""}>Grand-parent</option>
-                <option value="Ami" ${membre && membre.role === "Ami" ? "selected" : ""}>Ami</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">
-                <input type="checkbox" name="mineur" ${membre && membre.mineur ? "checked" : ""}> Mineur
-              </label>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Avatar</label>
-              <div class="emoji-selector">
-                ${['👨', '👩', '👦', '👧', '👴', '👵', '👶', '👱', '👨‍🦳', '👩‍🦳'].map(emoji => `
-                  <span class="emoji-option ${membre && membre.avatar === emoji ? 'selected' : ''}" data-emoji="${emoji}">${emoji}</span>
-                `).join('')}
-              </div>
-              <input type="hidden" name="avatar" id="selected-emoji" value="${membre ? membre.avatar : '👤'}">
-            </div>
-            ${membre && membre.mineur ? `
-            <div class="form-group">
-              <label class="form-label">Géolocalisation (lat,lon)</label>
-              <input type="text" class="form-control" name="gps" value="${membre.gps ? membre.gps.join(',') : ''}" placeholder="48.8566,2.3522">
-            </div>
-            ` : ''}
-            <div class="form-actions">
-              <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
-              <button type="submit" class="btn">${type === 'edit' ? 'Enregistrer' : 'Ajouter'}</button>
-            </div>
-          </form>
-        `;
-
-        // Initialiser le sélecteur d'emoji
-        initEmojiSelector(membre);
-        
-      } else if (type === 'agenda') {
-        modalTitle.textContent = 'Nouvelle activité';
-        modalContent.innerHTML = `
-          <form id="modalForm" onsubmit="event.preventDefault(); addActivity()">
-            <div class="form-group">
-              <label class="form-label">Date et heure</label>
-              <input type="datetime-local" class="form-control" name="date" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Intitulé de l'activité</label>
-              <input type="text" class="form-control" name="titre" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Lieu</label>
-              <input type="text" class="form-control" name="lieu">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Participants (séparés par des virgules)</label>
-              <input type="text" class="form-control" name="personnes" placeholder="Emma, Noah, Lucas">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Notes</label>
-              <textarea class="form-control" name="notes" rows="3"></textarea>
-            </div>
-            <div class="form-actions">
-              <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
-              <button type="submit" class="btn">Ajouter</button>
-            </div>
-          </form>
-        `;
+      switch (type) {
+        case 'add-member':
+          modalTitle.textContent = 'Ajouter un membre';
+          renderAddMemberForm(modalContent);
+          break;
+          
+        case 'edit-member':
+          modalTitle.textContent = 'Modifier un membre';
+          state.selectedMember = state.family.find(m => m.id === id);
+          renderEditMemberForm(modalContent);
+          break;
+          
+        case 'add-activity':
+          modalTitle.textContent = 'Nouvelle activité';
+          renderAddActivityForm(modalContent);
+          break;
+          
+        case 'edit-activity':
+          modalTitle.textContent = 'Modifier une activité';
+          state.selectedActivity = state.activities.find(a => a.id === id);
+          renderEditActivityForm(modalContent);
+          break;
+          
+        case 'add-location':
+          modalTitle.textContent = 'Ajouter un lieu';
+          renderAddLocationForm(modalContent);
+          break;
+          
+        case 'send-message':
+          modalTitle.textContent = 'Message au groupe';
+          renderSendMessageForm(modalContent);
+          break;
       }
     }
 
-    function initEmojiSelector(membre) {
-        const emojiOptions = document.querySelectorAll('.emoji-option');
-        const selectedEmojiInput = document.getElementById('selected-emoji');
-        
-        emojiOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                emojiOptions.forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedEmojiInput.value = this.getAttribute('data-emoji');
-            });
-            
-            // Pré-sélectionner l'emoji actuel si on modifie un membre
-            if (membre && membre.avatar === option.getAttribute('data-emoji')) {
-                option.classList.add('selected');
-                selectedEmojiInput.value = membre.avatar;
-            }
-        });
-        
-        // Sélectionner le premier emoji par défaut pour les nouveaux membres
-        if (!membre && emojiOptions.length > 0) {
-            emojiOptions[0].click();
-        }
-    }
-        
     function closeModal() {
       document.getElementById('modalBg').classList.remove('active');
+      state.selectedMember = null;
+      state.selectedActivity = null;
     }
-    
 
-    // ===== GESTION DES MEMBRES =====
-    async function addMember() {
-      console.log("Début de l'ajout d'un membre");
-      
-      try {
-        const form = document.getElementById('modalForm');
-        const formData = new FormData(form);
-        
-        // Récupérer les valeurs du formulaire
-        const prenom = formData.get("prenom");
-        const nom = formData.get("nom");
-        const role = formData.get("role");
-        const mineur = formData.get("mineur") === "on";
-        const avatar = document.getElementById('selected-emoji').value;
-        const gps = formData.get("gps");
-        
-        console.log("Données du formulaire:", { prenom, nom, role, mineur, avatar, gps });
-        
-        // Validation
-        if (!prenom) {
-          alert("Le prénom est obligatoire");
-          return;
-        }
-        
-        const memberData = {
-          prenom: prenom,
-          nom: nom || user.nom || "Famille",
-          role: role || "Parent",
-          mineur: mineur,
-          avatar: avatar || "👤",
-          gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
-        };
-        
-        // En mode démo (sans API)
-        const newMember = {
-          ...memberData,
-          id: Date.now() // ID unique
-        };
-        
-        // Ajouter à la famille utilisateur
-        user.famille.push(newMember);
-        
-        closeModal();
-        renderFamily();
-        
-        // Recréer la carte pour afficher le nouveau membre
-        if (map && newMember.gps) {
-          initMap();
-        }
-        
-        showNotification(`${prenom} a été ajouté à votre famille!`, 'success');
-        console.log("Membre ajouté avec succès:", newMember);
-        
-      } catch (error) {
-        console.error('Erreur lors de l\'ajout du membre:', error);
-        alert('Erreur lors de l\'ajout du membre: ' + error.message);
-      }
-    }
-    
-    async function updateMember(index) {
-      console.log("Début de la modification du membre");
-      
-      try {
-        const form = document.getElementById('modalForm');
-        const formData = new FormData(form);
-        
-        // Récupérer les valeurs du formulaire
-        const prenom = formData.get("prenom");
-        const nom = formData.get("nom");
-        const role = formData.get("role");
-        const mineur = formData.get("mineur") === "on";
-        const avatar = document.getElementById('selected-emoji').value;
-        const gps = formData.get("gps");
-        
-        // Validation
-        if (!prenom) {
-          alert("Le prénom est obligatoire");
-          return;
-        }
-        
-        const memberData = {
-          prenom: prenom,
-          nom: nom || user.nom || "Famille",
-          role: role || "Parent",
-          mineur: mineur,
-          avatar: avatar || "👤",
-          gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
-        };
-        
-        // En mode démo (sans API)
-        user.famille[index] = {
-          ...user.famille[index],
-          ...memberData
-        };
-        
-        closeModal();
-        renderFamily();
-        
-        // Recréer la carte si la localisation a changé
-        if (map) {
-          initMap();
-        }
-        
-        showNotification(`${prenom} a été modifié avec succès!`, 'success');
-        console.log("Membre modifié avec succès:", user.famille[index]);
-        
-      } catch (error) {
-        console.error('Erreur lors de la modification du membre:', error);
-        alert('Erreur lors de la modification du membre: ' + error.message);
-      }
-    }
-    
-    // ===== GESTION DES ACTIVITÉS =====
-    function editAgenda(index) {
-      const activite = agenda[index];
-      openEditModal('agenda');
-      
-      setTimeout(() => {
-        const form = document.getElementById('modalForm');
-        if (form) {
-          // Pré-remplir le formulaire
-          const dateTime = activite.date.replace(" ", "T");
-          form.date.value = dateTime;
-          form.titre.value = activite.titre;
-          form.lieu.value = activite.lieu;
-          form.personnes.value = activite.personnes.join(", ");
-          form.notes.value = activite.notes;
+    function renderAddMemberForm(container) {
+      container.innerHTML = `
+        <form id="memberForm" onsubmit="return saveMember(event)">
+          <div class="form-group">
+            <label class="form-label">Prénom *</label>
+            <input type="text" class="form-control" name="prenom" required>
+          </div>
           
-          // Modifier la soumission pour l'édition
-          form.onsubmit = function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            
-            agenda[index] = {
-              date: formData.get("date"),
-              titre: formData.get("titre"),
-              lieu: formData.get("lieu"),
-              personnes: formData.get("personnes").split(",").map(s => s.trim()),
-              notes: formData.get("notes")
-            };
-            
-            closeModal();
-            renderAgenda();
-          };
-        }
-      }, 100);
-    }
-
-    function addActivity() {
-      const form = document.getElementById('modalForm');
-      const formData = new FormData(form);
-      
-      agenda.push({
-        date: formData.get("date"),
-        titre: formData.get("titre"),
-        lieu: formData.get("lieu"),
-        personnes: formData.get("personnes") ? formData.get("personnes").split(",").map(s => s.trim()) : [],
-        notes: formData.get("notes")
-      });
-      
-      closeModal();
-      renderAgenda();
-    }
-
-    // ===== NAVIGATION ET ACCESSIBILITÉ =====
-    function setupNavigation() {
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control" name="nom">
+          </div>
           
-          const targetId = this.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      });
-    }
-
-    function setupAccessibility() {
-      // Fermer le modal avec la touche Échap
-      document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape") closeModal();
-      });
-
-      // Fermer le modal en cliquant à l'extérieur
-      document.getElementById('modalBg').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-      });
-    }
-    function showNotification(message, type = 'info') {
-      // Créer l'élément de notification
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          padding: 15px 20px;
-          border-radius: 8px;
-          color: white;
-          font-weight: 600;
-          z-index: 10000;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          animation: slideIn 0.3s ease;
+          <div class="form-group">
+            <label class="form-label">Rôle *</label>
+            <select class="form-control" name="role" required>
+              <option value="">Sélectionner...</option>
+              <option value="Parent">Parent</option>
+              <option value="Enfant">Enfant</option>
+              <option value="Grand-parent">Grand-parent</option>
+              <option value="Ami">Ami</option>
+              <option value="Éducateur">Éducateur</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Date de naissance</label>
+            <input type="date" class="form-control" name="birthday">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">
+              <input type="checkbox" name="mineur"> Membre mineur
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Avatar</label>
+            <div class="emoji-selector">
+              ${['👨', '👩', '👦', '👧', '👴', '👵', '👶', '👱', '👨‍🦳', '👩‍🦳'].map(emoji => `
+                <span class="emoji-option" data-emoji="${emoji}">${emoji}</span>
+              `).join('')}
+            </div>
+            <input type="hidden" name="avatar" id="selected-emoji" value="👤">
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+            <button type="submit" class="btn">Ajouter</button>
+          </div>
+        </form>
       `;
       
-      // Appliquer le style selon le type
-      if (type === 'success') {
-          notification.style.background = 'var(--green)';
-      } else if (type === 'error') {
-          notification.style.background = 'var(--red)';
-      } else {
-          notification.style.background = 'var(--blue)';
-      }
+      initEmojiSelector();
+    }
+
+    function renderEditMemberForm(container) {
+      if (!state.selectedMember) return;
       
-      notification.textContent = message;
+      const member = state.selectedMember;
+      container.innerHTML = `
+        <form id="memberForm" onsubmit="return updateMember(event, ${member.id})">
+          <div class="form-group">
+            <label class="form-label">Prénom *</label>
+            <input type="text" class="form-control" name="prenom" value="${member.prenom}" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control" name="nom" value="${member.nom || ''}">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Rôle *</label>
+            <select class="form-control" name="role" required>
+              <option value="Parent" ${member.role === 'Parent' ? 'selected' : ''}>Parent</option>
+              <option value="Enfant" ${member.role === 'Enfant' ? 'selected' : ''}>Enfant</option>
+              <option value="Grand-parent" ${member.role === 'Grand-parent' ? 'selected' : ''}>Grand-parent</option>
+              <option value="Ami" ${member.role === 'Ami' ? 'selected' : ''}>Ami</option>
+              <option value="Éducateur" ${member.role === 'Éducateur' ? 'selected' : ''}>Éducateur</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Date de naissance</label>
+            <input type="date" class="form-control" name="birthday" value="${member.birthday || ''}">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">
+              <input type="checkbox" name="mineur" ${member.mineur ? 'checked' : ''}> Membre mineur
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Avatar</label>
+            <div class="emoji-selector">
+              ${['👨', '👩', '👦', '👧', '👴', '👵', '👶', '👱', '👨‍🦳', '👩‍🦳'].map(emoji => `
+                <span class="emoji-option ${member.avatar === emoji ? 'selected' : ''}" data-emoji="${emoji}">${emoji}</span>
+              `).join('')}
+            </div>
+            <input type="hidden" name="avatar" id="selected-emoji" value="${member.avatar || '👤'}">
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+            <button type="submit" class="btn">Enregistrer</button>
+          </div>
+        </form>
+      `;
       
-      // Ajouter au document
-      document.body.appendChild(notification);
+      initEmojiSelector(member.avatar);
+    }
+
+    function renderAddActivityForm(container) {
+      container.innerHTML = `
+        <form id="activityForm" onsubmit="return saveActivity(event)">
+          <div class="form-group">
+            <label class="form-label">Titre *</label>
+            <input type="text" class="form-control" name="title" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Date et heure *</label>
+            <input type="datetime-local" class="form-control" name="date" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Lieu</label>
+            <input type="text" class="form-control" name="location">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Participants</label>
+            <div style="max-height: 200px; overflow-y: auto;">
+              ${state.family.map(member => `
+                <div>
+                  <label>
+                    <input type="checkbox" name="participants" value="${member.id}">
+                    ${member.prenom} (${member.role})
+                  </label>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" name="notes" rows="3"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn" style="background: #999;" onclick="closeModal()">Annuler</button>
+            <button type="submit" class="btn">Ajouter</button>
+          </div>
+        </form>
+      `;
+    }
+
+    // ===== FONCTIONS UTILITAIRES =====
+    function initEmojiSelector(selectedEmoji = '👤') {
+      const emojiOptions = document.querySelectorAll('.emoji-option');
+      const selectedEmojiInput = document.getElementById('selected-emoji');
       
-      // Supprimer après 3 secondes
-      setTimeout(() => {
-          notification.style.animation = 'fadeOut 0.3s ease';
-          setTimeout(() => {
-              if (notification.parentNode) {
-                  notification.parentNode.removeChild(notification);
-              }
-          }, 300);
-      }, 3000);
-  }
-  
-  // Ajouter les animations CSS pour les notifications
-  const notificationStyles = document.createElement('style');
-  notificationStyles.textContent = `
-      @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-      }
-      
-      @keyframes fadeOut {
-          from { opacity: 1; }
-          to { opacity: 0; }
-      }
-  `;
-  document.head.appendChild(notificationStyles);
-    
-    // ===== FONCTIONS DE DÉMO (en attendant l'API) =====
-    async function saveFamilyMember(memberData) {
-      // Simulation d'une sauvegarde API
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve({ ...memberData, id: Date.now() });
-        }, 500);
+      emojiOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          emojiOptions.forEach(o => o.classList.remove('selected'));
+          this.classList.add('selected');
+          selectedEmojiInput.value = this.getAttribute('data-emoji');
+        });
+        
+        if (option.getAttribute('data-emoji') === selectedEmoji) {
+          option.classList.add('selected');
+        }
       });
     }
 
-    async function loadFamilyMembers() {
-      // Simulation de chargement API
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve([]);
-        }, 500);
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long'
       });
     }
+
+    function formatDay(date) {
+      return date.toLocaleDateString('fr-FR', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short'
+      });
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // ===== GESTION DES ÉVÉNEMENTS =====
+    async function saveMember(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      
+      try {
+        const memberData = {
+          prenom: formData.get('prenom'),
+          nom: formData.get('nom'),
+          role: formData.get('role'),
+          birthday: formData.get('birthday'),
+          mineur: formData.get('mineur') === 'on',
+          avatar: formData.get('avatar')
+        };
+        
+        // Envoyer à l'API
+        const newMember = await apiRequest('/family/members', {
+          method: 'POST',
+          body: JSON.stringify(memberData)
+        });
+        
+        // Ajouter à l'état local
+        state.family.push(newMember);
+        
+        // Mettre à jour l'interface
+        renderFamilyMembers();
+        updateStats();
+        
+        closeModal();
+        showNotification('Membre ajouté avec succès', 'success');
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout du membre:', error);
+        showNotification('Erreur lors de l\'ajout du membre', 'error');
+      }
+    }
+
+    async function updateMember(event, id) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      
+      try {
+        const memberData = {
+          prenom: formData.get('prenom'),
+          nom: formData.get('nom'),
+          role: formData.get('role'),
+          birthday: formData.get('birthday'),
+          mineur: formData.get('mineur') === 'on',
+          avatar: formData.get('avatar')
+        };
+        
+        // Envoyer à l'API
+        const updatedMember = await apiRequest(`/family/members/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(memberData)
+        });
+        
+        // Mettre à jour l'état local
+        const index = state.family.findIndex(m => m.id === id);
+        if (index !== -1) {
+          state.family[index] = updatedMember;
+        }
+        
+        // Mettre à jour l'interface
+        renderFamilyMembers();
+        
+        closeModal();
+        showNotification('Membre modifié avec succès', 'success');
+      } catch (error) {
+        console.error('Erreur lors de la modification du membre:', error);
+        showNotification('Erreur lors de la modification du membre', 'error');
+      }
+    }
+
+    async function deleteMember(id) {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) return;
+      
+      try {
+        // Envoyer à l'API
+        await apiRequest(`/family/members/${id}`, {
+          method: 'DELETE'
+        });
+        
+        // Mettre à jour l'état local
+        state.family = state.family.filter(m => m.id !== id);
+        
+        // Mettre à jour l'interface
+        renderFamilyMembers();
+        updateStats();
+        
+        showNotification('Membre supprimé avec succès', 'success');
+      } catch (error) {
+        console.error('Erreur lors de la suppression du membre:', error);
+        showNotification('Erreur lors de la suppression du membre', 'error');
+      }
+    }
+
+    async function saveActivity(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      
+      try {
+        const activityData = {
+          title: formData.get('title'),
+          date: formData.get('date'),
+          location: formData.get('location'),
+          notes: formData.get('notes'),
+          participants: Array.from(formData.getAll('participants')).map(id => parseInt(id))
+        };
+        
+        // Envoyer à l'API
+        const newActivity = await apiRequest('/activities', {
+          method: 'POST',
+          body: JSON.stringify(activityData)
+        });
+        
+        // Ajouter à l'état local
+        state.activities.push(newActivity);
+        
+        // Mettre à jour l'interface
+        renderActivities();
+        updateStats();
+        
+        closeModal();
+        showNotification('Activité ajoutée avec succès', 'success');
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout de l\'activité:', error);
+        showNotification('Erreur lors de l\'ajout de l\'activité', 'error');
+      }
+    }
+
+    function editMember(id) {
+      openModal('edit-member', id);
+    }
+
+    function editActivity(id) {
+      openModal('edit-activity', id);
+    }
+
+    async function deleteActivity(id) {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer cette activité ?')) return;
+      
+      try {
+        // Envoyer à l'API
+        await apiRequest(`/activities/${id}`, {
+          method: 'DELETE'
+        });
+        
+        // Mettre à jour l'état local
+        state.activities = state.activities.filter(a => a.id !== id);
+        
+        // Mettre à jour l'interface
+        renderActivities();
+        updateStats();
+        
+        showNotification('Activité supprimée avec succès', 'success');
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'activité:', error);
+        showNotification('Erreur lors de la suppression de l\'activité', 'error');
+      }
+    }
+
+    // Fermer le modal en cliquant à l'extérieur
+    document.getElementById('modalBg').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeModal();
+      }
+    });
+
+    // Fermer le modal avec la touche Échap
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Initialiser les tooltips
+    document.addEventListener('mouseover', function(event) {
+      if (event.target.closest('[title]')) {
+        const element = event.target.closest('[title]');
+        element.setAttribute('data-tooltip', element.getAttribute('title'));
+        element.removeAttribute('title');
+      }
+    });
+
+    // Gestion de la navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
   </script>
 </body>
 </html>
