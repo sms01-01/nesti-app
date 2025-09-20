@@ -26,4 +26,12 @@
     "prisma": "^5.22.0",
     "vite": "^4.5.14"
   }
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "scripts": {
+    "seed": "node prisma/seed.js",
+    "db:reset": "npx prisma migrate reset && npm run seed",
+    "db:studio": "npx prisma studio"
+  }
 }
