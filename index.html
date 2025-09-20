@@ -1425,7 +1425,7 @@
                             <div class="form-group">
                                 <div class="g-recaptcha" data-sitekey="6LcVE88rAAAAAF5U-mHUIjOWsOheyAQmG45ovK0P"></div>
                             </div>
-                            <button type="submit" class="btn" id="signup-btn" style="width: 100%;">
+                            <button type="submit" class="btn" id="signup-btn" style="width: 100%;" onclick="redirectToDashboard()">
                                 Créer mon compte
                             </button>
                         </form>
@@ -1450,7 +1450,9 @@
                     <div class="form-group">
                         <div class="g-recaptcha" data-sitekey="6LcVE88rAAAAAF5U-mHUIjOWsOheyAQmG45ovK0P"></div>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%;">Se connecter</button>
+                    <button type="submit" class="btn" id="signup-btn" style="width: 100%;" onclick="redirectToDashboard()">
+                        Se connecter
+                    </button>             
                 </form>
                 <p style="text-align: center; margin-top: 20px;">
                     Pas encore de compte? <a href="#" id="switch-to-signup" style="color: var(--family-blue);">Inscrivez-vous</a>
@@ -1744,6 +1746,23 @@
                 loginModal.style.display = 'none';
             });
         });
+        // Fonction de redirection vers le dashboard
+        function redirectToDashboard(event) {
+            if (event) event.preventDefault();
+            
+            // Fermer le modal
+            document.getElementById('signup-modal').style.display = 'none';
+            
+            // Rediriger vers le dashboard après un court délai
+            setTimeout(function() {
+                window.location.href = 'https://nesti-app-1.onrender.com/dashboard.html';
+            }, 500);
+            
+            return false;
+        }
+        
+        // Modifier également le gestionnaire d'événements existant
+        document.getElementById('signup-form').addEventListener('submit', redirectToDashboard);
         // Initialisation de la carte (exemple)
         function initMap() {
             // Cette fonction serait utilisée pour initialiser une carte Leaflet
