@@ -889,6 +889,32 @@
         color: white;
         transform: scale(1.1);
     }
+    .emoji-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+    }
+    
+    .emoji-option {
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background: #f5f7ff;
+    }
+    
+    .emoji-option:hover {
+        background-color: #e0e7ff;
+        transform: scale(1.1);
+    }
+    
+    .emoji-option.selected {
+        background-color: var(--blue);
+        color: white;
+        transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -1126,8 +1152,20 @@
     </div>
   </footer>
   
+  
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // Mode debug
+    console.log("Dashboard Nesti initialisé");
+    console.log("Données utilisateur:", user);
+    
+    // Survoler pour voir les données des membres
+    document.addEventListener('mouseover', function(e) {
+        if (e.target.closest('.family-member')) {
+            const index = Array.from(document.querySelectorAll('.family-member')).indexOf(e.target.closest('.family-member'));
+            console.log("Membre survolé:", user.famille[index]);
+        }
+    });
     // ===== CONFIGURATION ET DONNÉES =====
     const API_BASE = '/api';
     let user = {
@@ -1485,67 +1523,101 @@
     }
 
     function initEmojiSelector(membre) {
-      const emojiOptions = document.querySelectorAll('.emoji-option');
-      const selectedEmojiInput = document.getElementById('selected-emoji');
-      
-      emojiOptions.forEach(option => {
-        option.addEventListener('click', function() {
-          emojiOptions.forEach(o => o.classList.remove('selected'));
-          this.classList.add('selected');
-          selectedEmojiInput.value = this.getAttribute('data-emoji');
+        const emojiOptions = document.querySelectorAll('.emoji-option');
+        const selectedEmojiInput = document.getElementById('selected-emoji');
+        
+        emojiOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                emojiOptions.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedEmojiInput.value = this.getAttribute('data-emoji');
+            });
+            
+            // Pré-sélectionner l'emoji actuel si on modifie un membre
+            if (membre && membre.avatar === option.getAttribute('data-emoji')) {
+                option.classList.add('selected');
+                selectedEmojiInput.value = membre.avatar;
+            }
         });
-      });
-
-      // Sélectionner l'emoji par défaut
-      if (membre && membre.avatar) {
-        const defaultEmoji = document.querySelector(`.emoji-option[data-emoji="${membre.avatar}"]`);
-        if (defaultEmoji) {
-          defaultEmoji.click();
+        
+        // Sélectionner le premier emoji par défaut pour les nouveaux membres
+        if (!membre && emojiOptions.length > 0) {
+            emojiOptions[0].click();
         }
-      } else {
-        // Sélectionner le premier emoji par défaut
-        emojiOptions[0].click();
-      }
     }
-
+        
     function closeModal() {
       document.getElementById('modalBg').classList.remove('active');
     }
-
-    // ===== GESTION DES MEMBRES =====
+    
     async function addMember() {
-      const form = document.getElementById('modalForm');
-      const formData = new FormData(form);
-      
-      const memberData = {
-        prenom: formData.get("prenom"),
-        nom: formData.get("nom"),
-        role: formData.get("role"),
-        mineur: !!formData.get("mineur"),
-        avatar: formData.get("avatar"),
-        gps: formData.get("gps") || null
-      };
-      
-      try {
-        // Sauvegarder dans la base de données
-        const savedMember = await apiRequest('/family/members', {
-          method: 'POST',
-          body: JSON.stringify(memberData)
-        });
+        const form = document.getElementById('modalForm');
+        const formData = new FormData(form);
         
-        // Ajouter à l'interface utilisateur
-        user.famille.push(savedMember);
-        
-        closeModal();
-        renderFamily();
-        initMap();
-        
-      } catch (error) {
-        console.error('Erreur lors de l\'ajout du membre:', error);
-        alert('Erreur lors de l\'ajout du membre');
-      }
+        try {
+            // Récupérer les valeurs du formulaire
+            const prenom = formData.get("prenom");
+            const nom = formData.get("nom");
+            const role = formData.get("role");
+            const mineur = formData.get("mineur") === "on"; // Les checkboxes retournent "on" si cochées
+            const avatar = formData.get("avatar");
+            const gps = formData.get("gps");
+            
+            // Valider les données requises
+            if (!prenom || !nom || !role || !avatar) {
+                alert("Veuillez remplir tous les champs obligatoires");
+                return;
+            }
+            
+            const memberData = {
+                prenom: prenom,
+                nom: nom,
+                role: role,
+                mineur: mineur,
+                avatar: avatar,
+                gps: gps ? gps.split(",").map(coord => parseFloat(coord.trim())) : null
+            };
+            
+            console.log("Données du membre à ajouter:", memberData);
+            
+            // En mode démo (sans API), ajouter directement à l'interface
+            if (!window.API_BASE || window.API_BASE === '/api') {
+                // Simulation d'ajout en mode démo
+                const newMember = {
+                    ...memberData,
+                    id: Date.now() // ID unique pour le nouveau membre
+                };
+                
+                user.famille.push(newMember);
+                
+                closeModal();
+                renderFamily();
+                initMap();
+                
+                // Afficher un message de confirmation
+                showNotification(`Membre ${prenom} ajouté avec succès!`, 'success');
+                
+            } else {
+                // Code pour l'API réelle (si configurée)
+                const savedMember = await apiRequest('/family/members', {
+                    method: 'POST',
+                    body: JSON.stringify(memberData)
+                });
+                
+                user.famille.push(savedMember);
+                
+                closeModal();
+                renderFamily();
+                initMap();
+                
+                showNotification(`Membre ${prenom} ajouté avec succès!`, 'success');
+            }
+            
+        } catch (error) {
+            console.error('Erreur détaillée:', error);
+            alert('Erreur lors de l\'ajout du membre: ' + error.message);
+        }
     }
-
     async function updateMember(index) {
       const form = document.getElementById('modalForm');
       const formData = new FormData(form);
@@ -1660,7 +1732,62 @@
         if (e.target === this) closeModal();
       });
     }
-
+    function showNotification(message, type = 'info') {
+      // Créer l'élément de notification
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          padding: 15px 20px;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          z-index: 10000;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease;
+      `;
+      
+      // Appliquer le style selon le type
+      if (type === 'success') {
+          notification.style.background = 'var(--green)';
+      } else if (type === 'error') {
+          notification.style.background = 'var(--red)';
+      } else {
+          notification.style.background = 'var(--blue)';
+      }
+      
+      notification.textContent = message;
+      
+      // Ajouter au document
+      document.body.appendChild(notification);
+      
+      // Supprimer après 3 secondes
+      setTimeout(() => {
+          notification.style.animation = 'fadeOut 0.3s ease';
+          setTimeout(() => {
+              if (notification.parentNode) {
+                  notification.parentNode.removeChild(notification);
+              }
+          }, 300);
+      }, 3000);
+  }
+  
+  // Ajouter les animations CSS pour les notifications
+  const notificationStyles = document.createElement('style');
+  notificationStyles.textContent = `
+      @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+      }
+      
+      @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+      }
+  `;
+  document.head.appendChild(notificationStyles);
+    
     // ===== FONCTIONS DE DÉMO (en attendant l'API) =====
     async function saveFamilyMember(memberData) {
       // Simulation d'une sauvegarde API
