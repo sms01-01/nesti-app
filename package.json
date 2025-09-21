@@ -36,4 +36,18 @@
   "prisma": {
     "seed": "node prisma/seed.js"
   }
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo build",
+    "build:android": "eas build -p android",
+    "build:ios": "eas build -p ios",
+    "build:all": "eas build --platform all",
+    "submit:android": "eas submit -p android",
+    "submit:ios": "eas submit -p ios",
+    "eas:login": "eas login",
+    "eas:configure": "eas build:configure"
+  }
 }
